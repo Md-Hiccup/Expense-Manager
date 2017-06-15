@@ -60,5 +60,13 @@ module.exports = function (passport) {
     })
   });
 
+  router.post('/totalPrice',function(req, res){
+    db.Item.sum('price',{
+      where: { price: { $gt: 0 } }
+    }).then(function (sum) {
+      res.json(sum);
+    })
+  });
+
  return router;
 }
