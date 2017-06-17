@@ -40,33 +40,36 @@ module.exports = function (passport) {
 
   router.post('/addItems', function (req, res) {
     db.Item.bulkCreate([
-      {name:'dates', price: 400, UserId : 1},
-      {name:'HeadPhones', price: 600, UserId : 1}
+      {name:req.body.name, price: req.body.price, UserId : req.body.uid}
+      //{name:'HeadPhones', price: 600, UserId : 1}
     ]).then(function(){
-      return db.Item.findAll();
+        return db.Item.findAll();
     }).then(function(results){
-      res.json(results);
+        res.json(results);
     })
   });
 
-  router.post('/itemList', function(req, res){
+  router.post('/itemList', function(req, res) {
     db.User.findAll({
-      include : [{
-        model : db.Item,
-        where : { UserId : req.body.uid }
+        include: [{
+            model: db.Item,
+          //  attributes : [ [ db.sequelize.fn('SUM', db.sequelize.col('price')), 'total']],
+            where: { UserId: req.body.uid }
+          //  groupBy : [ 'UserId']
       }]
-    }).then(function(result){
+    }).then(function (result) {
       res.json(result);
-    })
+    }).catch(console.error);
   });
 
-  router.post('/totalPrice',function(req, res){
-    db.Item.sum('price',{
-      where: { price: { $gt: 0 } }
-    }).then(function (sum) {
-      res.json(sum);
-    })
-  });
+  router.post('/totalPrice', function(req, res) {
+      db.Item.findAll({
+          where: {UserId: req.body.uid},
+          attributes: ['UserId', [db.sequelize.fn('SUM', db.sequelize.col('price')), 'totalPrice']]
+      }).then(function (result) {
+          res.json(result);
+      });
+    });
 
  return router;
 }
