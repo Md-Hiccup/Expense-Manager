@@ -1,7 +1,8 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Total = sequelize.define('Total', {
-    price: {type : DataTypes.INTEGER , defaultValue : 0 }
+    price: {type : DataTypes.INTEGER , defaultValue : 0 },
+    dates: DataTypes.DATEONLY
   },{
     classMethods: {
       associate: function(models) {

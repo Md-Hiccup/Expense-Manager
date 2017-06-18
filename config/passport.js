@@ -53,12 +53,12 @@ module.exports = function(passport, user){
                         }
                     }).catch(function(error) {
                         return done({status : 401 ,message : 'Email is not valid'});
-                });
-              }
+                    });
+                }
             }).catch(function(error) {
                 return done({status : 401 , message : 'Something went wrong with your Signup'});
-        });
-      }
+            });
+        }
     ));
 
 

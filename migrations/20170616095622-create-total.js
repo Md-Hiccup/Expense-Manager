@@ -12,13 +12,17 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue : 0
       },
+      dates: {
+        type: Sequelize.DATEONLY,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       }
     });
   },
