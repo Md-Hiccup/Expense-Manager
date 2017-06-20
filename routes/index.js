@@ -91,15 +91,25 @@ module.exports = function (passport) {
     });
 
     router.post('/weeklyExp', function (req, res) {
-        db.sequelize.query('select week(dates) as week, sum(price) as weeklyExp from Items where ' +
-            'week(dates) = ? AND UserId = ?',
+        db.sequelize.query('select week(dates) as week, sum(price) as weeklyExp from Items ' +
+            ' where week(dates) = ? AND UserId = ?',
             {
                 replacements:[ req.body.weekId ,req.body.uid], type: db.sequelize.QueryTypes.SELECT
             }).then(function (tot) {
             console.log(tot);
             res.json(tot);
         })
+    });
 
+    router.post('/quarterExp', function (req, res) {
+        db.sequelize.query('select quarter(dates) as quarter, sum(price) as QuarterExp from Items where ' +
+            ' quarter(dates) = ? AND UserId = ?',
+            {
+                replacements : [req.body.quarter, req.body.uid], type: db.sequelize.QueryTypes.SELECT
+            }).then(function (quart){
+            console.log(quart);
+            res.json(quart);
+        })
     });
 
 
