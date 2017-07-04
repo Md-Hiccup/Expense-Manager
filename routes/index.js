@@ -7,35 +7,7 @@ module.exports = function (passport) {
 
     /* GET home page. */
     router.get('/', function (req, res, next) {
-        res.render('index', {title: 'Express'});
-    });
-
-    router.get('/signup', function (req, res) {
-        res.json('Signup');
-    });
-
-    router.post('/signup', passport.authenticate('local-signup', {
-        failWithError: true
-    }), function (user, req, res, next) {
-        console.log('UserSignup  : ' + JSON.stringify(user));
-        res.json(user);
-    });
-
-    router.get('/login', function (req, res) {
-        res.json('login');
-    });
-
-    router.post('/login', passport.authenticate('local-login', {
-        failWithError: true
-    }), function (user, req, res, next) {
-        console.log("UserLogin :" + JSON.stringify(user));
-        res.json(user);
-    });
-
-    router.get('/logout', function (req, res) {
-        req.session.destroy(function (err) {
-            res.redirect('/')
-        });
+        res.render('index');
     });
 
     router.post('/addItems', function (req, res) {
@@ -85,7 +57,8 @@ module.exports = function (passport) {
         db.sequelize.query('select UserId, monthname(dates) as month, sum(price) as totalPrice from Items' +
             ' where month(dates)= ? AND UserId = ? ',
             {   replacements: [req.body.month, req.body.uid], type: db.sequelize.QueryTypes.SELECT
-            }).then(function (items) {
+            }
+        ).then(function (items) {
             res.json(items);
         });
     });
@@ -94,8 +67,9 @@ module.exports = function (passport) {
         db.sequelize.query('select week(dates) as week, sum(price) as weeklyExp from Items ' +
             ' where week(dates) = ? AND UserId = ?',
             {
-                replacements:[ req.body.weekId ,req.body.uid], type: db.sequelize.QueryTypes.SELECT
-            }).then(function (tot) {
+                replacements:[ req.body.week ,req.body.uid], type: db.sequelize.QueryTypes.SELECT
+            }
+        ).then(function (tot) {
             console.log(tot);
             res.json(tot);
         })
@@ -106,12 +80,12 @@ module.exports = function (passport) {
             ' quarter(dates) = ? AND UserId = ?',
             {
                 replacements : [req.body.quarter, req.body.uid], type: db.sequelize.QueryTypes.SELECT
-            }).then(function (quart){
-            console.log(quart);
-            res.json(quart);
+            }
+        ).then(function (quarter){
+            console.log(quarter);
+            res.json(quarter);
         })
     });
-
 
     return router;
 }
