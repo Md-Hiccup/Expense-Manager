@@ -34,13 +34,17 @@ module.exports = function (passport) {
     router.get('/google', passport.authenticate('google', { scope: [ 'profile', 'email' ]}));
 
     router.get('/google/callback', passport.authenticate('google', {
-        //successRedirect : '/profile',
+        //successRedirect : '/auth/profile',
         failureRedirect : '/auth/login'
     }),function (req, res) {
-        res.json('Google Callback');
+        res.redirect('/auth/profile');
     });
 
+    router.get('/profile', function (req, res) {
+        res.render('logout', { user: req.user });
+    })
     router.get('/logout', function (req, res) {
+        req.logout();
         req.session.destroy(function (err) {
             res.redirect('/')
         });

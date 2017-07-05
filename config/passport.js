@@ -3,10 +3,9 @@
 var bCrypt = require('bcrypt-nodejs');
 var configAuth = require('./auth');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+module.exports = function(passport, users, google){
 
-module.exports = function(passport, user, google){
-
-    var User = user;
+    var User = users;
     var Google = google;
     var LocalStrategy = require('passport-local').Strategy;
 
@@ -15,12 +14,12 @@ module.exports = function(passport, user, google){
     });
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        User.findById(id).then(function(user) {
+        User.findById(id).then(function(err, user) {
             if(user){
                 done(null, user.get());
             }
             else{
-                done(user.errors,null);
+                done(null, err);
             }
         });
     });
@@ -74,7 +73,7 @@ module.exports = function(passport, user, google){
             passReqToCallback : true // allows us to pass back the entire request to the callback
         },
         function(req, email, password, done) {
-            var User = user;
+           // var User = user;
             var isValidPassword = function(userpass,password){
                 return bCrypt.compareSync(password, userpass);
             }
@@ -103,28 +102,13 @@ module.exports = function(passport, user, google){
             process.nextTick(function(){
                 //user is not logged in yet
                 if(!req.user) {
-                    console.log('what happen bro !!! 404 : hahaha');
-                    Google.findOne({where : {'id': profile.id}}).then(function (err, user) {
-                        console.log(req.user);
-                        console.log(profile.id);
-                        if (err)
-                            return done(err);
+                    Google.findOne({where : {'id': profile.id}}).then(function (user) {
+                        console.log(user);
                         if (user) {
-                            console.log("(((((((((((((");
-                            console.log(user);
-                            // return done({status : 200});
-                            if(!user.Google.token){
-                                user.Google.token = accessToken;
-                                user.Google.name = profile.displayName;
-                                user.Google.email = profile.emails[0].value;
-                                /* user.save(function(err){
-                                 if(err)
-                                 throw err;
-                                 });*/
-                            }
+                            //  Old User want to login
                             return done(null, user);
-                            // return done('Old User want to login');
                         } else {
+                            //  New User login
                             console.log('new user');
                             var data= {
                                 id : profile.id,
@@ -138,26 +122,14 @@ module.exports = function(passport, user, google){
                                 }
                                 if (newUser) {
                                     return done(null , newUser);
-                                    // return done({status : 200 , id : newUser.id , name : newUser.first_name+" "+newUser.last_name});
                                 }
                             });
                         }
+                    }).catch(function(err){
+                        console.log('something went wrong with google login')
+                        return done({status : 401 , message:'Something went wrong with your Login'});
                     });
                     //user is logged in already, and needs to be merged
-                } else {
-                    console.log("need to be merged");
-                    var user = req.user;
-                    Google.id = profile.id;
-                    Google.token = accessToken;
-                    Google.name = profile.displayName;
-                    Google.email = profile.emails[0].value;
-
-                    /*  user.save(function(err){
-                     if(err)
-                     throw err;
-                     return done(null, user);
-                     });*/
-                    return done('user is already logged in and needs to be merged');
                 }
             });
         }

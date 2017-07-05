@@ -7,14 +7,14 @@ Creating totalExpense by adding Items and Price to get the total estimate cost o
 *check in postman*
 ###### user request
 
-1. **/signup**
+1. **/auth/signup**
 
 - name 
 - email 
 
 - password
 
-2. **/login**
+2. **/auth/login**
 
 - email
 - password
