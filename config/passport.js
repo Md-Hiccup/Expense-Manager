@@ -3,10 +3,13 @@
 var bCrypt = require('bcrypt-nodejs');
 var configAuth = require('./auth');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-module.exports = function(passport, users, google){
+var FacebookStrategy = require('passport-facebook').Strategy;
+
+module.exports = function(passport, users, google, facebook){
 
     var User = users;
     var Google = google;
+    var Facebook = facebook;
     var LocalStrategy = require('passport-local').Strategy;
 
     passport.serializeUser(function(user, done) {
@@ -92,6 +95,7 @@ module.exports = function(passport, users, google){
         }
     ));
 
+    //  GOOGLE LOGIN
     passport.use(new GoogleStrategy({
             clientID: configAuth.googleAuth.clientID,
             clientSecret: configAuth.googleAuth.clientSecret,
@@ -130,6 +134,50 @@ module.exports = function(passport, users, google){
                         return done({status : 401 , message:'Something went wrong with your Login'});
                     });
                     //user is logged in already, and needs to be merged
+                }
+            });
+        }
+    ));
+
+    //  FACEBOOK LOGIN
+    passport.use(new FacebookStrategy({
+            clientID: configAuth.facebookAuth.clientID,
+            clientSecret: configAuth.facebookAuth.clientSecret,
+            callbackURL: configAuth.facebookAuth.callbackURL,
+            profileFields: ['id', 'name','email', 'gender', 'profileUrl'],
+            passReqToCallback: true
+    },
+        function(req, accessToken, refreshToken, profile, done) {
+            process.nextTick(function () {
+                if(!req.user) {
+                console.log(profile);
+                    Facebook.findOne({where: {'id': profile.id}}).then(function (user) {
+                        console.log(user);
+                        console.log(profile);
+                        console.log(accessToken);
+                        if (user) {
+                            //  Old User want to login
+                            console.log('old user');
+                            return done(null, user);
+                        } else {
+                            //  New User login
+                            console.log('new user');
+                            var data = {
+                                id: profile.id,
+                                token: accessToken,
+                                name: profile.name.givenName + ' ' + profile.name.familyName,
+                                email: profile.emails[0].value
+                            };
+                            Facebook.create(data).then(function (newUser, err) {
+                                if (!newUser) {
+                                    return done(null, false);
+                                }
+                                if (newUser) {
+                                    return done(null, newUser);
+                                }
+                            });
+                        }
+                    })
                 }
             });
         }

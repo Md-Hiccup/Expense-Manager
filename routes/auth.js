@@ -40,8 +40,17 @@ module.exports = function (passport) {
         res.redirect('/auth/profile');
     });
 
+    router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+
+    router.get('/facebook/callback', passport.authenticate('facebook', {
+        //successRedirect : '/auth/profile',
+        failureRedirect : '/auth/login'
+    }),function (req, res) {
+        res.redirect('/auth/profile');
+    });
+
     router.get('/profile', function (req, res) {
-        res.render('logout', { user: req.user });
+        res.render('logout');
     })
     router.get('/logout', function (req, res) {
         req.logout();

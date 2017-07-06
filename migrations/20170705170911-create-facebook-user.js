@@ -1,10 +1,10 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('GoogleUsers', {
+    return queryInterface.createTable('FacebookUsers', {
       id: {
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       name: {
         type: Sequelize.STRING
@@ -14,18 +14,10 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       }
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('GoogleUsers');
+    return queryInterface.dropTable('FacebookUsers');
   }
 };

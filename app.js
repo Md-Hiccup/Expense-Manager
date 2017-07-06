@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var session = require('express-session');
 var env = require('dotenv').load();
-
+var flash = require('connect-flash');
 var app = express();
 
 // view engine setup
@@ -30,6 +30,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());   // persistent login sessions
+app.use(flash());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -42,7 +43,7 @@ app.use('/auth', auth);
 var models = require("./models");
 
 //load passport strategies
-require('./config/passport.js')(passport, models.User, models.GoogleUser);
+require('./config/passport.js')(passport, models.User, models.GoogleUser, models.FacebookUser);
 
 //Sync Database   [ for forcefully delete previous value in DB use .sync({force:true}.then(..) ]
 models.sequelize.sync({force: false}).then(function(){
