@@ -4,6 +4,7 @@ var bCrypt = require('bcrypt-nodejs');
 var configAuth = require('./auth');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var jwt = require('jsonwebtoken');
 
 module.exports = function(passport, users, google, facebook){
 
@@ -54,6 +55,8 @@ module.exports = function(passport, users, google, facebook){
                             return done(null, false);
                         }
                         if (newUser) {
+                           // var myToken = jwt.sign({user: newUser.id}, 'secret', { expiresIn: 24 * 60 * 60 });
+                           // res.send(200, {token: myToken, status : 200 , id : newUser.id , name : newUser.name});
                             return done({status : 200 , id : newUser.id , name : newUser.name});
                         }
                     }).catch(function(error) {
@@ -88,7 +91,9 @@ module.exports = function(passport, users, google, facebook){
                     return done({status : 401 , message : 'Incorrect password.'});
                 }
                 var userinfo = user.get();
-                return done({status : 200 , id : userinfo.id , name : userinfo.name});
+                var myToken = jwt.sign({ user: userinfo.id }, 'secret', { expiresIn: 24 * 60 * 60 });
+                //return done({status : 200 , id : userinfo.id , name : userinfo.name});
+                return done({token: myToken, status : 200 , id : userinfo.id , name : userinfo.name});
             }).catch(function(err){
                 return done({status : 401 , message:'Something went wrong with your Login'});
             });

@@ -24,7 +24,7 @@ module.exports = function (passport) {
         res.json('login msg');
     });
 
-    router.post('/login', passport.authenticate('local-login', {
+    router.post('/login', passport.authenticate('local', {
         failWithError: true
     }), function (user, req, res, next) {
         console.log("UserLogin :" + JSON.stringify(user));
@@ -57,6 +57,14 @@ module.exports = function (passport) {
         req.session.destroy(function (err) {
             res.redirect('/')
         });
+    });
+
+    router.get("/user", passport.authenticate('local-login', {
+        session : false
+    }), function(req, res) {
+        //res.send(req.user.id);
+        console.log()
+        res.json({message: "Success! You can not see this without a token"});
     });
 
     return router ;
