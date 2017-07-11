@@ -34,10 +34,10 @@ app.use(flash());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-var routes = require('./routes/index')(passport);
 var auth = require('./routes/auth')(passport);
-app.use('/', routes);
+var routes = require('./routes/index')(passport);
 app.use('/auth', auth);
+app.use('/', routes);
 
 //Models
 var models = require("./models");
