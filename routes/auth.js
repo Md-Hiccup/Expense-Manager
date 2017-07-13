@@ -59,8 +59,8 @@ module.exports = function (passport) {
             res.redirect('/')
         });
     });
+
     router.get("/withouttoken", function(req, res) {
-        //res.send(req.user.id);
         console.log();
         res.json({message: "Success! user without token"});
     });
@@ -89,7 +89,6 @@ module.exports = function (passport) {
     });
 
     router.get("/withtoken", function(req, res) {
-        //res.send(req.user.id);
         console.log();
         res.json({message: "Success! You can not see this without a token"});
     });
