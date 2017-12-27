@@ -1,6 +1,7 @@
 # Expense-Manager
 Creating totalExpense by adding Items and Price to get the total estimate cost of the month. Expense-Manager is build in nodejs with mysql using sequelize.
 
+
 **Set Mysql sql_mode _ONLY_FULL_GROUP_BY = "";_**
 
 ## API Post request
@@ -53,3 +54,4 @@ Creating totalExpense by adding Items and Price to get the total estimate cost o
 
 - uid 
 - quarter
+
