@@ -1,3 +1,39 @@
 .InputItems {
-    padding: 10px 70px;
+    display: block;
+    padding: 10px 20px 10px 10px;
+    text-align: center;
+}
+.InputItems button{
+    /*display: block;*/
+    font: inherit;
+    padding: 5px;
+    margin : 0 5px;
+    border: 1px solid #AA6817;
+    cursor : pointer;
+    outline: none;
+    width:8%;
+}
+.InputItems .Add {
+    background-color: #8F5E1E;
+    padding:9px;
+    color: white;
+}
+.InputItems input{
+    display:inline-block;
+    font-size:15px;
+    margin: 10px;
+}
+.InputItems .Items {
+    padding: 10px 10px 10px 5px;
+    width:30%;
+}
+.InputItems .Price {
+    padding: 10px 10px 10px 5px;
+    width:10%;
+}
+.InputItems input::-webkit-outer-spin-button,
+.InputItems input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }

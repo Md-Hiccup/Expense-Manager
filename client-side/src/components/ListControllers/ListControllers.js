@@ -1,15 +1,29 @@
 import React from 'react';
 
 import InputItems from './InputItems/InputItems';
-import ListItems from '../ListItems/ListItems';
+// import ListItem from './ListItems/ListItem/ListItem';
 
-const ListControllers = () => {
+const ListControllers = (props) => {
+
     return (
         <div>
-            <InputItems/>
-            <ListItems/>
+            <InputItems
+                itemList ={(items) => {props.itemList(items)}}
+                addItem={props.addItem}
+                reset = {props.reset}
+                inputChanged = {props.inputChanged}
+            />
+            {/*{list}*/}
+           {/*<ListItems
+                itemName= {props.items}
+                price = {props.price}
+           />*/}
         </div>
     )
 };
 
 export default ListControllers;
+
+/*
+items = {props.items}
+price = {props.price}*/
