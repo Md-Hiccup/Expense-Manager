@@ -1,12 +1,13 @@
 import React, {Component } from 'react';
 
 import Aux from '../../hoc/Aux';
+import ListControllers from '../../components/ListControllers/ListControllers';
 
 class ExpenseManager extends Component {
     render() {
         return (
             <Aux>
-                <div></div>
+                <ListControllers />
             </Aux>
         );
     }
