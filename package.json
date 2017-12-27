@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "concurrently \"nodemon ./bin/www\"  \"cd client-side && npm start\""
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.16.0",
+    "concurrently": "^3.5.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
