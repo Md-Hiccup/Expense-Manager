@@ -2,7 +2,9 @@
 Creating totalExpense by adding Items and Price to get the total estimate cost of the month. Expense-Manager is build in nodejs with mysql using sequelize.
 
 
-**Set Mysql sql_mode _ONLY_FULL_GROUP_BY = "";_**
+**SET Mysql sql_mode _ONLY_FULL_GROUP_BY = "";_**
+
+**SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));**
 
 ## API Post request
 *check in postman*
@@ -70,12 +72,12 @@ Creating totalExpense by adding Items and Price to get the total estimate cost o
 
 - sequelize model:generate --name User --attributes firstName:string, lastName:string, email:string
     - create a model file User in models folder
-    - create a migration file with name like *****-create-user.js in migration folder
+    - create a migration file with name like xxxxxx-create-user.js in migration folder
     
 3. **Running Migrations**
     
 - sequelize db:migrate
-    - it create a table called USers with all columns as specified in migration file
+    - it create a table called Users with all columns as specified in migration file
     
 4. **Undoing Migrations**
 
@@ -85,7 +87,7 @@ Creating totalExpense by adding Items and Price to get the total estimate cost o
 5. **Creating First Seed**
 
 - sequelize seed:generate --name demo-user
-    - it will create seed file(like ******-demo-user.js) in seeders folder. It follows up/down semantics .
+    - it will create seed file(like xxxxxx-demo-user.js) in seeders folder. It follows up/down semantics .
     
 6. **Running Seeds**
 

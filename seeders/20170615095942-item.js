@@ -11,6 +11,8 @@ module.exports = {
     return queryInterface.bulkInsert('Items', [{
         name: 'Mobile',
         price: 8000,
+        dates: new Date(),
+        UserId: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       }], {});

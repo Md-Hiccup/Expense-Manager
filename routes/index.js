@@ -11,35 +11,55 @@ module.exports = function (passport) {
     });
 
     router.post('/addItems', function (req, res) {
-        db.Item.bulkCreate([
-            {name:req.body.name, price: req.body.price, UserId : req.body.uid, dates: req.body.dates}
-            //{name:'HeadPhones', price: 600, UserId : 1}
-        ]).then(function(){
-            return db.Item.findAll({ where : {UserID : req.body.uid }});
-        }).then(function(results){
-            res.json(results);
-        })
+        db.sequelize.query('Select id from Users where id = ?',
+        {
+            replacements:[req.body.uid], type: db.sequelize.QueryTypes.SELECT
+        }).then(function (userID) {
+           if(userID[0] !== undefined){
+               console.log(userID[0]);
+               db.Item.create(
+                   {name:req.body.name, price: req.body.price, UserId : req.body.uid, dates: req.body.dates}
+                   //{name:'HeadPhones', price: 600, UserId : 1, dates: 2017-12-27}
+               )
+               .then(function(results){
+                   console.log(results);
+                   res.json({Items:results , message: 'item added successfully'});
+               });
+           }else{
+               res.json({message: 'enter valid user id'})
+           }
+       });
     });
 
     router.post('/itemList', function(req, res) {
         db.User.findAll({
             include: [{
                 model: db.Item,
-                //attributes : [ [ db.sequelize.fn('SUM', db.sequelize.col('price')), 'total']],
+                // attributes : [ [ db.sequelize.fn('SUM', db.sequelize.col('price')), 'total']],
                 where: { UserId: req.body.uid }
                 //  groupBy : [ 'UserId']
             }]
+            //{ uid : 1}
         }).then(function (result) {
-            res.json(result);
-        }).catch(console.error);
+            console.log(result[0]);
+            if(result[0] !== undefined)
+                res.json(result);
+            else
+                res.json({message:'user id is not valid'});
+        })
     });
 
     router.post('/totalPrice', function(req, res) {
         db.Item.findAll({
             where: {UserId: req.body.uid},
             attributes: ['UserId', [db.sequelize.fn('SUM', db.sequelize.col('price')), 'totalPrice']]
-        }).then(function (result) {
-            res.json(result);
+            //{ uid : 1}
+        }).then(function (total) {
+            console.log(total[0].dataValues.UserId);
+            if(total[0].dataValues.UserId)
+                res.json(total);
+            else
+                res.json({message: 'user Is not valid'})
         });
     });
 
@@ -48,8 +68,13 @@ module.exports = function (passport) {
             where: {UserId: req.body.uid , dates : req.body.dates},
             attributes: ['UserId', [db.sequelize.fn('dayname', db.sequelize.col('dates')),'day'],
                 [db.sequelize.fn('SUM', db.sequelize.col('price')), 'totalPrice']]
-        }).then(function (result) {
-            res.json(result);
+            //{ uid : 1, dates: 2017-12-27}
+        }).then(function (daily) {
+            console.log(daily);
+            if(daily[0].dataValues.day)
+                res.json(daily);
+            else
+                res.json({message: 'nothing bought'});
         });
     });
 
@@ -58,8 +83,14 @@ module.exports = function (passport) {
             ' where month(dates)= ? AND UserId = ? ',
             {   replacements: [req.body.month, req.body.uid], type: db.sequelize.QueryTypes.SELECT
             }
-        ).then(function (items) {
-            res.json(items);
+            //{ uid : 1, month: 2017-12-27}
+        ).then(function (monthly){
+            console.log(monthly);
+            console.log(monthly[0].UserId);
+            if(monthly[0].month)
+                res.json(monthly);
+            else
+                res.json({message: "user didn't buy things in this month"});
         });
     });
 
@@ -69,9 +100,13 @@ module.exports = function (passport) {
             {
                 replacements:[ req.body.week ,req.body.uid], type: db.sequelize.QueryTypes.SELECT
             }
-        ).then(function (tot) {
-            console.log(tot);
-            res.json(tot);
+            // {week : 52, uid: 1}
+        ).then(function (week) {
+            console.log(week);
+            if(week[0].week)
+                res.json(week);
+            else
+                res.json({message:'no items bought on this week'});
         })
     });
 
@@ -81,10 +116,14 @@ module.exports = function (passport) {
             {
                 replacements : [req.body.quarter, req.body.uid], type: db.sequelize.QueryTypes.SELECT
             }
+            // {quarter: 4, uid: 1}
         ).then(function (quarter){
             console.log(quarter);
-            res.json(quarter);
-        })
+                if(quarter[0].quarter)
+                    res.json(quarter);
+                else
+                    res.json({message: 'quarter should be 1, 2, 3, 4'});
+            })
     });
 
     return router;
