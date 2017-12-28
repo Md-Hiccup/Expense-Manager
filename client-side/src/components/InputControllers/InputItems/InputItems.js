@@ -1,11 +1,11 @@
 import React from 'react';
 
 import classes from './InputItems.css';
+import Button from '../Button/Button';
 
 const InputItems = (props) => {
     return (
         <div className={classes.InputItems}>
-            <h3>Months</h3>
             <form>
                 <input
                     className={classes.Items}
@@ -21,10 +21,7 @@ const InputItems = (props) => {
                     value={props.itemList.price}
                     onChange={props.inputChanged}
                     placeholder="$ Price"/>
-                <button
-                    className={classes.Add}
-                    onClick={props.addItem}
-                >ADD</button>
+                <Button btnType='Add' clicked={props.addItem}>ADD</Button>
             </form>
         </div>
     )

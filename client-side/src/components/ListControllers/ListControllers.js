@@ -1,29 +1,21 @@
 import React from 'react';
 
-import InputItems from './InputItems/InputItems';
-// import ListItem from './ListItems/ListItem/ListItem';
+import ListItems from './ListItems/ListItems';
 
-const ListControllers = (props) => {
-
+const listControllers = (props) => {
+    let totalItems = Object.keys(props.listOfItem)
+    .map((num) => {
+        return [...Array(props.listOfItem[num])].map((dd,i)=> {
+            return <ListItems key={num+i} type={dd.items} value={dd.price}/>
+            })
+        })
     return (
         <div>
-            <InputItems
-                itemList ={props.itemList}
-                inputChanged = {props.inputChanged}
-                addItem={props.addItem}
-                reset = {props.reset}
-            />
-            {/*{list}*/}
-           {/*<ListItems
-                itemName= {props.items}
-                price = {props.price}
-           />*/}
+            <ul>
+                {totalItems}
+            </ul>
         </div>
     )
 };
 
-export default ListControllers;
-
-/*
-items = {props.items}
-price = {props.price}*/
+export default listControllers;

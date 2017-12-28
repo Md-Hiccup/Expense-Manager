@@ -2,18 +2,12 @@ import React from 'react';
 
 import ListItem from './ListItem/ListItem';
 
-const ListItems = (props) => {
+const listItems = (props) => {
     return (
         <div>
-            {props.itemName.map(itemList => (
-                <ListItem
-                    itemName={itemList.items}
-                    priceOfItem = {itemList.price}
-
-                />
-            ))}
+            <ListItem itemName={props.type} itemPrice={props.value}/>
         </div>
     )
 };
 
-export default ListItems;
+export default listItems;

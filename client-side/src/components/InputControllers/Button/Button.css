@@ -1,0 +1,14 @@
+.Button {
+    font: inherit;
+    padding: 5px;
+    margin : 0 5px;
+    border: 1px solid #AA6817;
+    cursor : pointer;
+    outline: none;
+    width:8%;
+}
+.Add {
+    background-color: #8F5E1E;
+    padding: 9px;
+    color: white;
+}
