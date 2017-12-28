@@ -8,10 +8,10 @@ const ListControllers = (props) => {
     return (
         <div>
             <InputItems
-                itemList ={(items) => {props.itemList(items)}}
+                itemList ={props.itemList}
+                inputChanged = {props.inputChanged}
                 addItem={props.addItem}
                 reset = {props.reset}
-                inputChanged = {props.inputChanged}
             />
             {/*{list}*/}
            {/*<ListItems

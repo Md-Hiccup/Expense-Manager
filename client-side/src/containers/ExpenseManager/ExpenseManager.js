@@ -22,19 +22,25 @@ class ExpenseManager extends Component {
     };
     addItemHandler = (event) => {
         let list = {...this.state.itemList};
-        alert('Item : ' + list.items+'\nPrice : '+list.price);
+
+        alert('Item : ' + list.items+'\nPrice : '+list.price +"\nAdded Successfully");
         event.preventDefault();
         this.setState({itemList: list});
         console.log(list);
+        this.emptyInput(list);
     };
-
+    emptyInput(list){
+        list.items='';
+        list.price='';
+        this.setState({itemList: list});
+    }
     render() {
         return (
             <Aux>
                 <ListControllers
                     itemList = {this.state.itemList}
-                    addItem={this.addItemHandler}
                     inputChanged = {this.InputHandler}
+                    addItem={this.addItemHandler}
                     reset = {this.resetHandler}
                 />
             </Aux>
