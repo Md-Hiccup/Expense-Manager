@@ -5,13 +5,20 @@ import InputControllers from '../../components/InputControllers/InputControllers
 import ListControllers from '../../components/ListControllers/ListControllers';
 
 class ExpenseManager extends Component {
-    state = {
-        itemList: {
-            items: 'ColdCoffee',
-            price: '10',
-        },
-        allList: [] ,
-        count : 0,
+    constructor(){
+        super();
+        const date = new Date(),
+            today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+
+        this.state = {
+            itemList: {
+                items: 'ColdCoffee',
+                price: '10',
+            },
+            allList: [],
+            count: 0,
+            todaysDate: today
+        }
     };
     InputHandler = (event) => {
         const value = event.target.value;
@@ -54,6 +61,7 @@ class ExpenseManager extends Component {
                     itemList = {this.state.itemList}
                     inputChanged = {this.InputHandler}
                     addItem={this.addItemHandler}
+                    today = {this.state.todaysDate}
                 />
                 <ListControllers
                     listOfItem = {this.state.allList}

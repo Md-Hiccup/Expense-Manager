@@ -1,13 +1,15 @@
 import React from 'react';
 
 import InputItems from './InputItems/InputItems';
+import Month from './Month/Month';
 import classes from './InputControllers.css';
+
 
 const inputControllers = (props) => {
 
     return (
         <div className={classes.InputControllers}>
-            <h3>Months</h3>
+            <Month today = {props.today}/>
             <InputItems
                 itemList ={props.itemList}
                 inputChanged = {props.inputChanged}
