@@ -8,6 +8,7 @@ var passport = require('passport');
 var session = require('express-session');
 var env = require('dotenv').load();
 var flash = require('connect-flash');
+var cors = require('cors');
 var app = express();
 
 // view engine setup
@@ -33,6 +34,9 @@ app.use(passport.session());   // persistent login sessions
 app.use(flash());
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+// allowing cross origin resource sharing permission
+app.use(cors());
 
 var auth = require('./routes/auth')(passport);
 var routes = require('./routes/index')(passport);

@@ -1,6 +1,7 @@
 import React, {Component } from 'react';
+import axios from 'axios';
 
-import Aux from '../../hoc/Aux';
+import Aux from '../../hoc/Aux/Aux';
 import InputControllers from '../../components/InputControllers/InputControllers';
 import ListControllers from '../../components/ListControllers/ListControllers';
 
@@ -31,7 +32,7 @@ class ExpenseManager extends Component {
     };
     addItemHandler = (event) => {
         let list = {...this.state.itemList};
-        alert('Item : ' + list.items+'\nPrice : '+list.price +"\nAdded Successfully");
+        // alert('Item : ' + list.items+'\nPrice : '+list.price +"\nAdded Successfully");
         event.preventDefault();
         this.setState({itemList: list});
         this.showList(list);
@@ -53,6 +54,31 @@ class ExpenseManager extends Component {
         list.price='';
         this.setState({itemList: list});
     }
+
+    saveItemsHandler = () => {
+        const data = {
+            name:'Cold Cold Coffee',
+            price:10,
+            uid: 1,
+            dates: '2017-12-30'
+        };
+        // axios.get('https://localhost:3005/')
+        //     .then(res => {
+        //         console.log(res);
+        //     });
+        // alert(Object.keys(data).map(d => {
+        //     console.log(d)
+        // }));
+        axios.post('http://localhost:3005/addItems',data)
+            .then(res => {
+                console.log(res);
+                alert(res);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+
     render() {
         // console.log(this.state.allList);
         return (
@@ -62,6 +88,7 @@ class ExpenseManager extends Component {
                     inputChanged = {this.InputHandler}
                     addItem={this.addItemHandler}
                     today = {this.state.todaysDate}
+                    saveItem = {this.saveItemsHandler}
                 />
                 <ListControllers
                     listOfItem = {this.state.allList}

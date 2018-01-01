@@ -14,7 +14,6 @@ Creating totalExpense by adding Items and Price to get the total estimate cost o
 
 - name 
 - email 
-
 - password
 
 2. **/auth/login**

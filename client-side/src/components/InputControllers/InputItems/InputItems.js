@@ -6,7 +6,7 @@ import Button from '../Button/Button';
 const InputItems = (props) => {
     return (
         <div className={classes.InputItems}>
-            <form>
+            {/*<form onSubmit={props.saveItem}>*/}
                 <input
                     className={classes.Items}
                     type="text"
@@ -22,7 +22,8 @@ const InputItems = (props) => {
                     onChange={props.inputChanged}
                     placeholder="$ Price"/>
                 <Button btnType='Add' clicked={props.addItem}>ADD</Button>
-            </form>
+                <Button btnType='Save' clicked = {props.saveItem}>SAVE</Button>
+            {/*</form>*/}
         </div>
     )
 };
