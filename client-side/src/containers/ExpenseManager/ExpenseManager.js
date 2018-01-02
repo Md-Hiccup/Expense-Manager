@@ -47,7 +47,6 @@ class ExpenseManager extends Component {
         };
         count = count+1;
         this.setState({allList: allItem, count : count});
-        console.log(allItem);
     }
     emptyInput(list){
         list.items='';
@@ -56,10 +55,22 @@ class ExpenseManager extends Component {
     }
 
     saveItemsHandler = () => {
-        axios.post('/addItems', Object.keys(this.state.allList))
+        const items = {...this.state.allList};
+        const saveItem = Object.keys(items).map(il => {
+            // console.log(items[il]);
+            const data = {
+                uid: 1,
+                name: items[il].items,
+                price: items[il].price,
+                dates: '2018-1-2'
+            };
+            return data;
+        });
+        console.log('saveItem', saveItem);
+        axios.post('/addItems', saveItem[0])
             .then(res => {
-                console.log(res.data);
-                // console.log(res);
+                // console.log(saveItem);
+                alert(Object.values(res.data));
                 return res
             })
             .catch(err => {
@@ -68,7 +79,6 @@ class ExpenseManager extends Component {
     };
 
     render() {
-        // console.log(this.state.allList);
         return (
             <Aux>
                 <InputControllers

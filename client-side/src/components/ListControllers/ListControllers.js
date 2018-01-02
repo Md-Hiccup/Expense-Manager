@@ -7,7 +7,7 @@ const listControllers = (props) => {
     let totalItems = Object.keys(props.listOfItem)
     .map((num) => {
         return [...Array(props.listOfItem[num])].map((dd,i)=> {
-            return <ListItems key={i} type={dd.name} value={dd.price}/>
+            return <ListItems key={i} type={dd.items} value={dd.price}/>
             })
         });
     return (

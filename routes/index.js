@@ -17,10 +17,10 @@ module.exports = function (passport) {
         }).then(function (userID) {
            if(userID[0] !== undefined){
                console.log(userID[0]);
-               db.Item.create(
+               db.Item.bulkCreate([
                    {name:req.body.name, price: req.body.price, UserId : req.body.uid, dates: req.body.dates}
                    //{name:'HeadPhones', price: 600, UserId : 1, dates: 2017-12-27}
-               )
+               ])
                .then(function(results){
                    console.log(results);
                    res.json({Items:results , message: 'item added successfully'});
