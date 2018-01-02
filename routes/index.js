@@ -30,13 +30,12 @@ module.exports = function (passport) {
            }
        });
     });
-
-    router.post('/itemList', function(req, res) {
+    router.get('/itemList', function (req, res){
         db.User.findAll({
             include: [{
                 model: db.Item,
                 // attributes : [ [ db.sequelize.fn('SUM', db.sequelize.col('price')), 'total']],
-                where: { UserId: req.body.uid }
+                where: { UserId: req.query.uid }
                 //  groupBy : [ 'UserId']
             }]
             //{ uid : 1}
@@ -49,9 +48,9 @@ module.exports = function (passport) {
         })
     });
 
-    router.post('/totalPrice', function(req, res) {
+    router.get('/totalPrice', function(req, res) {
         db.Item.findAll({
-            where: {UserId: req.body.uid},
+            where: {UserId: req.query.uid},
             attributes: ['UserId', [db.sequelize.fn('SUM', db.sequelize.col('price')), 'totalPrice']]
             //{ uid : 1}
         }).then(function (total) {
@@ -63,9 +62,9 @@ module.exports = function (passport) {
         });
     });
 
-    router.post('/dailyExp', function (req, res) {
+    router.get('/dailyExp', function (req, res) {
         db.Item.findAll({
-            where: {UserId: req.body.uid , dates : req.body.dates},
+            where: {UserId: req.query.uid , dates : req.query.dates},
             attributes: ['UserId', [db.sequelize.fn('dayname', db.sequelize.col('dates')),'day'],
                 [db.sequelize.fn('SUM', db.sequelize.col('price')), 'totalPrice']]
             //{ uid : 1, dates: 2017-12-27}
@@ -78,10 +77,10 @@ module.exports = function (passport) {
         });
     });
 
-    router.post('/monthlyExp', function (req, res) {
+    router.get('/monthlyExp', function (req, res) {
         db.sequelize.query('select UserId, monthname(dates) as month, sum(price) as totalPrice from Items' +
             ' where month(dates)= ? AND UserId = ? ',
-            {   replacements: [req.body.month, req.body.uid], type: db.sequelize.QueryTypes.SELECT
+            {   replacements: [req.query.month, req.query.uid], type: db.sequelize.QueryTypes.SELECT
             }
             //{ uid : 1, month: 2017-12-27}
         ).then(function (monthly){
@@ -94,11 +93,11 @@ module.exports = function (passport) {
         });
     });
 
-    router.post('/weeklyExp', function (req, res) {
+    router.get('/weeklyExp', function (req, res) {
         db.sequelize.query('select week(dates) as week, sum(price) as weeklyExp from Items ' +
             ' where week(dates) = ? AND UserId = ?',
             {
-                replacements:[ req.body.week ,req.body.uid], type: db.sequelize.QueryTypes.SELECT
+                replacements:[ req.query.week ,req.query.uid], type: db.sequelize.QueryTypes.SELECT
             }
             // {week : 52, uid: 1}
         ).then(function (week) {
@@ -110,11 +109,11 @@ module.exports = function (passport) {
         })
     });
 
-    router.post('/quarterExp', function (req, res) {
+    router.get('/quarterExp', function (req, res) {
         db.sequelize.query('select quarter(dates) as quarter, sum(price) as QuarterExp from Items where ' +
             ' quarter(dates) = ? AND UserId = ?',
             {
-                replacements : [req.body.quarter, req.body.uid], type: db.sequelize.QueryTypes.SELECT
+                replacements : [req.query.quarter, req.query.uid], type: db.sequelize.QueryTypes.SELECT
             }
             // {quarter: 4, uid: 1}
         ).then(function (quarter){

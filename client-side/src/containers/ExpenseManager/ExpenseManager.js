@@ -56,23 +56,17 @@ class ExpenseManager extends Component {
     }
 
     saveItemsHandler = () => {
-        const data = {
-            name:'Cold Cold Coffee',
-            price:10,
-            uid: 1,
-            dates: '2017-12-30'
-        };
-        // axios.get('https://localhost:3005/')
-        //     .then(res => {
-        //         console.log(res);
-        //     });
-        // alert(Object.keys(data).map(d => {
-        //     console.log(d)
-        // }));
-        axios.post('http://localhost:3005/addItems',data)
+        // const data = {
+        //     name:'Coffee',
+        //     price:10,
+        //     uid: 1,
+        //     dates: '2018-1-2'
+        // };
+
+        axios.post('/addItems', this.state.allList)
             .then(res => {
                 console.log(res);
-                alert(res);
+                return res
             })
             .catch(err => {
                 console.log(err);
