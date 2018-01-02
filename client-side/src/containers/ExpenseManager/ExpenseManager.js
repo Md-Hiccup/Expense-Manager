@@ -56,16 +56,10 @@ class ExpenseManager extends Component {
     }
 
     saveItemsHandler = () => {
-        // const data = {
-        //     name:'Coffee',
-        //     price:10,
-        //     uid: 1,
-        //     dates: '2018-1-2'
-        // };
-
-        axios.post('/addItems', this.state.allList)
+        axios.post('/addItems', Object.keys(this.state.allList))
             .then(res => {
-                console.log(res);
+                console.log(res.data);
+                // console.log(res);
                 return res
             })
             .catch(err => {
