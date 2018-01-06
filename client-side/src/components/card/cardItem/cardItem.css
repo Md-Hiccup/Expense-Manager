@@ -9,12 +9,30 @@
     display:flex;
     justify-content: space-between;
 }
-.Close {
+.Button {
+    display:flex;
+    justify-content: flex-end;
+}
+.Button .Close {
     background-color: #7B1113;
     padding: 9px ;
     color: white ;
     margin : 0 5px;
     cursor : pointer;
     outline: none;
-    width:5%;
+}
+.Button .Upd {
+    background-color: #3d7359;
+    padding: 9px ;
+    color: white ;
+    margin : 0 5px;
+    cursor : pointer;
+    outline: none;
+}
+.Inp {
+    display:inline-block;
+    font-size:15px;
+    padding: 10px;
+    margin-left: 10px;
+    width: 35%;
 }

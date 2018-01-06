@@ -1,7 +1,7 @@
 import React from 'react';
 
 import classes from './card.css';
-import Button  from '../../components/InputControllers/Button/Button';
+import CardItem from './cardItem/cardItem';
 
 const card = (props) => {
     const allItem = [];
@@ -16,12 +16,13 @@ const card = (props) => {
     }
     const itemsListOutput = allItem.map(il => {
         return (
-            <div
-                className={classes.Card}
-               key={il.id}>
-                <p>{il.itemName} : {il.itemPrice}</p>
-                <button className={classes.Clear} onClick= {props.deleteItem} id={il.id}>X</button>
-            </div>
+            <CardItem
+                key = {il.id}
+                items={il}
+                deleteItem={props.deleteItem}
+                changedInputItem={props.changedInputItem}
+                updateItem = {props.updateItem}
+            />
         )
     });
     return (

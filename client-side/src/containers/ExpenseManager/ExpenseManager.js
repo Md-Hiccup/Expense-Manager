@@ -13,7 +13,7 @@ class ExpenseManager extends Component {
 
         this.state = {
             itemList: {
-                items: 'ColdCoffeeiyaaa',
+                items: 'ColdCoffe',
                 price: '10',
             },
             allList: [],
@@ -74,7 +74,7 @@ class ExpenseManager extends Component {
             axios.post('/addItems', saveItem[item])
                 .then(res => {
                     // console.log(saveItem);
-                    alert(Object.values(res.data));
+                    alert(Object.values(saveItem[item]));
                     return res
                 })
                 .catch(err => {
@@ -103,7 +103,3 @@ class ExpenseManager extends Component {
 }
 
 export default ExpenseManager;
-
-/*
- items = {this.state.items}
- price = {this.state.price}*/

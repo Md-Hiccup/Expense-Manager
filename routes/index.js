@@ -40,7 +40,6 @@ module.exports = function (passport) {
             }]
             //{ uid : 1}
         }).then(function (result) {
-            console.log(result[0]);
             if(result[0] !== undefined)
                 res.json(result);
             else
@@ -135,6 +134,17 @@ module.exports = function (passport) {
                 res.json({ status:  400 ,message: 'error in deleting an item'});
             }
         })
-    })
+    });
+
+    router.put('/updateItems', function (req, res) {
+        db.Item.update(
+            {   name : req.body.name, price: req.body.price},
+            {   where: { id : req.body.id}  }
+        )
+            .then(function (result) {
+                // console.log('result ',result);
+                res.json({ message: result})
+            })
+    });
     return router;
 }
