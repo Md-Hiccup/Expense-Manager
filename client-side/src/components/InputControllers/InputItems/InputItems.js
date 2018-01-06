@@ -23,6 +23,8 @@ const InputItems = (props) => {
                     placeholder="$ Price"/>
                 <Button btnType='Add' clicked={props.addItem}>ADD</Button>
                 <Button btnType='Save' clicked = {props.saveItem}>SAVE</Button>
+                <Button btnType='Clear' clicked={props.clearItem}>Clear</Button>
+
             {/*</form>*/}
         </div>
     )

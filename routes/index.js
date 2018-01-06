@@ -125,5 +125,16 @@ module.exports = function (passport) {
             })
     });
 
+    router.delete('/deleteItems', function (req, res) {
+        db.Item.destroy({
+            where: { UserId: req.query.uid,  id: req.query.id   },
+        }).then(del => {
+            if(del !== 0 || del === undefined){
+                res.json({ status: 200 ,message: 'Successfully deleted'});
+            } else {
+                res.json({ status:  400 ,message: 'error in deleting an item'});
+            }
+        })
+    })
     return router;
 }

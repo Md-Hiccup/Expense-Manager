@@ -15,6 +15,7 @@ const inputControllers = (props) => {
                 inputChanged = {props.inputChanged}
                 addItem={props.addItem}
                 saveItem={props.saveItem}
+                clearItem = {props.clearItem}
             />
         </div>
     )

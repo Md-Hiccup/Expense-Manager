@@ -1,0 +1,20 @@
+.Card {
+    width: 80%;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 3px #ccc;
+    padding: 10px;
+    margin: 10px auto;
+    box-sizing: border-box;
+    text-transform: capitalize;
+    display:flex;
+    justify-content: space-between;
+}
+.Clear {
+    background-color: #7B1113;
+    padding: 9px ;
+    color: white ;
+    margin : 0 5px;
+    cursor : pointer;
+    outline: none;
+    width:5%;
+}

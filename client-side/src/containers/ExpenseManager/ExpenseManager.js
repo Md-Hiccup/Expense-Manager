@@ -13,7 +13,7 @@ class ExpenseManager extends Component {
 
         this.state = {
             itemList: {
-                items: 'ColdCoffee',
+                items: 'ColdCoffeeiyaaa',
                 price: '10',
             },
             allList: [],
@@ -53,7 +53,9 @@ class ExpenseManager extends Component {
         list.price='';
         this.setState({itemList: list});
     }
-
+    clearItemHandler = () => {
+        this.setState({allList: []});
+    };
     saveItemsHandler = () => {
         const items = {...this.state.allList};
         const saveItem = Object.keys(items).map(il => {
@@ -67,15 +69,18 @@ class ExpenseManager extends Component {
             return data;
         });
         console.log('saveItem', saveItem);
-        axios.post('/addItems', saveItem[0])
-            .then(res => {
-                // console.log(saveItem);
-                alert(Object.values(res.data));
-                return res
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        for(let item in saveItem){
+            console.log('item ',item);
+            axios.post('/addItems', saveItem[item])
+                .then(res => {
+                    // console.log(saveItem);
+                    alert(Object.values(res.data));
+                    return res
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
     };
 
     render() {
@@ -87,6 +92,7 @@ class ExpenseManager extends Component {
                     addItem={this.addItemHandler}
                     today = {this.state.todaysDate}
                     saveItem = {this.saveItemsHandler}
+                    clearItem = {this.clearItemHandler}
                 />
                 <ListControllers
                     listOfItem = {this.state.allList}

@@ -17,3 +17,21 @@
     padding: 9px ;
     color: white ;
 }
+.Clear {
+    background-color: #7B1113;
+    padding: 9px ;
+    color: white ;
+}
+.List {
+    background-color: aquamarine;
+    color: black;
+    padding:15px;
+    width: 15%;
+}
+.Update {
+    background-color: #3d7359 ;
+    padding: 15px ;
+    color: white ;
+    justify-content:flex-end  ;
+    width: 15%;
+}
