@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import axios from '../../axios-orders';
 
 import classes from './AllItems.css';
-import Card from '../../components/card/card';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import Button from '../../components/InputControllers/Button/Button';
+import List from '../../components/List/List';
 import TotalPrice from '../../components/TotalPrice/TotalPrice';
 
 class AllItems extends Component {
@@ -15,7 +15,8 @@ class AllItems extends Component {
             all : [],
             totalPrice: [],
             content: true,
-            show: false
+            showList: false,
+            showPrice: false
         };
     }
     InputItemHandler = (event) => {
@@ -70,7 +71,8 @@ class AllItems extends Component {
                         id: key
                     });
                 }
-                this.setState({all: fetchLists});
+                this.setState({all: fetchLists, showList: !this.state.showList});
+                console.log('all',fetchLists);
             })
             .catch(err => {
                 // console.log(err);
@@ -96,11 +98,9 @@ class AllItems extends Component {
     totalPriceHandler = () => {
         axios('/totalPrice?uid=1')
             .then(total => {
-                console.log(total);
-                this.setState({totalPrice: total.data[0], show : true});
-                console.log(this.state.totalPrice)
+                this.setState({totalPrice: total.data[0], showPrice : !this.state.showPrice});
             })
-    }
+    };
     render (){
         return (
             <div>
@@ -109,19 +109,16 @@ class AllItems extends Component {
                     <Button btnType="List" clicked={this.totalPriceHandler}>TotalPrice</Button>
                     <Button btnType="Update" clicked={this.updateAllHandler}>Update</Button>
                 </div>
-                <div>
-                    {this.state.all.map(list => {
-                        return <Card
-                            key = {list.id}
-                            items={list.Items}
-                            deleteItem={this.deleteItemHandler}
-                            changedInputItem={this.InputItemHandler}
-                            updateItem = {this.updateAllHandler}
-                        />
-                    })
-                    }
-                </div>
-                {this.state.show ? <TotalPrice totalPrice={this.state.totalPrice.totalPrice}/> : null}
+
+                {this.state.showList ?
+                    <List
+                        deleteItem={this.deleteItemHandler}
+                        changedInputItem={this.InputItemHandler}
+                        updateItem = {this.updateAllHandler}
+                        all = {this.state.all}
+                    />: null}
+
+                {this.state.showPrice ? <TotalPrice totalPrice={this.state.totalPrice.totalPrice} /> : null}
             </div>
         )
     }

@@ -1,30 +1,37 @@
 import React, {Component } from 'react';
 import axios from 'axios';
+import moment from 'moment';
 
 import Aux from '../../hoc/Aux/Aux';
 import InputControllers from '../../components/InputControllers/InputControllers';
 import ListControllers from '../../components/ListControllers/ListControllers';
 
+
 class ExpenseManager extends Component {
     constructor(){
         super();
-        const date = new Date(),
-            today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+        // const date = new Date(),
+            // today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
 
         this.state = {
             itemList: {
                 items: 'ColdCoffe',
                 price: '10',
             },
+            date: moment(),
             allList: [],
             count: 0,
-            todaysDate: today
         }
     };
+    InputDate = (date) => {
+        console.log('date', date);
+        this.setState({date : date})
+    };
     InputHandler = (event) => {
+        // console.log('event', event);
         const value = event.target.value;
         const name = event.target.name;
-        var list = {...this.state.itemList};
+        const list = {...this.state.itemList};
         list[name]=value;
         this.setState({
             itemList:list
@@ -39,11 +46,12 @@ class ExpenseManager extends Component {
         this.emptyInput(list);
     };
     showList(list){
+        // console.log('showList', list);
         let count = this.state.count;
         const allItem = {...this.state.allList};
         allItem[count] = {
             items: list.items,
-            price: list.price
+            price: list.price,
         };
         count = count+1;
         this.setState({allList: allItem, count : count});
@@ -58,19 +66,20 @@ class ExpenseManager extends Component {
     };
     saveItemsHandler = () => {
         const items = {...this.state.allList};
+        const date = {...this.state.date};
         const saveItem = Object.keys(items).map(il => {
             // console.log(items[il]);
             const data = {
                 uid: 1,
                 name: items[il].items,
                 price: items[il].price,
-                dates: '2018-1-2'
+                dates: moment(date).format('YYYY-MM-DD')
             };
             return data;
         });
         console.log('saveItem', saveItem);
         for(let item in saveItem){
-            console.log('item ',item);
+            // console.log('item ',item);
             axios.post('/addItems', saveItem[item])
                 .then(res => {
                     // console.log(saveItem);
@@ -86,11 +95,15 @@ class ExpenseManager extends Component {
     render() {
         return (
             <Aux>
+                <div style={{textAlign: 'center'}}>
+
+                </div>
                 <InputControllers
                     itemList = {this.state.itemList}
+                    today = {this.state.date}
                     inputChanged = {this.InputHandler}
+                    inputDate = {this.InputDate}
                     addItem={this.addItemHandler}
-                    today = {this.state.todaysDate}
                     saveItem = {this.saveItemsHandler}
                     clearItem = {this.clearItemHandler}
                 />

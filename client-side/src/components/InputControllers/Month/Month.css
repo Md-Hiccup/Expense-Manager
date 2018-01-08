@@ -1,0 +1,10 @@
+.Date {
+    background-color: aquamarine;
+    color: black;
+    padding:15px;
+    width: 100%;
+    border: 1px solid red;
+    cursor : pointer;
+    outline: none;
+    margin: 20px;
+}

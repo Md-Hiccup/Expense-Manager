@@ -2,28 +2,39 @@ import React from 'react';
 
 import classes from './InputItems.css';
 import Button from '../Button/Button';
+import Month from '../Month/Month';
+import DatePicker from 'react-datepicker';
+
+import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 
 const InputItems = (props) => {
     return (
         <div className={classes.InputItems}>
             {/*<form onSubmit={props.saveItem}>*/}
-                <input
-                    className={classes.Items}
-                    type="text"
-                    name="items"
-                    value={props.itemList.items}
-                    onChange={props.inputChanged}
-                    placeholder="Enter Items"/>
-                <input
-                    className={classes.Price}
-                    type="number"
-                    name="price"
-                    value={props.itemList.price}
-                    onChange={props.inputChanged}
-                    placeholder="$ Price"/>
-                <Button btnType='Add' clicked={props.addItem}>ADD</Button>
-                <Button btnType='Save' clicked = {props.saveItem}>SAVE</Button>
-                <Button btnType='Clear' clicked={props.clearItem}>Clear</Button>
+            {/*<Month today={props.today}/>*/}
+
+            <DatePicker
+                customInput={<Month />}
+                selected={props.today}
+                onChange={props.inputDate}
+                dateFormat="LL"/>
+            <input
+                className={classes.Items}
+                type="text"
+                name="items"
+                value={props.itemList.items}
+                onChange={props.inputChanged}
+                placeholder="Enter Items"/>
+            <input
+                className={classes.Price}
+                type="number"
+                name="price"
+                value={props.itemList.price}
+                onChange={props.inputChanged}
+                placeholder="$ Price"/>
+            <Button btnType='Add' clicked={props.addItem}>ADD</Button>
+            <Button btnType='Save' clicked = {props.saveItem}>SAVE</Button>
+            <Button btnType='Clear' clicked={props.clearItem}>Clear</Button>
 
             {/*</form>*/}
         </div>
