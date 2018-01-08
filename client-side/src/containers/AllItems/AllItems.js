@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import axios from '../../axios-orders';
 
+import classes from './AllItems.css';
 import Card from '../../components/card/card';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import Button from '../../components/InputControllers/Button/Button';
-import classes from './AllItems.css';
+import TotalPrice from '../../components/TotalPrice/TotalPrice';
 
 class AllItems extends Component {
     constructor(){
@@ -13,7 +14,8 @@ class AllItems extends Component {
             itemList:[],
             all : [],
             totalPrice: [],
-            content: true
+            content: true,
+            show: false
         };
     }
     InputItemHandler = (event) => {
@@ -91,12 +93,20 @@ class AllItems extends Component {
                 return err;
             });
     };
-
+    totalPriceHandler = () => {
+        axios('/totalPrice?uid=1')
+            .then(total => {
+                console.log(total);
+                this.setState({totalPrice: total.data[0], show : true});
+                console.log(this.state.totalPrice)
+            })
+    }
     render (){
         return (
             <div>
                 <div className={classes.Display}>
                     <Button btnType="List" clicked={this.itemListHandler}>List</Button>
+                    <Button btnType="List" clicked={this.totalPriceHandler}>TotalPrice</Button>
                     <Button btnType="Update" clicked={this.updateAllHandler}>Update</Button>
                 </div>
                 <div>
@@ -111,6 +121,7 @@ class AllItems extends Component {
                     })
                     }
                 </div>
+                {this.state.show ? <TotalPrice totalPrice={this.state.totalPrice.totalPrice}/> : null}
             </div>
         )
     }
