@@ -10,7 +10,7 @@ class Toolbar extends Component {
     render () {
         const { activeItem } = this.state;
         return(
-            <Segment inverted >
+            <Segment inverted style={{margin: '0px'}}>
                 <Menu inverted pointing secondary>
                     <Menu.Item as={Link} to="/" name="home" onClick={this.handleItemClick}>
                         <h2>ExpoMan</h2>
