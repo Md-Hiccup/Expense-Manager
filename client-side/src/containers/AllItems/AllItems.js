@@ -72,7 +72,7 @@ class AllItems extends Component {
                     });
                 }
                 this.setState({all: fetchLists, showList: !this.state.showList});
-                console.log('all',fetchLists);
+                // console.log('all',fetchLists);
             })
             .catch(err => {
                 // console.log(err);
@@ -81,12 +81,12 @@ class AllItems extends Component {
     };
     deleteItemHandler= (event)=> {
         const del = event.target.id;
-        console.log(del);
+        // console.log(del);
         axios.delete('/deleteItems?uid=1&id='+del)
             .then(res => {
                 if(res.data.status === 200){
-                    console.log(this.props);
                     this.itemListHandler();
+                    console.log('delete',this.props);
                 }else {
                     alert('error in deletion');
                 }
