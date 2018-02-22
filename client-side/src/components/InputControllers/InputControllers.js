@@ -1,29 +1,40 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Segment, Header, Button } from 'semantic-ui-react';
 
 import InputItems from './InputItems/InputItems';
 import classes from './InputControllers.css';
 
-const inputControllers = (props) => {
-    // console.log('inputController props', props);
+class InputControllers extends Component {
+    state = {   showInput: false    }
+    
+    handleItemClick = (e, {name}) => { this.setState({ activeItem: name})}
+
+    render(){
+
     return (
         <div className={classes.InputControllers}>
-            {/*<Month today = {props.today}/>*/}
-
-            <InputItems
-                today = {props.today}
-                itemList ={props.itemList}
-                inputChanged = {props.inputChanged}
-                inputDate = {props.inputDate}
-                addItem={props.addItem}
-                saveItem={props.saveItem}
-                clearItem = {props.clearItem}
-            />
+        {/*<Month today = {props.today}/>*/}
+            <Segment padded textAlign='left'>
+                <Header as='h2'>
+                    This Month Total Expense: $10.99
+                    <Button circular color='red' floated='right' 
+                        onClick={() => this.setState({showInput : !this.state.showInput})}>Add</Button>
+                </Header>
+                { this.state.showInput ? 
+                    <InputItems
+                        today = {this.props.today}
+                        itemList ={this.props.itemList}
+                        inputChanged = {this.props.inputChanged}
+                        inputDate = {this.props.inputDate}
+                        addItem={this.props.addItem}
+                        saveItem={this.props.saveItem}
+                        clearItem = {this.props.clearItem}
+                    />  :   null
+                 }
+            </Segment> 
         </div>
     )
+}
 };
 
-export default inputControllers;
-
-/*
- items = {props.items}
- price = {props.price}*/
+export default InputControllers;

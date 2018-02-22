@@ -15,10 +15,10 @@
 }
 .InputItems input::-webkit-outer-spin-button,
 .InputItems input::-webkit-inner-spin-button {
-    /* display: none; <- Crashes Chrome on hover */
-    /* -webkit-appearance: none; */
-    /* margin: 0; <-- Apparently some margin are still there even though it's hidden */
-/* } */ 
+    display: none; 
+    -webkit-appearance: none;
+    margin: 0; 
+}  */
 .form {
-    padding-left: 12rem;    
+    /* padding-left: 12rem;     */
 }

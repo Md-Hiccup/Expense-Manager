@@ -1,14 +1,14 @@
-.container {
+/* .container {
     background-color: #25405E;
     padding-bottom: 4rem;
-}
-.title {
+} */
+/* .title {
     font-size: 40px;
     text-align: center;
     color: white;
     padding-bottom: 3rem;
     padding-top: 2rem;
-}
+} */
 /* .inputItems {
     display: inline;
     margin-left: 15rem;
@@ -22,3 +22,8 @@
 .form {
     padding-left: 12rem;    
 } */
+.ExpenseControl {
+    display: block;
+    padding: 10px 20px 10px 10px;
+    text-align: center;
+}

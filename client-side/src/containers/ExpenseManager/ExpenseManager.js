@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
+import { Grid, Menu } from 'semantic-ui-react';
 
 import Aux from '../../hoc/Aux/Aux';
 import InputControllers from '../../components/InputControllers/InputControllers';
@@ -21,8 +23,12 @@ class ExpenseManager extends Component {
             date: moment(),
             allList: [],
             count: 0,
+            activeItem: 'dashboard',
+            showInput: false
         }
     };
+    handleItemClick = (e, {name}) => { this.setState({ activeItem: name})}
+
     InputDate = (date) => {
         console.log('date', date);
         this.setState({ date: date })
@@ -61,56 +67,105 @@ class ExpenseManager extends Component {
         list.price = '';
         this.setState({ itemList: list });
     }
-    clearItemHandler = () => {
-        this.setState({ allList: [] });
-    };
-    saveItemsHandler = () => {
-        const items = { ...this.state.allList };
-        const date = { ...this.state.date };
-        const saveItem = Object.keys(items).map(il => {
-            // console.log(items[il]);
-            const data = {
-                uid: 1,
-                name: items[il].items,
-                price: items[il].price,
-                dates: moment(date).format('YYYY-MM-DD')
-            };
-            return data;
-        });
-        console.log('saveItem', saveItem);
-        for (let item in saveItem) {
-            // console.log('item ',item);
-            axios.post('/addItems', saveItem[item])
-                .then(res => {
-                    // console.log(saveItem);
-                    alert(Object.values(saveItem[item]));
-                    return res
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        }
+    // clearItemHandler = () => {
+    //     this.setState({ allList: [] });
+    // };
+    // saveItemsHandler = () => {
+    //     const items = { ...this.state.allList };
+    //     const date = { ...this.state.date };
+    //     const saveItem = Object.keys(items).map(il => {
+    //         // console.log(items[il]);
+    //         const data = {
+    //             uid: 1,
+    //             name: items[il].items,
+    //             price: items[il].price,
+    //             dates: moment(date).format('YYYY-MM-DD')
+    //         };
+    //         return data;
+    //     });
+    //     console.log('saveItem', saveItem);
+    //     for (let item in saveItem) {
+    //         // console.log('item ',item);
+    //         axios.post('/addItems', saveItem[item])
+    //             .then(res => {
+    //                 // console.log(saveItem);
+    //                 alert(Object.values(saveItem[item]));
+    //                 return res
+    //             })
+    //             .catch(err => {
+    //                 console.log(err);
+    //             });
+    //     }
+    // };
+
+    itemListHandler= () => {
+        axios.get('/itemList', {
+            params: {
+                uid: 1
+            }
+        })
+            .then(res => {
+                const fetchLists = [];
+                for (let key in res.data) {
+                    fetchLists.push({
+                        ...res.data[key],
+                        id: key
+                    });
+                }
+                this.setState({all: fetchLists, showList: !this.state.showList});
+                // console.log('all',fetchLists);
+            })
+            .catch(err => {
+                // console.log(err);
+                return err;
+            });
     };
 
     render() {
+        const {activeItem} = this.state;
+
         return (
-            <Aux>                
-                <div className={classes.container}>
-                    <h2 className={classes.title}>Total Expense: 00 </h2>
-                    <InputControllers
-                        itemList={this.state.itemList}
-                        today={this.state.date}
-                        inputChanged={this.InputHandler}
-                        inputDate={this.InputDate}
-                        addItem={this.addItemHandler}
-                        saveItem={this.saveItemsHandler}
-                        clearItem={this.clearItemHandler}
+            <Aux>
+                <div className={classes.ExpenseControl}>
+                <Grid container relaxed>
+                {/* <Grid.Row columns={3}> */}
+                    <Grid.Column width={3} floated="left"> 
+                    <Menu  fluid pointing secondary vertical>
+                        <Menu.Item as={Link} to='/' name="dashboard" 
+                            active={activeItem === 'dashboard'} 
+                            onClick={this.handleItemClick}>
+                        </Menu.Item>
+                        <Menu.Item as={Link} to='/allitems' name='allitems' 
+                            active={activeItem === 'allitems'} 
+                            onClick={this.handleItemClick} >
+                        </Menu.Item>
+                    </Menu>
+                    </Grid.Column>
+                    <Grid.Column width={10}> 
+                        <InputControllers
+                            itemList={this.state.itemList}
+                            today={this.state.date}
+                            inputChanged={this.InputHandler}
+                            inputDate={this.InputDate}
+                            addItem={this.addItemHandler}
+                            saveItem={this.saveItemsHandler}
+                            clearItem={this.clearItemHandler}
+                        />  
+                    </Grid.Column>
+            
+                    <Grid.Column width={3}> 
+
+                    </Grid.Column>
+                {/* </Grid.Row> */}
+                </Grid>   
+                </div>             
+                
+                <div>
+                    <ListControllers
+                        listOfItem={this.state.allList}
                     />
                 </div>
                 
-                <ListControllers
-                    listOfItem={this.state.allList}
-                />
             </Aux>
         );
     }
