@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Grid, Menu, Header, Button, Modal, Form, Icon, Divider,Tab } from 'semantic-ui-react';
+import { Segment, Grid, Menu, Header, Button, Modal, Icon, Divider,Tab } from 'semantic-ui-react';
 import Login from '../../Auth/Login';
 import Signup from '../../Auth/Signup';
 // import classes from './Toolbar.css';
@@ -14,17 +14,18 @@ class Toolbar extends Component {
     handleChange = (e, { name, value }) => this.setState({ [name]: e.target.value })
     handleSubmit = () => {
         const { password, email } = this.state;
-        alert(" Login... ")
+        alert(" Authenticate...")
         this.setState({ submittedPassword: password, submittedEmail: email })
         this.close()
     }
  
     render() {
+        const {open, dimmer} = this.state;
+        // const {email, password } = this.state; 
         const panes = [
-            { menuItem: 'SignIn', render: () => <Tab.Pane ><Login /></Tab.Pane> },
-            { menuItem: 'SignUp', render: () => <Tab.Pane ><Signup /></Tab.Pane> },
+            { menuItem: 'SignIn', render: () => <Tab.Pane ><Login submit={this.handleSubmit}/></Tab.Pane> },
+            { menuItem: 'SignUp', render: () => <Tab.Pane ><Signup submit={this.handleSubmit}/></Tab.Pane> },
           ]
-        const {open, dimmer, email, password } = this.state; 
         return(
             <Segment inverted style={{margin: '0px', borderRadius: '0px'}}>
                 <Grid container >
@@ -38,7 +39,7 @@ class Toolbar extends Component {
                                     <Button onClick={this.show(true)} inverted>SignIn / SignUp</Button>
                                     {/* <Button inverted>SignUp</Button> */}
                                     <Modal dimmer={dimmer} size='tiny' open={open} onClose={this.close}>
-                                        <Header textAlign='center'> Sign In </Header>
+                                        <Header textAlign='center'> ExpoMan Authentication </Header>
                                         <Modal.Content>
                                             <Tab 
                                                 menu={{color: 'teal', attached:false, tabular:false}}

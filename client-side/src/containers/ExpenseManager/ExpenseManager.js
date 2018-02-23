@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { Grid, Menu } from 'semantic-ui-react';
@@ -56,6 +55,7 @@ class ExpenseManager extends Component {
         let count = this.state.count;
         const allItem = { ...this.state.allList };
         allItem[count] = {
+            id : count,
             items: list.items,
             price: list.price,
         };
@@ -98,27 +98,10 @@ class ExpenseManager extends Component {
     //     }
     // };
 
-    itemListHandler= () => {
-        axios.get('/itemList', {
-            params: {
-                uid: 1
-            }
-        })
-            .then(res => {
-                const fetchLists = [];
-                for (let key in res.data) {
-                    fetchLists.push({
-                        ...res.data[key],
-                        id: key
-                    });
-                }
-                this.setState({all: fetchLists, showList: !this.state.showList});
-                // console.log('all',fetchLists);
-            })
-            .catch(err => {
-                // console.log(err);
-                return err;
-            });
+    deleteItemHandler= (event)=> {
+        const del = event.target.id;
+        console.log('d',del);
+        
     };
 
     render() {
@@ -151,6 +134,15 @@ class ExpenseManager extends Component {
                             saveItem={this.saveItemsHandler}
                             clearItem={this.clearItemHandler}
                         />  
+                        <div>
+                            <ListControllers
+                                delItem = {this.deleteItemHandler}
+                                listOfItem={this.state.allList}
+                            />
+                        </div>
+                        <div>
+                            
+                        </div>
                     </Grid.Column>
             
                     <Grid.Column width={3}> 
@@ -160,11 +152,7 @@ class ExpenseManager extends Component {
                 </Grid>   
                 </div>             
                 
-                <div>
-                    <ListControllers
-                        listOfItem={this.state.allList}
-                    />
-                </div>
+                
                 
             </Aux>
         );
