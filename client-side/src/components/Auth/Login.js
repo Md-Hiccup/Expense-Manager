@@ -20,7 +20,7 @@ const Login = (props) => {
                 // onChange={props.handleChanged}
                 // value={password}
                 />
-            <Button primary >Sign In</Button>
+            <Button primary >Login</Button>
         </Form> 
     )
 };

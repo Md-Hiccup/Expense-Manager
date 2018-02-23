@@ -4,11 +4,13 @@ import { Form, Button } from 'semantic-ui-react';
 const Signup = (props) => {
     return (
         <Form >
-            <Form.Group>
-                <Form.Input placeholder='First Name' name='fname' type='text' size='large'
+            <Form.Group widths='equal'>
+                <Form.Input fluid label='First Name' placeholder='First Name' 
+                    name='fname' type='text' size='large'
                     // value={fname} onChange={props.handleChanged}
                     />
-                <Form.Input placeholder='Last Name' name='lname' type='text' size='large'
+                <Form.Input fluid label='Last Name' placeholder='Last Name' 
+                    name='lname' type='text' size='large'
                     // value={lname} onChange={props.handleChanged} 
                     />                
             </Form.Group>
@@ -28,7 +30,7 @@ const Signup = (props) => {
                 // onChange={props.handleChanged}
                 // value={password}
                 />
-            <Button primary >Sign In</Button>
+            <Button primary >Signup</Button>
         </Form> 
     )
 }

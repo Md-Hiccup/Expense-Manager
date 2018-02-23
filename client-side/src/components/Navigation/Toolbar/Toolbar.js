@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Grid, Menu, Header, Button, Modal, Form, Icon, Divider,Tab } from 'semantic-ui-react';
 import Login from '../../Auth/Login';
+import Signup from '../../Auth/Signup';
 // import classes from './Toolbar.css';
 
 class Toolbar extends Component {
@@ -20,8 +21,8 @@ class Toolbar extends Component {
  
     render() {
         const panes = [
-            { menuItem: 'SignIn', render: () => <div><Tab.Pane attatched={false}><Login /></Tab.Pane></div> },
-            { menuItem: 'SignUp', render: () => <Tab.Pane attatched={false}>Tab 2 Content</Tab.Pane> },
+            { menuItem: 'SignIn', render: () => <Tab.Pane ><Login /></Tab.Pane> },
+            { menuItem: 'SignUp', render: () => <Tab.Pane ><Signup /></Tab.Pane> },
           ]
         const {open, dimmer, email, password } = this.state; 
         return(
@@ -44,24 +45,6 @@ class Toolbar extends Component {
                                                 grid={{ paneWidth:2, tabWidth: 6 }}
                                                 panes={panes} 
                                             />
-                                        {/* <Form onSubmit={this.handleSubmit}>
-                                                <Form.Input fluid label='Email' 
-                                                    type='email'
-                                                    name='email'
-                                                    size='large'
-                                                    placeholder='abc@gmail.com' 
-                                                    onChange={this.handleChange}
-                                                    value={email}
-                                                    />
-                                                <Form.Input fluid label='Password' 
-                                                    type='password'
-                                                    name='password'
-                                                    size='large'
-                                                    placeholder='aaaaa' 
-                                                    onChange={this.handleChange}
-                                                    value={password}/>
-                                            <Button primary >Sign In</Button>
-                                        </Form> */}
                                         </Modal.Content>
                                         <Modal.Actions>
                                             <Button floated='left' color='facebook'><Icon name='facebook' /> Facebook</Button>
