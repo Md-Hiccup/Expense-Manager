@@ -58,12 +58,13 @@ class AllItems extends Component {
     };
 
     itemListHandler= () => {
-        axios.get('/itemList', {
-            params: {
-                uid: 1
-            }
-        })
+        axios.get('/itemList',
+        // {   params: {
+                    // uid: 1
+        //  }      }
+        )
             .then(res => {
+                console.log('res', res);
                 const fetchLists = [];
                 for (let key in res.data) {
                     fetchLists.push({

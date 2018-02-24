@@ -3,27 +3,33 @@ import { Table } from 'semantic-ui-react';
 
 // import classes from './ListControllers.css';
 import ListItems from './ListItems/ListItems';
+import ListItem from 'semantic-ui-react/dist/commonjs/elements/List/ListItem';
 
 class ListControllers extends Component {
-    constructor(props){
-        super(props);
-        this.state = { }
-    }
+
     render() {
-        
-        let totalItems = Object.keys(this.props.listOfItem)
-        .map((num) => {
-            return [...Array(this.props.listOfItem[num])].map((dd,i)=> {
-                return (
-                    <ListItems key={i} id={dd.id} 
-                        type={dd.items} value={dd.price}
-                        delItem = {this.props.delItem}
-                        />
-                    )
-                })
-            });
+        const dd = this.props.list;
+        // console.log('this.props: ',this.props)
+        console.log('props listcontroller:', dd)
+        let totalItems = <ListItem
+                         key = {dd._id} id={dd._id}
+                         item={dd.name} price={+dd.price}
+                        //  delItem= {this.props.delItem}
+                         />
+        // })
+        // let totalItems = Object.keys(list).map((num) => {
+        //     return [...Array(list[num])].map((dd)=> {
+        //         console.log('dd',dd)
+        //         return (
+        //             <ListItems key={dd._id} id={dd._id} 
+        //                 type={dd.items} value={dd.price}
+        //                 delItem = {this.props.delItem}
+        //                 />
+        //             )
+        //         })
+        //     });
         return (
-            <div>
+            // <div>
                 <Table color='red'>
                     <Table.Header>
                         <Table.Row>
@@ -37,7 +43,7 @@ class ListControllers extends Component {
                         {totalItems}    
                     </Table.Body>
                 </Table>
-            </div>
+            // </div>
             // <div className={classes.ListControllers}>
             //     <ul>
             //         {totalItems}

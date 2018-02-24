@@ -22,13 +22,13 @@ class InputControllers extends Component {
                 </Header>
                 { this.state.showInput ? 
                     <InputItems
-                        today = {this.props.today}
+                        // today = {this.props.today}
+                        // inputDate = {this.props.inputDate}
                         itemList ={this.props.itemList}
                         inputChanged = {this.props.inputChanged}
-                        inputDate = {this.props.inputDate}
-                        addItem={this.props.addItem}
                         saveItem={this.props.saveItem}
-                        clearItem = {this.props.clearItem}
+                        addItem={this.props.addItem}
+                        // clearItem = {this.props.clearItem}
                     />  :   null
                  }
             </Segment> 

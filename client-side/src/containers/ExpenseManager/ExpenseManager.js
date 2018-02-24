@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
-import { Grid, Menu } from 'semantic-ui-react';
+import { Grid, Menu, Button } from 'semantic-ui-react';
+import axios from '../../axios-orders';
 
 import Aux from '../../hoc/Aux/Aux';
 import InputControllers from '../../components/InputControllers/InputControllers';
 import ListControllers from '../../components/ListControllers/ListControllers';
 import classes from './ExpenseManager.css';
+import Card from '../../components/card/card';
+// import List from '../../components/List/List';
 
 class ExpenseManager extends Component {
     constructor() {
         super();
         // const date = new Date(),
         // today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
-
         this.state = {
             itemList: {
                 items: 'ColdCoffe',
@@ -21,17 +23,24 @@ class ExpenseManager extends Component {
             },
             date: moment(),
             allList: [],
+            addItem: [],
             count: 0,
             activeItem: 'dashboard',
-            showInput: false
+            showInput: false,
+            showList:false,
+            noItem: true
         }
     };
+    componentDidMount() {
+        this.itemListHandler();
+    }
+
     handleItemClick = (e, {name}) => { this.setState({ activeItem: name})}
 
-    InputDate = (date) => {
-        console.log('date', date);
-        this.setState({ date: date })
-    };
+    // InputDate = (date) => {
+    //     console.log('date', date);
+    //     this.setState({ date: date })
+    // };
     InputHandler = (event) => {
         // console.log('event', event);
         const value = event.target.value;
@@ -42,25 +51,30 @@ class ExpenseManager extends Component {
             itemList: list
         });
     };
-    addItemHandler = (event) => {
-        let list = { ...this.state.itemList };
-        // alert('Item : ' + list.items+'\nPrice : '+list.price +"\nAdded Successfully");
-        event.preventDefault();
-        this.setState({ itemList: list });
-        this.showList(list);
-        this.emptyInput(list);
-    };
+    // addItemHandler = (event) => {
+    //     let list = { ...this.state.itemList };
+    //     // alert('Item : ' + list.items+'\nPrice : '+list.price +"\nAdded Successfully");
+    //     event.preventDefault();
+    //     this.setState({ itemList: list, noItem: false});
+    //     this.showList(list);
+    //     this.saveItemsHandler(list);
+    //     this.emptyInput(list);
+    // };
     showList(list) {
-        // console.log('showList', list);
         let count = this.state.count;
-        const allItem = { ...this.state.allList };
+        const allItem = { ...this.state.addItem };
+        console.log('allItem',allItem);
+        // const date = { ...this.state.date };
         allItem[count] = {
-            id : count,
+            // id : count,
             items: list.items,
             price: list.price,
+            // dates: moment(date).format('YYYY-MM-DD')
         };
         count = count + 1;
-        this.setState({ allList: allItem, count: count });
+        // this.itemListHandler();
+        this.setState({ count: count , noItem: false});
+        // this.saveItemsHandler(list);
     }
     emptyInput(list) {
         list.items = '';
@@ -70,40 +84,85 @@ class ExpenseManager extends Component {
     // clearItemHandler = () => {
     //     this.setState({ allList: [] });
     // };
-    // saveItemsHandler = () => {
-    //     const items = { ...this.state.allList };
-    //     const date = { ...this.state.date };
-    //     const saveItem = Object.keys(items).map(il => {
-    //         // console.log(items[il]);
-    //         const data = {
-    //             uid: 1,
-    //             name: items[il].items,
-    //             price: items[il].price,
-    //             dates: moment(date).format('YYYY-MM-DD')
-    //         };
-    //         return data;
-    //     });
-    //     console.log('saveItem', saveItem);
-    //     for (let item in saveItem) {
-    //         // console.log('item ',item);
-    //         axios.post('/addItems', saveItem[item])
-    //             .then(res => {
-    //                 // console.log(saveItem);
-    //                 alert(Object.values(saveItem[item]));
-    //                 return res
-    //             })
-    //             .catch(err => {
-    //                 console.log(err);
-    //             });
-    //     }
+    saveItemsHandler = () => {
+        let list = { ...this.state.itemList };
+        const date = { ...this.state.date };
+        const count = this.state.count;
+        const saveItem = {
+            // id : count,
+            name: list.items,
+            price: list.price,
+            dates: moment(date).format('YYYY-MM-DD')
+        }
+        // console.log('saveItem', saveItem);
+        axios.post('/addItems', saveItem)
+            .then(res => {
+                return res;
+            }).then(result => {
+                this.setState({ addItem: result.data, itemList:list})
+                console.log('addITem', this.state.addItem);        
+                this.showList(this.state.itemList);
+                // this.emptyInput(list);
+            })
+            .catch(err => console.error(err));
+    };
+    // deleteItemHandler= (event)=> {
+    //     const del = event.target.id;
+    //     // console.log(del);
+    //     axios.delete('/deleteItems?uid=1&id='+del)
+    //         .then(res => {
+    //             if(res.data.status === 200){
+    //                 this.itemListHandler();
+    //                 console.log('delete',this.props);
+    //             }else {
+    //                 alert('error in deletion');
+    //             }
+    //         })
+    //         .catch(err => {
+    //             return err;
+    //         });
     // };
-
     deleteItemHandler= (event)=> {
         const del = event.target.id;
-        console.log('d',del);
+        console.log();
+        console.log('del id: ',del);
+        axios.delete('/deleteItems',{
+            params: { id: del}
+        })
+            .then(res => {
+                // console.log('res: data: ',res)
+                if(res.status === 200){
+                    this.itemListHandler();
+                    this.setState({noItem : true});
+                    console.log('status 200');
+                }
+                console.log(res);
+            })
         
     };
-
+    itemListHandler= () => {
+        axios.get('/itemList', {
+            params: {
+                uid: 1
+            }
+        })
+        .then(res => {
+            // console.log('res itemList',res)
+            const fetchLists = [];
+            for (let key in res.data) {
+                fetchLists.push({
+                    ...res.data[key],
+                    id: key
+                });
+            }
+            this.setState({allList: fetchLists, showList: !this.state.showList});
+            // console.log('all',fetchLists);
+        })
+        .catch(err => {
+            // console.log(err);
+            return err;
+        });
+    };
     render() {
         const {activeItem} = this.state;
 
@@ -122,31 +181,38 @@ class ExpenseManager extends Component {
                             active={activeItem === 'allitems'} 
                             onClick={this.handleItemClick} >
                         </Menu.Item>
+                        <Button primary onClick={this.itemListHandler} >Show List</Button>
                     </Menu>
                     </Grid.Column>
                     <Grid.Column width={10}> 
                         <InputControllers
+                            // today={this.state.date}
+                            // inputDate={this.InputDate}
                             itemList={this.state.itemList}
-                            today={this.state.date}
                             inputChanged={this.InputHandler}
-                            inputDate={this.InputDate}
                             addItem={this.addItemHandler}
                             saveItem={this.saveItemsHandler}
-                            clearItem={this.clearItemHandler}
+                            // clearItem={this.clearItemHandler}
                         />  
                         <div>
-                            <ListControllers
+                            { this.state.noItem ? null : <ListControllers
                                 delItem = {this.deleteItemHandler}
-                                listOfItem={this.state.allList}
-                            />
+                                list ={this.state.addItem}
+                            />}
                         </div>
                         <div>
-                            
+                        {/* {this.state.showList ? */}
+                            <Card
+                                all = {this.state.allList}
+                                deleteItem={this.deleteItemHandler}
+                                // changedInputItem={this.InputItemHandler}
+                                // updateItem = {this.updateAllHandler}
+                            /> 
+                             {/* : null}   */}
                         </div>
                     </Grid.Column>
             
                     <Grid.Column width={3}> 
-
                     </Grid.Column>
                 {/* </Grid.Row> */}
                 </Grid>   

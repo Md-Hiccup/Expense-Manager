@@ -1,5 +1,5 @@
 {
-  "name": "expenses-manager",
+  "name": "expense-manager",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^3.5.1",
     "body-parser": "~1.16.0",
     "concurrently": "^3.5.1",
     "connect-flash": "^0.1.1",
@@ -18,8 +19,10 @@
     "express": "~4.14.1",
     "express-session": "~1.13.0",
     "jsonwebtoken": "^7.4.1",
+    "mongoose": "^5.0.7",
     "morgan": "~1.7.0",
     "mysql": "^2.13.0",
+    "nodemon": "^1.15.1",
     "passport": "~0.3.2",
     "passport-facebook": "^2.1.1",
     "passport-google-oauth": "^1.0.0",

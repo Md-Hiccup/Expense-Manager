@@ -46,8 +46,8 @@ const InputItems = (props) => {
                         placeholder="$ Price" width={3}
                         value={props.itemList.price} onChange={props.inputChanged}
                     />
-                    <Button primary size="large" onClick={props.addItem}>Add</Button>
-                    <Button color="green" size="large" onClick={props.saveItem}>Save</Button>
+                    <Button primary size="large" onClick={props.saveItem}>Add</Button>
+                    {/* <Button color="green" size="large" onClick={props.saveItem}>Save</Button> */}
                 </Form.Group>
             </Form>
             {/*</form>*/}

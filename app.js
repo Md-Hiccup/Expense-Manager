@@ -10,6 +10,12 @@ var env = require('dotenv').load();
 var flash = require('connect-flash');
 var cors = require('cors');
 var app = express();
+var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+
+mongoose.connect('mongodb://localhost/expense-manager', { useMongoClient: true, promiseLibrary: require('bluebird')})
+    .then(() => console.log('connection successful'))
+    .catch((err) => console.error(err));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,10 +42,11 @@ app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // allowing cross origin resource sharing permission
-app.use(cors());
+app.use(cors({origin: '*'}));
 
 var auth = require('./routes/auth')(passport);
-var routes = require('./routes/index')(passport);
+// var routes = require('./routes/item')(passport);
+var routes = require('./routes/item');
 app.use('/auth', auth);
 app.use('/', routes);
 
@@ -50,11 +57,11 @@ var models = require("./models");
 require('./config/passport.js')(passport, models.User, models.GoogleUser, models.FacebookUser);
 
 //Sync Database   [ for forcefully delete previous value in DB use .sync({force:true}.then(..) ]
-models.sequelize.sync({force: false}).then(function(){
-    console.log('Nice! Database looks fine')
-}).catch(function(err){
-    console.log(err,"Something went wrong with the Database Update!")
-});
+// models.sequelize.sync({force: false}).then(function(){
+//     console.log('Nice! Database looks fine')
+// }).catch(function(err){
+//     console.log(err,"Something went wrong with the Database Update!")
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

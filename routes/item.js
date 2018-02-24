@@ -1,0 +1,68 @@
+const express = require('express');
+const router = express.Router();
+const mongoose = require('mongoose');
+const Item = require('../models/Item');
+
+/* Get All List */
+router.get('/itemList', function (req, res, next) {
+    Item.find(function(err, data){
+        if(err) return next(err);
+        res.json(data);
+    })
+});
+
+/* Save Item */
+router.post('/addItems', function(req, res, next){
+    Item.create(req.body, function(err, post){
+        if(err) return next(err);
+        res.json(post);
+    })
+})
+
+router.delete('/deleteItems', function(req, res, next){
+    console.log('params: ',req.query.id);
+    // console.log('body: ' ,req.body);
+    Item.findByIdAndRemove(req.query.id, req.body, function(err, del){
+        if(err) return next(err);
+        console.log('del Items: ',del)
+        res.json(del)
+    })
+})
+
+/* GET All Books */
+// router.get('/', function(req, res, next) {
+//     // res.json('Show the all Book')
+//     Book.find(function (err, products){
+//       if(err) return next(err);
+//       res.json(products);
+//     })
+//   });
+  
+  /* GET Single Book By Id */
+//   router.get('/:id', function(req, res, next){
+//     Book.findById(req.params.id, function(err, post){
+//       if(err) return next(err); 
+//       res.json(post)
+//     })
+//   })
+  
+  /* UPDATE Book */
+//   router.put('/:id', function(req, res, next){
+//     // res.json("Update Book")
+//     Book.findByIdAndUpdate(req.params.id, req.body, function(err, post){
+//       if(err) return next(err);
+//       res.json(post);
+//     })
+//   })
+  
+  /* DELETE Book */
+//   router.delete('/:id', function(req, res, next){
+//     // res.json("Delete Book");
+//     Book.findByIdAndRemove(req.params.id, req.body, function(err, post){
+//       if(err) return next(err);
+//       res.json(post)
+//     })
+//   })
+  
+
+module.exports = router;
