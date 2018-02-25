@@ -24,6 +24,7 @@ class ExpenseManager extends Component {
             date: moment(),
             allList: [],
             addItem: [],
+            showList: [],
             count: 0,
             activeItem: 'dashboard',
             showInput: false,
@@ -60,22 +61,26 @@ class ExpenseManager extends Component {
     //     this.saveItemsHandler(list);
     //     this.emptyInput(list);
     // };
-    showList(list) {
-        let count = this.state.count;
-        const allItem = { ...this.state.addItem };
-        console.log('allItem',allItem);
-        // const date = { ...this.state.date };
-        allItem[count] = {
-            // id : count,
-            items: list.items,
-            price: list.price,
-            // dates: moment(date).format('YYYY-MM-DD')
-        };
-        count = count + 1;
-        // this.itemListHandler();
-        this.setState({ count: count , noItem: false});
-        // this.saveItemsHandler(list);
-    }
+    // showList(list) {
+    //     let count = this.state.count;
+    //     const allItem = { ...this.state.addItem };
+    //     const showItem = {...this.state.showList};
+    //     console.log('showList before :', this.state.showList);
+    //     // const date = { ...this.state.date };
+    //     // const showItem ;
+    //     showItem[count]  = {
+    //         sno: count,
+    //         id : allItem._id,
+    //         items: list.items,
+    //         price: list.price,
+    //         // dates: moment(date).format('YYYY-MM-DD')
+    //     };
+    //     count = count + 1;
+    //     // this.itemListHandler();
+    //     this.setState({ showList: showItem, count: count , noItem: false});
+    //     console.log('showList after', this.state.showList)
+    //     // this.saveItemsHandler(list);
+    // }
     emptyInput(list) {
         list.items = '';
         list.price = '';
@@ -87,7 +92,8 @@ class ExpenseManager extends Component {
     saveItemsHandler = () => {
         let list = { ...this.state.itemList };
         const date = { ...this.state.date };
-        const count = this.state.count;
+        // const count = this.state.count;
+        const ress = this.state.allList.slice();
         const saveItem = {
             // id : count,
             name: list.items,
@@ -99,10 +105,13 @@ class ExpenseManager extends Component {
             .then(res => {
                 return res;
             }).then(result => {
-                this.setState({ addItem: result.data, itemList:list})
-                console.log('addITem', this.state.addItem);        
-                this.showList(this.state.itemList);
-                // this.emptyInput(list);
+                ress.push(
+                    result.data
+                )
+                this.setState({ allList: ress, itemList:list})
+                // console.log('addITem', this.state.addItem);        
+                // this.showList(this.state.itemList);
+                this.emptyInput(list);
             })
             .catch(err => console.error(err));
     };
@@ -133,7 +142,8 @@ class ExpenseManager extends Component {
                 // console.log('res: data: ',res)
                 if(res.status === 200){
                     this.itemListHandler();
-                    this.setState({noItem : true});
+                    // if()
+                    // this.setState({noItem : false});
                     console.log('status 200');
                 }
                 console.log(res);
@@ -156,7 +166,7 @@ class ExpenseManager extends Component {
                 });
             }
             this.setState({allList: fetchLists, showList: !this.state.showList});
-            // console.log('all',fetchLists);
+            console.log('all',fetchLists);
         })
         .catch(err => {
             // console.log(err);
@@ -194,12 +204,14 @@ class ExpenseManager extends Component {
                             saveItem={this.saveItemsHandler}
                             // clearItem={this.clearItemHandler}
                         />  
-                        <div>
-                            { this.state.noItem ? null : <ListControllers
+                        {/* <div> */}
+                            {/* { this.state.noItem ? null : */}
+                             {/* <ListControllers
                                 delItem = {this.deleteItemHandler}
-                                list ={this.state.addItem}
-                            />}
-                        </div>
+                                list ={this.state.showList}
+                            /> */}
+                            {/* } */}
+                        {/* </div> */}
                         <div>
                         {/* {this.state.showList ? */}
                             <Card

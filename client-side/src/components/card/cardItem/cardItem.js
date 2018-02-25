@@ -1,4 +1,5 @@
 import React from 'react';
+import { Table, Button } from 'semantic-ui-react';
 
 import classes from './cardItem.css';
 
@@ -6,11 +7,21 @@ const cardItem = (props) => {
     // console.log('cardList', props);
     const ct = props.items.date;
     const date = new Date(ct).toDateString();
+    const cd = props.items;
     return (
-        <div>
-            <p id={props.items.id}>{props.items.itemName}:{props.items.itemPrice}
-            <button id={props.items.id} onClick={props.deleteItem}>X</button></p>            
-        </div>
+        <Table.Row id={cd.id}>
+            {/* <ListItem itemName={props.type} itemPrice={props.value}/> */}
+            <Table.Cell>{+cd.s+1}</Table.Cell>
+            <Table.Cell>{cd.itemName}</Table.Cell>
+            <Table.Cell>{cd.itemPrice}</Table.Cell>
+            <Table.Cell collapsing>
+                <Button circular color='red' icon='close' id={cd.id} 
+                onClick={props.deleteItem}
+                />
+            </Table.Cell>
+        </Table.Row>
+            // <p id={props.items.id}>{props.items.itemName}:{props.items.itemPrice}
+            // <button id={props.items.id} onClick={props.deleteItem}>X</button></p>            
         // <div className={classes.Card}>
         //     <p style={{width: '100%'}}>
         //         <input

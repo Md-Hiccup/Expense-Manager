@@ -3,31 +3,36 @@ import { Table } from 'semantic-ui-react';
 
 // import classes from './ListControllers.css';
 import ListItems from './ListItems/ListItems';
-import ListItem from 'semantic-ui-react/dist/commonjs/elements/List/ListItem';
 
 class ListControllers extends Component {
 
     render() {
         const dd = this.props.list;
         // console.log('this.props: ',this.props)
-        console.log('props listcontroller:', dd)
-        let totalItems = <ListItem
-                         key = {dd._id} id={dd._id}
-                         item={dd.name} price={+dd.price}
-                        //  delItem= {this.props.delItem}
-                         />
-        // })
-        // let totalItems = Object.keys(list).map((num) => {
-        //     return [...Array(list[num])].map((dd)=> {
-        //         console.log('dd',dd)
-        //         return (
-        //             <ListItems key={dd._id} id={dd._id} 
-        //                 type={dd.items} value={dd.price}
-        //                 delItem = {this.props.delItem}
-        //                 />
-        //             )
-        //         })
-        //     });
+        // console.log('props listcontroller:', dd)
+        const totals = [];
+        for(let i in dd){
+            totals.push({
+                sno : dd[i].sno,
+                id : dd[i].id,
+                item : dd[i].items,
+                price: dd[i].price
+            })
+        }
+        // console.log('totalas', totals);
+        let totalItems = totals.map(tt => {
+            // console.log('tt ',tt);
+            return (
+                <ListItems key = {tt.sno}
+                    items= {tt}
+                    // sno={tt.sno}    id={tt.id}
+                    // item={tt.items} price={tt.price}
+                    delItem= {this.props.delItem}
+                />               
+            )
+        })
+            
+        
         return (
             // <div>
                 <Table color='red'>
@@ -40,7 +45,7 @@ class ListControllers extends Component {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {totalItems}    
+                        {totalItems}
                     </Table.Body>
                 </Table>
             // </div>
