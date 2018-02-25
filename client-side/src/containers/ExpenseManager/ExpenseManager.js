@@ -6,10 +6,9 @@ import axios from '../../axios-orders';
 
 import Aux from '../../hoc/Aux/Aux';
 import InputControllers from '../../components/InputControllers/InputControllers';
-import ListControllers from '../../components/ListControllers/ListControllers';
+// import ListControllers from '../../components/ListControllers/ListControllers';
 import classes from './ExpenseManager.css';
 import Card from '../../components/card/card';
-// import List from '../../components/List/List';
 
 class ExpenseManager extends Component {
     constructor() {
@@ -24,12 +23,8 @@ class ExpenseManager extends Component {
             date: moment(),
             allList: [],
             addItem: [],
-            showList: [],
-            count: 0,
             activeItem: 'dashboard',
-            showInput: false,
             showList:false,
-            noItem: true
         }
     };
     componentDidMount() {
@@ -43,7 +38,7 @@ class ExpenseManager extends Component {
     //     this.setState({ date: date })
     // };
     InputHandler = (event) => {
-        // console.log('event', event);
+        // console.log('event: ', event);
         const value = event.target.value;
         const name = event.target.name;
         const list = { ...this.state.itemList };
@@ -52,35 +47,7 @@ class ExpenseManager extends Component {
             itemList: list
         });
     };
-    // addItemHandler = (event) => {
-    //     let list = { ...this.state.itemList };
-    //     // alert('Item : ' + list.items+'\nPrice : '+list.price +"\nAdded Successfully");
-    //     event.preventDefault();
-    //     this.setState({ itemList: list, noItem: false});
-    //     this.showList(list);
-    //     this.saveItemsHandler(list);
-    //     this.emptyInput(list);
-    // };
-    // showList(list) {
-    //     let count = this.state.count;
-    //     const allItem = { ...this.state.addItem };
-    //     const showItem = {...this.state.showList};
-    //     console.log('showList before :', this.state.showList);
-    //     // const date = { ...this.state.date };
-    //     // const showItem ;
-    //     showItem[count]  = {
-    //         sno: count,
-    //         id : allItem._id,
-    //         items: list.items,
-    //         price: list.price,
-    //         // dates: moment(date).format('YYYY-MM-DD')
-    //     };
-    //     count = count + 1;
-    //     // this.itemListHandler();
-    //     this.setState({ showList: showItem, count: count , noItem: false});
-    //     console.log('showList after', this.state.showList)
-    //     // this.saveItemsHandler(list);
-    // }
+    
     emptyInput(list) {
         list.items = '';
         list.price = '';
@@ -92,7 +59,6 @@ class ExpenseManager extends Component {
     saveItemsHandler = () => {
         let list = { ...this.state.itemList };
         const date = { ...this.state.date };
-        // const count = this.state.count;
         const ress = this.state.allList.slice();
         const saveItem = {
             // id : count,
@@ -109,55 +75,35 @@ class ExpenseManager extends Component {
                     result.data
                 )
                 this.setState({ allList: ress, itemList:list})
-                // console.log('addITem', this.state.addItem);        
-                // this.showList(this.state.itemList);
                 this.emptyInput(list);
             })
             .catch(err => console.error(err));
     };
-    // deleteItemHandler= (event)=> {
-    //     const del = event.target.id;
-    //     // console.log(del);
-    //     axios.delete('/deleteItems?uid=1&id='+del)
-    //         .then(res => {
-    //             if(res.data.status === 200){
-    //                 this.itemListHandler();
-    //                 console.log('delete',this.props);
-    //             }else {
-    //                 alert('error in deletion');
-    //             }
-    //         })
-    //         .catch(err => {
-    //             return err;
-    //         });
-    // };
+    
     deleteItemHandler= (event)=> {
         const del = event.target.id;
-        console.log();
-        console.log('del id: ',del);
+        // console.log('delete id: ',del);
         axios.delete('/deleteItems',{
             params: { id: del}
         })
-            .then(res => {
-                // console.log('res: data: ',res)
-                if(res.status === 200){
-                    this.itemListHandler();
-                    // if()
-                    // this.setState({noItem : false});
-                    console.log('status 200');
-                }
-                console.log(res);
-            })
-        
-    };
-    itemListHandler= () => {
-        axios.get('/itemList', {
-            params: {
-                uid: 1
+        .then(res => {
+            if(res.status === 200){
+                this.itemListHandler();
+                // console.log('Item Deleted: ',res);
             }
         })
+        .catch(err => {
+            return err;
+        });
+        
+    };
+
+    itemListHandler= () => {
+        axios.get('/itemList', {
+            params: {   uid: 1  }
+        })
         .then(res => {
-            // console.log('res itemList',res)
+            // console.log('Total Items List: ',res)
             const fetchLists = [];
             for (let key in res.data) {
                 fetchLists.push({
@@ -166,13 +112,13 @@ class ExpenseManager extends Component {
                 });
             }
             this.setState({allList: fetchLists, showList: !this.state.showList});
-            console.log('all',fetchLists);
+            // console.log('all',fetchLists);
         })
         .catch(err => {
-            // console.log(err);
             return err;
         });
     };
+
     render() {
         const {activeItem} = this.state;
 
@@ -204,23 +150,13 @@ class ExpenseManager extends Component {
                             saveItem={this.saveItemsHandler}
                             // clearItem={this.clearItemHandler}
                         />  
-                        {/* <div> */}
-                            {/* { this.state.noItem ? null : */}
-                             {/* <ListControllers
-                                delItem = {this.deleteItemHandler}
-                                list ={this.state.showList}
-                            /> */}
-                            {/* } */}
-                        {/* </div> */}
                         <div>
-                        {/* {this.state.showList ? */}
                             <Card
                                 all = {this.state.allList}
                                 deleteItem={this.deleteItemHandler}
                                 // changedInputItem={this.InputItemHandler}
                                 // updateItem = {this.updateAllHandler}
                             /> 
-                             {/* : null}   */}
                         </div>
                     </Grid.Column>
             
@@ -229,9 +165,6 @@ class ExpenseManager extends Component {
                 {/* </Grid.Row> */}
                 </Grid>   
                 </div>             
-                
-                
-                
             </Aux>
         );
     }

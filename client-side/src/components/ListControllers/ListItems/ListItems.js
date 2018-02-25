@@ -2,8 +2,9 @@ import React from 'react';
 import { Table, Button } from 'semantic-ui-react';
 
 // import ListItem from './ListItem/ListItem';
+
 const listItems = (props) => {
-    // console.log('listITems',props);
+    // console.log('List Items: ',props);
     const li = props.items;
     return (
         <Table.Row >

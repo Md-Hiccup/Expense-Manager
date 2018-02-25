@@ -8,8 +8,7 @@ class ListControllers extends Component {
 
     render() {
         const dd = this.props.list;
-        // console.log('this.props: ',this.props)
-        // console.log('props listcontroller:', dd)
+        // console.log('List Controller: ', this.props)
         const totals = [];
         for(let i in dd){
             totals.push({
@@ -19,41 +18,29 @@ class ListControllers extends Component {
                 price: dd[i].price
             })
         }
-        // console.log('totalas', totals);
+        // console.log('List controllers totals: ', totals);
         let totalItems = totals.map(tt => {
-            // console.log('tt ',tt);
             return (
-                <ListItems key = {tt.sno}
-                    items= {tt}
-                    // sno={tt.sno}    id={tt.id}
-                    // item={tt.items} price={tt.price}
+                <ListItems 
+                    key = {tt.sno}  items= {tt}
                     delItem= {this.props.delItem}
                 />               
             )
         })
-            
-        
         return (
-            // <div>
-                <Table color='red'>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell width={2}>S No.</Table.HeaderCell>
-                            <Table.HeaderCell width={8}>Items</Table.HeaderCell>
-                            <Table.HeaderCell width={4}>Price</Table.HeaderCell>
-                            <Table.HeaderCell width={2}/>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        {totalItems}
-                    </Table.Body>
-                </Table>
-            // </div>
-            // <div className={classes.ListControllers}>
-            //     <ul>
-            //         {totalItems}
-            //     </ul>
-            // </div>
+            <Table color='red'>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell width={2}>S No.</Table.HeaderCell>
+                        <Table.HeaderCell width={8}>Items</Table.HeaderCell>
+                        <Table.HeaderCell width={4}>Price</Table.HeaderCell>
+                        <Table.HeaderCell width={2}/>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                    {totalItems}
+                </Table.Body>
+            </Table>
         )
 }
 };

@@ -9,8 +9,6 @@ const card = (props) => {
     const items = props.all;
     const allItem = [];
     for (let index in items) {
-        // console.log(index+ " " +props.items[index].name);
-        // console.log(props.items[index].name);
         allItem.push({
             s : index,
             id: items[index]._id,
@@ -19,7 +17,7 @@ const card = (props) => {
             date : items[index].dates
         });
     }
-    console.log('allItem: ',allItem);
+    // console.log('allItem: ',allItem);
     const itemsListOutput = allItem.map(il => {
         // console.log('il',il.id)
         return (
