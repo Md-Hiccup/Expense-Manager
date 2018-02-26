@@ -5,21 +5,27 @@ import InputItems from './InputItems/InputItems';
 import classes from './InputControllers.css';
 
 class InputControllers extends Component {
-    state = {   showInput: false    }
+    state = {   showInput: false   , totalPrice:0 }
     
     handleItemClick = (e, {name}) => { this.setState({ activeItem: name})}
-
+    // componentWillReceiveProps(nextProps){
+    //     console.log('next',nextProps)
+    //     this.setState({ totalPrice: nextProps})
+    // }
     render(){
-
+        const { totalPrice } = this.props;
+        // console.log('InputController: ', this.props)
+        console.log('Total Price: ', totalPrice)        
     return (
         <div className={classes.InputControllers}>
         {/*<Month today = {props.today}/>*/}
             <Segment padded textAlign='left'>
                 <Header as='h2'>
-                    This Month Total Expense: $10.99
+                    This Month Total Expense: {totalPrice}
                     <Button circular color='red' floated='right' 
-                        onClick={() => this.setState({showInput : !this.state.showInput})}>Add</Button>
+                            onClick={() => this.setState({showInput : !this.state.showInput})}>Add</Button>
                 </Header>
+                {/* </Segment><Segment> */}
                 { this.state.showInput ? 
                     <InputItems
                         // today = {this.props.today}

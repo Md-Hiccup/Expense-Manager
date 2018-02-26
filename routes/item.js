@@ -17,7 +17,7 @@ router.post('/addItems', function(req, res, next){
         if(err) return next(err);
         res.json(post);
     })
-})
+});
 
 router.delete('/deleteItems', function(req, res, next){
     console.log('params: ',req.query.id);
@@ -27,6 +27,19 @@ router.delete('/deleteItems', function(req, res, next){
         console.log('del Items: ',del)
         res.json(del)
     })
+});
+
+router.get('/totalPrice', function(req, res, next){
+    Item.aggregate([{
+        "$group":{
+            "_id":"0",
+            "totalSum":{ "$sum": "$price"}
+        }
+    }]).then(resss => {
+        console.log('resss:',resss)
+        res.json(resss);
+    })
+    console.log('Total Price')
 })
 
 /* GET All Books */

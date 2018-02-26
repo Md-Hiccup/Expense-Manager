@@ -1,10 +1,30 @@
 # Expense-Manager
-Creating totalExpense by adding Items and Price to get the total estimate cost of the month. Expense-Manager is build in nodejs with mysql using sequelize.
+Creating totalExpense by adding Items and Price to get the total estimate cost of the month. Expense-Manager is build in nodejs with Mongo DB.(exclude mysql using sequelize.)
 
 
-**SET Mysql sql_mode _ONLY_FULL_GROUP_BY = "";_**
+<!-- **SET Mysql sql_mode _ONLY_FULL_GROUP_BY = "";_**
 
-**SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));**
+**SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));** -->
+
+## MongoDB
+
+###### Server Commands
+
+1. **Start Server**
+
+- sudo service mongod start
+
+2. **Stop Server**
+
+- sudo service mongod stop
+
+3. **Check Server Status**
+
+- sudo service mongod status
+
+4. **Restart Server**
+
+- sudo service mongod restart
 
 ## API Post request
 *check in postman*

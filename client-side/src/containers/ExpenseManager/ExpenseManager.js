@@ -24,6 +24,7 @@ class ExpenseManager extends Component {
             allList: [],
             addItem: [],
             activeItem: 'dashboard',
+            amount: 0,
             showList:false,
         }
     };
@@ -43,9 +44,7 @@ class ExpenseManager extends Component {
         const name = event.target.name;
         const list = { ...this.state.itemList };
         list[name] = value;
-        this.setState({
-            itemList: list
-        });
+        this.setState({ itemList: list  });
     };
     
     emptyInput(list) {
@@ -70,14 +69,16 @@ class ExpenseManager extends Component {
         axios.post('/addItems', saveItem)
             .then(res => {
                 return res;
-            }).then(result => {
-                ress.push(
-                    result.data
-                )
-                this.setState({ allList: ress, itemList:list})
-                this.emptyInput(list);
-            })
-            .catch(err => console.error(err));
+        }).then(result => {
+            ress.push(
+                result.data
+            )
+            this.setState({ allList: ress, itemList:list})
+            this.totalPriceHandler();
+            this.emptyInput(list);
+        })
+        .catch(err => console.error(err));
+        
     };
     
     deleteItemHandler= (event)=> {
@@ -88,14 +89,12 @@ class ExpenseManager extends Component {
         })
         .then(res => {
             if(res.status === 200){
+                // this.totalPriceHandler();
                 this.itemListHandler();
                 // console.log('Item Deleted: ',res);
             }
         })
-        .catch(err => {
-            return err;
-        });
-        
+        .catch(err => { return console.error('Error: ',err); });
     };
 
     itemListHandler= () => {
@@ -112,13 +111,25 @@ class ExpenseManager extends Component {
                 });
             }
             this.setState({allList: fetchLists, showList: !this.state.showList});
-            // console.log('all',fetchLists);
+            this.totalPriceHandler();
+            console.log('all',fetchLists);
         })
-        .catch(err => {
-            return err;
-        });
+        .catch(err => { return console.eroor('Error: ',err); });
     };
 
+    totalPriceHandler = () => {
+        // console.log('total Price handler: ')
+        axios('/totalPrice')
+            .then(total => {
+                if(total.data[0] !== undefined){
+                    const getTotalPrice = total.data[0].totalSum
+                    console.log('Total: ', getTotalPrice);
+                    this.setState({ amount : getTotalPrice})
+                } else {
+                    this.setState({amount : 0})
+                }
+            })
+    };
     render() {
         const {activeItem} = this.state;
 
@@ -137,7 +148,7 @@ class ExpenseManager extends Component {
                             active={activeItem === 'allitems'} 
                             onClick={this.handleItemClick} >
                         </Menu.Item>
-                        <Button primary onClick={this.itemListHandler} >Show List</Button>
+                        <Button primary onClick={this.totalPriceHandler} >Show List</Button>
                     </Menu>
                     </Grid.Column>
                     <Grid.Column width={10}> 
@@ -146,8 +157,9 @@ class ExpenseManager extends Component {
                             // inputDate={this.InputDate}
                             itemList={this.state.itemList}
                             inputChanged={this.InputHandler}
-                            addItem={this.addItemHandler}
+                            // addItem={this.addItemHandler}
                             saveItem={this.saveItemsHandler}
+                            totalPrice = {this.state.amount}
                             // clearItem={this.clearItemHandler}
                         />  
                         <div>
@@ -158,6 +170,7 @@ class ExpenseManager extends Component {
                                 // updateItem = {this.updateAllHandler}
                             /> 
                         </div>
+                        
                     </Grid.Column>
             
                     <Grid.Column width={3}> 
