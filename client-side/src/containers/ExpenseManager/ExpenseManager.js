@@ -25,7 +25,8 @@ class ExpenseManager extends Component {
             addItem: [],
             activeItem: 'dashboard',
             amount: 0,
-            showList:false,
+            editList: false,
+            tmpItems :[]
         }
     };
     componentDidMount() {
@@ -39,7 +40,7 @@ class ExpenseManager extends Component {
     //     this.setState({ date: date })
     // };
     InputHandler = (event) => {
-        // console.log('event: ', event);
+        console.log('event: ', event.target);
         const value = event.target.value;
         const name = event.target.name;
         const list = { ...this.state.itemList };
@@ -110,7 +111,7 @@ class ExpenseManager extends Component {
                     id: key
                 });
             }
-            this.setState({allList: fetchLists, showList: !this.state.showList});
+            this.setState({allList: fetchLists});
             this.totalPriceHandler();
             console.log('all',fetchLists);
         })
@@ -129,6 +130,50 @@ class ExpenseManager extends Component {
                     this.setState({amount : 0})
                 }
             })
+    };
+    inputItemHandler = (event) => {
+        // console.log('event', event.target)
+        const value = event.target.value;
+        const id = event.target.id;
+        const name = event.target.name;
+        const list = this.state.allList.slice();
+        // console.log('lisstttt', list);
+        for(let ls in list){
+            if(list[ls]._id === id){
+                if(name === 'items'){
+                    // console.log('itmsssss', list[ls])
+                    list[ls].name = value;
+                } else if (name === 'price'){
+                    list[ls].price = value;
+                }
+                // console.log('list',list[ls]);
+                this.setState({ tmpItems: list[ls], editList: true})
+            }
+        }
+        console.log('input Item editList: ', this.state.editList);
+    }
+    updateAllHandler =(event) => {
+        // const ItemUpdate = {...this.state.itemList}
+        // for(let upd in ItemUpdate) {
+            // console.log('item');
+        //     axios.put('/updateItems', {
+        //         id: ItemUpdate[upd].id,
+        //         name: ItemUpdate[upd].name,
+        //         price:ItemUpdate[upd].price
+        //     })
+        //         .then(function (result) {
+        //             console.log('res', result)
+        //         })
+        // }
+        const t_id = event.target.id;
+        console.log('Update Handler: ',t_id);
+        this.setState({ editList: false})
+        console.log('Update editList: ',this.state.editList)
+        // axios.put('/'+t_id)
+        // .then( res => {
+        //     console.log('Update Item: ',res);
+        // })
+        
     };
     render() {
         const {activeItem} = this.state;
@@ -157,7 +202,6 @@ class ExpenseManager extends Component {
                             // inputDate={this.InputDate}
                             itemList={this.state.itemList}
                             inputChanged={this.InputHandler}
-                            // addItem={this.addItemHandler}
                             saveItem={this.saveItemsHandler}
                             totalPrice = {this.state.amount}
                             // clearItem={this.clearItemHandler}
@@ -166,13 +210,14 @@ class ExpenseManager extends Component {
                             <Card
                                 all = {this.state.allList}
                                 deleteItem={this.deleteItemHandler}
-                                // changedInputItem={this.InputItemHandler}
-                                // updateItem = {this.updateAllHandler}
+                                updateItem = {this.updateAllHandler}
+                                isEdit = {this.state.editList}
+                                changedInput={this.inputItemHandler}
                             /> 
                         </div>
                         
                     </Grid.Column>
-            
+                        {/* <Input type='text' onChange={this.inputItemHandler} name='items' /> */}
                     <Grid.Column width={3}> 
                     </Grid.Column>
                 {/* </Grid.Row> */}

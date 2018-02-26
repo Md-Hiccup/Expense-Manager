@@ -25,8 +25,9 @@ const card = (props) => {
                 key = {il.id}
                 items={il}
                 deleteItem={props.deleteItem}
-                // changedInputItem={props.changedInputItem}
-                // updateItem = {props.updateItem}
+                changedInput={props.changedInput}
+                updateItem = {props.updateItem}
+                isEdit = {props.isEdit} 
             />
         )
     });
@@ -34,9 +35,9 @@ const card = (props) => {
         <Table color='red'>
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell width={2}>S No.</Table.HeaderCell>
-                    <Table.HeaderCell width={6}>Items</Table.HeaderCell>
-                    <Table.HeaderCell width={3}>Price</Table.HeaderCell>
+                    <Table.HeaderCell width={2}>No.</Table.HeaderCell>
+                    <Table.HeaderCell width={5}>Items</Table.HeaderCell>
+                    <Table.HeaderCell width={4}>Price</Table.HeaderCell>
                     <Table.HeaderCell width={3}>Date</Table.HeaderCell>
                     <Table.HeaderCell width={2}/>
                 </Table.Row>

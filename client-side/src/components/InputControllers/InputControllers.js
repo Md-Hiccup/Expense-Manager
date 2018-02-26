@@ -33,7 +33,6 @@ class InputControllers extends Component {
                         itemList ={this.props.itemList}
                         inputChanged = {this.props.inputChanged}
                         saveItem={this.props.saveItem}
-                        addItem={this.props.addItem}
                         // clearItem = {this.props.clearItem}
                     />  :   null
                  }

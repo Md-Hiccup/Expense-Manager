@@ -9,6 +9,7 @@ import { Button, Form } from 'semantic-ui-react';
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 
 const InputItems = (props) => {
+    // console.log('Input Items: ', props)
     return (
         <div className={classes.InputItems}>
           

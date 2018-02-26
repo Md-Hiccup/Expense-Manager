@@ -60,7 +60,7 @@ class AllItems extends Component {
     itemListHandler= () => {
         axios.get('/itemList',
         // {   params: {
-                    // uid: 1
+        //             uid: 1
         //  }      }
         )
             .then(res => {

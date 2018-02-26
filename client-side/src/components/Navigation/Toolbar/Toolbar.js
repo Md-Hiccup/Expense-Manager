@@ -39,7 +39,7 @@ class Toolbar extends Component {
                                     <Button onClick={this.show(true)} inverted>SignIn / SignUp</Button>
                                     {/* <Button inverted>SignUp</Button> */}
                                     <Modal dimmer={dimmer} size='tiny' open={open} onClose={this.close}>
-                                        <Header textAlign='center'> ExpoMan Authentication </Header>
+                                        <Header textAlign='center'> ExpoMan </Header>
                                         <Modal.Content>
                                             <Tab 
                                                 menu={{color: 'teal', attached:false, tabular:false}}

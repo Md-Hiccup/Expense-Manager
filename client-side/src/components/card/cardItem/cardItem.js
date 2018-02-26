@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button } from 'semantic-ui-react';
+import { Table, Input, Icon } from 'semantic-ui-react';
 
 // import classes from './cardItem.css';
 
@@ -9,15 +9,29 @@ const cardItem = (props) => {
     // const date = new Date(ct).toDateString();
     const cd = props.items;
     return (
-        <Table.Row id={cd.id}>
+        <Table.Row >
             <Table.Cell>{+cd.s+1}</Table.Cell>
-            <Table.Cell>{cd.itemName}</Table.Cell>
-            <Table.Cell>{cd.itemPrice}</Table.Cell>
+            <Table.Cell>
+            {   props.isEdit ? 
+                <Input type='text' size='small' value={cd.itemName} name='items'
+                onChange={props.changedInput} id={cd.id}/> 
+                : cd.itemName } 
+            </Table.Cell>
+            <Table.Cell>
+            {   props.isEdit ? 
+                <Input type='number' size='small' value={cd.itemPrice} name='price'
+                onChange={props.changedInput} id={cd.id}/> 
+                : cd.itemPrice } 
+            </Table.Cell>
             <Table.Cell>{cd.date}</Table.Cell>
             <Table.Cell collapsing>
-                <Button circular color='red' icon='close' id={cd.id} 
-                onClick={props.deleteItem}
-                />
+                <Icon circular inverted color='red' id={cd.id} name='close' onClick={props.deleteItem}/>
+                {   props.isEdit ?  
+                <Icon circular inverted color='green' id={cd.id} 
+                    name='check' onClick={props.updateItem}/>
+                :   <Icon circular inverted color='grey' id={cd.id} 
+                        name='edit' onClick={props.changedInput}/>
+                }   
             </Table.Cell>
         </Table.Row>
     )
