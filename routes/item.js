@@ -45,48 +45,19 @@ router.get('/totalPrice', function(req, res, next){
 })
 
   /* Update Single Item By Id */
-router.put('/:id', function(req, res, next){
-    console.log('get Id: ',req.params.id);
-    Item.findByIdAndUpdate(req.params.id, req.body, function(err, post){
+router.put('/updateItems/:id', function(req, res, next){
+    // console.log('get Body', req.body)
+    const updateBody = {  
+        $set: {
+            name: req.body.data.name,
+            price: req.body.data.price    
+        }
+    }
+    Item.findByIdAndUpdate(req.params.id, updateBody , {new: true}, function(err, post){
         if(err) return next(err); 
+        console.log(post);
         res.json(post)
     })
 })
-
-/* GET All Books */
-// router.get('/', function(req, res, next) {
-//     // res.json('Show the all Book')
-//     Book.find(function (err, products){
-//       if(err) return next(err);
-//       res.json(products);
-//     })
-//   });
-  
-  /* GET Single Book By Id */
-//   router.get('/:id', function(req, res, next){
-//     Book.findById(req.params.id, function(err, post){
-//       if(err) return next(err); 
-//       res.json(post)
-//     })
-//   })
-  
-  /* UPDATE Book */
-//   router.put('/:id', function(req, res, next){
-//     // res.json("Update Book")
-//     Book.findByIdAndUpdate(req.params.id, req.body, function(err, post){
-//       if(err) return next(err);
-//       res.json(post);
-//     })
-//   })
-  
-  /* DELETE Book */
-//   router.delete('/:id', function(req, res, next){
-//     // res.json("Delete Book");
-//     Book.findByIdAndRemove(req.params.id, req.body, function(err, post){
-//       if(err) return next(err);
-//       res.json(post)
-//     })
-//   })
-  
 
 module.exports = router;

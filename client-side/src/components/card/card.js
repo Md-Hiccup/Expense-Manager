@@ -28,13 +28,14 @@ const card = (props) => {
                 changedInput={props.changedInput}
                 updateItem = {props.updateItem}
                 isEdit = {props.isEdit} 
+                editVal = {props.editVal}
             />
         )
     });
     return (
         <Table color='red'>
             <Table.Header>
-                <Table.Row>
+                <Table.Row >
                     <Table.HeaderCell width={2}>No.</Table.HeaderCell>
                     <Table.HeaderCell width={5}>Items</Table.HeaderCell>
                     <Table.HeaderCell width={4}>Price</Table.HeaderCell>

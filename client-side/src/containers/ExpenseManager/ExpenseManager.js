@@ -22,32 +22,37 @@ class ExpenseManager extends Component {
             },
             date: moment(),
             allList: [],
-            addItem: [],
             activeItem: 'dashboard',
             amount: 0,
             editList: false,
+            editVal : null,
             tmpItems :[]
         }
     };
+
+    /*  IT calls After render() */
     componentDidMount() {
         this.itemListHandler();
     }
 
+    /* To handle the side Tab click */
     handleItemClick = (e, {name}) => { this.setState({ activeItem: name})}
 
     // InputDate = (date) => {
     //     console.log('date', date);
     //     this.setState({ date: date })
     // };
+
+    /*  For input change in Addition of Item */
     InputHandler = (event) => {
-        console.log('event: ', event.target);
+        // console.log('event: ', event.target);
         const value = event.target.value;
         const name = event.target.name;
         const list = { ...this.state.itemList };
         list[name] = value;
         this.setState({ itemList: list  });
     };
-    
+    /*  It empty the adding input Items */
     emptyInput(list) {
         list.items = '';
         list.price = '';
@@ -56,6 +61,7 @@ class ExpenseManager extends Component {
     // clearItemHandler = () => {
     //     this.setState({ allList: [] });
     // };
+    /*  It save the Item to DB  */
     saveItemsHandler = () => {
         let list = { ...this.state.itemList };
         const date = { ...this.state.date };
@@ -81,7 +87,7 @@ class ExpenseManager extends Component {
         .catch(err => console.error(err));
         
     };
-    
+    /*  It delete the item from DB  */
     deleteItemHandler= (event)=> {
         const del = event.target.id;
         // console.log('delete id: ',del);
@@ -97,7 +103,7 @@ class ExpenseManager extends Component {
         })
         .catch(err => { return console.error('Error: ',err); });
     };
-
+    /*  It list the all Items from DB   */
     itemListHandler= () => {
         axios.get('/itemList', {
             params: {   uid: 1  }
@@ -113,68 +119,65 @@ class ExpenseManager extends Component {
             }
             this.setState({allList: fetchLists});
             this.totalPriceHandler();
-            console.log('all',fetchLists);
+            // console.log('all',fetchLists);
         })
-        .catch(err => { return console.eroor('Error: ',err); });
+        .catch(err => { return console.error('Error: ',err); });
     };
-
+    /*  It call the total Price of the Items    */
     totalPriceHandler = () => {
         // console.log('total Price handler: ')
         axios('/totalPrice')
             .then(total => {
                 if(total.data[0] !== undefined){
                     const getTotalPrice = total.data[0].totalSum
-                    console.log('Total: ', getTotalPrice);
+                    // console.log('Total: ', getTotalPrice);
                     this.setState({ amount : getTotalPrice})
                 } else {
                     this.setState({amount : 0})
                 }
             })
     };
+    /*  For updating the items  */
     inputItemHandler = (event) => {
         // console.log('event', event.target)
         const value = event.target.value;
-        const id = event.target.id;
+        const _id = event.target.id;
         const name = event.target.name;
         const list = this.state.allList.slice();
-        // console.log('lisstttt', list);
+        let lt = null;
         for(let ls in list){
-            if(list[ls]._id === id){
+            if(list[ls]._id === _id){
                 if(name === 'items'){
                     // console.log('itmsssss', list[ls])
                     list[ls].name = value;
                 } else if (name === 'price'){
                     list[ls].price = value;
                 }
+                lt = ls;
                 // console.log('list',list[ls]);
-                this.setState({ tmpItems: list[ls], editList: true})
             }
         }
-        console.log('input Item editList: ', this.state.editList);
+        this.setState({ tmpItems: list[lt], editList: true, editVal: _id})
+        // console.log('Edit item List: ', this.state.editList);
     }
+    /*  It update the Item from DB  */
     updateAllHandler =(event) => {
-        // const ItemUpdate = {...this.state.itemList}
-        // for(let upd in ItemUpdate) {
-            // console.log('item');
-        //     axios.put('/updateItems', {
-        //         id: ItemUpdate[upd].id,
-        //         name: ItemUpdate[upd].name,
-        //         price:ItemUpdate[upd].price
-        //     })
-        //         .then(function (result) {
-        //             console.log('res', result)
-        //         })
-        // }
-        const t_id = event.target.id;
-        console.log('Update Handler: ',t_id);
-        this.setState({ editList: false})
-        console.log('Update editList: ',this.state.editList)
-        // axios.put('/'+t_id)
-        // .then( res => {
-        //     console.log('Update Item: ',res);
-        // })
-        
+        const _id = event.target.id;
+        const tmpItems = this.state.tmpItems;
+        // console.log('tmpItems:', tmpItems)
+        axios.put('/updateItems/'+_id,{
+            data: {
+                name: tmpItems.name,
+                price: tmpItems.price
+            }
+        })
+        .then( res => {
+            this.totalPriceHandler();
+            // console.log('Updated Item: ',res);
+        })
+        this.setState({ editList: false, editVal: null})
     };
+
     render() {
         const {activeItem} = this.state;
 
@@ -212,6 +215,7 @@ class ExpenseManager extends Component {
                                 deleteItem={this.deleteItemHandler}
                                 updateItem = {this.updateAllHandler}
                                 isEdit = {this.state.editList}
+                                editVal = {this.state.editVal}
                                 changedInput={this.inputItemHandler}
                             /> 
                         </div>
