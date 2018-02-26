@@ -15,7 +15,7 @@ class InputControllers extends Component {
     render(){
         const { totalPrice } = this.props;
         // console.log('InputController: ', this.props)
-        console.log('Total Price: ', totalPrice)        
+        // console.log('Total Price: ', totalPrice)        
     return (
         <div className={classes.InputControllers}>
         {/*<Month today = {props.today}/>*/}

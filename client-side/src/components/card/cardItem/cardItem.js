@@ -13,6 +13,7 @@ const cardItem = (props) => {
             <Table.Cell>{+cd.s+1}</Table.Cell>
             <Table.Cell>{cd.itemName}</Table.Cell>
             <Table.Cell>{cd.itemPrice}</Table.Cell>
+            <Table.Cell>{cd.date}</Table.Cell>
             <Table.Cell collapsing>
                 <Button circular color='red' icon='close' id={cd.id} 
                 onClick={props.deleteItem}

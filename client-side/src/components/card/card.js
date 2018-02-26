@@ -35,8 +35,9 @@ const card = (props) => {
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell width={2}>S No.</Table.HeaderCell>
-                    <Table.HeaderCell width={8}>Items</Table.HeaderCell>
-                    <Table.HeaderCell width={4}>Price</Table.HeaderCell>
+                    <Table.HeaderCell width={6}>Items</Table.HeaderCell>
+                    <Table.HeaderCell width={3}>Price</Table.HeaderCell>
+                    <Table.HeaderCell width={3}>Date</Table.HeaderCell>
                     <Table.HeaderCell width={2}/>
                 </Table.Row>
             </Table.Header>

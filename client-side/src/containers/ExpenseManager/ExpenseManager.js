@@ -63,7 +63,7 @@ class ExpenseManager extends Component {
             // id : count,
             name: list.items,
             price: list.price,
-            dates: moment(date).format('YYYY-MM-DD')
+            dates: moment(date).format('ll')
         }
         // console.log('saveItem', saveItem);
         axios.post('/addItems', saveItem)
