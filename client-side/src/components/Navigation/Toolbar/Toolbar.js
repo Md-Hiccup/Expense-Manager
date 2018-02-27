@@ -16,12 +16,12 @@ class Toolbar extends Component {
     
     handleTabChange = (e, { activeIndex }) => this.setState({ activeIndex });
     handleChange = (e, { name , value }) => {
-        console.log(name, value);
+        // console.log(name, value);
         this.setState({ [name]: e.target.value }) 
     }
     handleSubmit = () => {
         const {  email, password } = this.state;
-        console.log(email, password);
+        // console.log(email, password);
         this.setState({ submittedPassword: password, submittedEmail: email });
         // console.log('change: ',email, password);        
         console.log('submit: ',this.state.submittedEmail, this.state.submittedPassword);
@@ -29,6 +29,11 @@ class Toolbar extends Component {
     }
     responseGoogle = (response) => {
         console.log('Google ',response);
+        axios.post('/auth/google', response)
+            .then(res => {
+                console.log('g+ res', res);
+                this.close();
+            })
     }
     responseFacebook = (response) => {
         const fbData = {
@@ -40,7 +45,8 @@ class Toolbar extends Component {
         console.log('Facebook ',response);
         axios.post('/auth/facebook', response)
             .then(res => {
-                console.log('fb res:', res);
+                console.log('fb :', res);
+                this.close();
             })
     }
     render() {
@@ -75,7 +81,7 @@ class Toolbar extends Component {
                                                 {/* <Button color='facebook'><Icon name='facebook'/> Facebook</Button> */}
                                                 <FacebookLogin
                                                     appId="271200740023977"
-                                                    autoLoad={true}
+                                                    autoLoad={false}
                                                     fields="name,email,picture"
                                                     callback={this.responseFacebook}
                                                     title='Fb'

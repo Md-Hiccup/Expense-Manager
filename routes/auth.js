@@ -12,25 +12,24 @@ router.post('/facebook', function(req, res){
     profile = req.body;
     process.nextTick(function(){
         //user is not logged in yet
-        console.log(profile);
-        console.log();
             User.findOne({'facebook.fbid': profile.id}, function (err, user) {
                 if (err)
                     return console.error(err);
                 if (user) {
-                    console.log('old user');
+                    console.log('old user fb');
                     if(!user.facebook.token){
                         user.facebook.token = profile.accessToken;
                         user.facebook.name = profile.name;
                         user.facebook.email = profile.email;
                         user.save(function(err){
                             if(err)
-                                throw err;
+                                return console.error(err);
                         });
                     }
-                    return user;
+                    // console.log(user);
+                    res.json(user);
                 } else {
-                    console.log('new user');
+                    console.log('new user fb');
                     var newUser = new User();
                     newUser.facebook.fbid = profile.id;
                     newUser.facebook.token = profile.accessToken;
@@ -39,8 +38,8 @@ router.post('/facebook', function(req, res){
 
                     newUser.save(function (err) {
                         if (err)
-                            throw err;
-                        return newUser;
+                            return console.error(err);
+                        return res.json(newUser);
                     });
                 }
               //  console.log(profile.image);
@@ -49,5 +48,45 @@ router.post('/facebook', function(req, res){
      });
 })
 
-// router.post('/google', function(req, res))
+router.post('/google', function(req, res){
+    profile = req.body.profileObj;
+    accessToken = req.body.accessToken;
+    // console.log('profile obj', profile);
+    // console.log('token obj', accessToken)
+    // res.json('google login response')
+    process.nextTick(function(){
+        User.findOne({'google.id': profile.id}, function (err, user) {
+            if (err)
+                return console.error(err);
+            if (user) {
+                console.log('old user google');
+                if(!user.google.token){
+                    user.google.token = accessToken;
+                    user.google.name = profile.name;
+                    user.google.email = profile.email;
+                    user.save(function(err){
+                        if(err)
+                            return console.error(err);
+                    });
+                }
+                // console.log(user);
+                res.json(user);
+            } else {
+                console.log('new User google');
+                var newUser = new User();
+                newUser.google.id = profile.googleId;
+                newUser.google.token = accessToken;
+                newUser.google.name = profile.name;
+                newUser.google.email = profile.email;
+
+                newUser.save(function (err) {
+                    if (err)
+                        return console.error(err);
+                    res.json(newUser);
+                });
+            }
+            // console.log(profile.image);
+        });
+    })
+})
 module.exports = router;
