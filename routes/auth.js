@@ -4,9 +4,14 @@ var router = express.Router();
 // var passport = require('../../config/passport');
 
 // localhost:3000/auth/
-router.get('/', function (req, res) {
-    res.render('index');
+router.get('/all', function (req, res) {
+    User.find(function(err, data){
+        if(err) return next(err);
+        res.json(data)
+    });
 });
+
+/*********  Facebook Login  **************/
 router.post('/facebook', function(req, res){
     // console.log('facebook login:', req.body);
     profile = req.body;
@@ -48,6 +53,7 @@ router.post('/facebook', function(req, res){
      });
 })
 
+/*********  Google Login  *************/
 router.post('/google', function(req, res){
     profile = req.body.profileObj;
     accessToken = req.body.accessToken;
@@ -55,7 +61,7 @@ router.post('/google', function(req, res){
     // console.log('token obj', accessToken)
     // res.json('google login response')
     process.nextTick(function(){
-        User.findOne({'google.id': profile.id}, function (err, user) {
+        User.findOne({'google.gid': profile.googleId}, function (err, user) {
             if (err)
                 return console.error(err);
             if (user) {
@@ -74,7 +80,7 @@ router.post('/google', function(req, res){
             } else {
                 console.log('new User google');
                 var newUser = new User();
-                newUser.google.id = profile.googleId;
+                newUser.google.gid = profile.googleId;
                 newUser.google.token = accessToken;
                 newUser.google.name = profile.name;
                 newUser.google.email = profile.email;

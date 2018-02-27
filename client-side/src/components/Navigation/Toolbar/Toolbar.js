@@ -4,12 +4,15 @@ import { Segment, Grid, Menu, Header, Button, Modal, Icon, Divider,Tab } from 's
 import Login from '../../Auth/Login';
 import Signup from '../../Auth/Signup';
 // import classes from './Toolbar.css';
-import GoogleLogin from  'react-google-login';
+import {GoogleLogin, GoogleLogout} from  'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 import axios from '../../../axios-orders';
 
 class Toolbar extends Component {
-    state = { activeIndex: 0, open: false,  email: '', password:'', submittedPassword: '', submittedEmail: '' }
+    state = { 
+            activeIndex: 0, open: false, isLogin : false, ativeLogin: 0,
+            email: '', password:'', submittedPassword: '', submittedEmail: ''
+         }
 
     show = dimmer => () => this.setState({ dimmer, open: true })
     close = () => this.setState({ open: false })
@@ -32,25 +35,26 @@ class Toolbar extends Component {
         axios.post('/auth/google', response)
             .then(res => {
                 console.log('g+ res', res);
+                this.setState({isLogin: true, activeLogin: 2})
                 this.close();
-            })
+        })
     }
     responseFacebook = (response) => {
-        const fbData = {
-            name: response.name,
-            email: response.email,
-            id: response.id,
-            token: response.accessToken,
-        }
         console.log('Facebook ',response);
         axios.post('/auth/facebook', response)
             .then(res => {
                 console.log('fb :', res);
+                this.setState({isLogin: true, activeLogin: 1})
                 this.close();
             })
     }
+    logout = (response) => {
+        console.log('logout ', response.target);
+        // axios.get('/auth/all').then(res => console.log(res));
+        this.setState({isLogin: false, activeLogin: 0})
+    }
     render() {
-        const {open, email, password, submittedEmail, submittedPassword} = this.state;
+        const {open} = this.state;
         // const {email, password } = this.state; 
         const panes = [
             {   menuItem: 'Sign In', 
@@ -71,20 +75,30 @@ class Toolbar extends Component {
                                 <Menu.Item>
                                     <Modal dimmer='blurring' open={open} onClose={this.close} 
                                         style={{textAlign:'center'}} size='tiny' 
-                                        trigger={<Button inverted onClick={this.show(false)}>Login / Register</Button>}>
+                                        trigger={ this.state.isLogin ? 
+                                            this.state.activeLogin === 1 ? 
+                                                <Button color='facebook' onClick={this.logout}>
+                                                    <Icon name='facebook' onClick={this.logout}/>Logout</Button>
+                                                // : <GoogleLogout buttonText="Logout" onLogoutSuccess={this.logout} />
+                                                : <Button color='google plus' onClick={this.logout}>
+                                                    <Icon name='google plus' onClick={this.logout}/> Logout</Button> 
+                                            // <Button inverted onClick={this.logout}>Logout</Button>
+                                        : <Button inverted onClick={this.show(false)}>Login / Register</Button>}>
                                         {/* <Modal.Header >{ panes[this.state.activeIndex].menuItem}</Modal.Header> */}
                                         <Modal.Content>
                                             <Header as='h1'>{ panes[this.state.activeIndex].menuItem}
                                                 <Header.Subheader>with your social network</Header.Subheader>
                                             </Header>
-                                            <Button.Group >
+                                            <Button.Group size='mini' >
                                                 {/* <Button color='facebook'><Icon name='facebook'/> Facebook</Button> */}
                                                 <FacebookLogin
                                                     appId="271200740023977"
-                                                    autoLoad={false}
+                                                    autoLoad={false} size='medium'
                                                     fields="name,email,picture"
                                                     callback={this.responseFacebook}
-                                                    title='Fb'
+                                                    textButton="Facebook"
+                                                    cssClass='kep-login-facebook'
+                                                    icon= 'fa-facebook'
                                                 />
                                                 {/* <Button.Or/>     */}
                                                 <GoogleLogin
@@ -92,7 +106,8 @@ class Toolbar extends Component {
                                                     buttonText="Login"
                                                     onSuccess= {this.responseGoogle}
                                                     onFailure = {this.responseGoogle}
-                                                />
+                                                    style={googleStyle}
+                                                ><Icon name='google'/>GOOGLE</GoogleLogin>
                                                 {/* <Button color='google plus'><Icon name='google plus'/> Google</Button>     */}
                                                 {/* <Button.Or/>    
                                                 <Button color='twitter'><Icon name='twitter' /> Twitter</Button>                         */}
@@ -142,4 +157,17 @@ class Toolbar extends Component {
     }
 }
 
+const googleStyle = {
+    display: 'inline-block',
+    background: 'rgb(209, 72, 54)',
+    color: 'rgb(255, 255, 255)',
+    // width: '190px',
+    padding: '10px 23px',
+    borderRadius: '2px',
+    border: '1px solid transparent',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    // fontFamily: 'Roboto',
+    cursor: 'pointer'
+}
 export default Toolbar;
