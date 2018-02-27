@@ -3,34 +3,51 @@ import { Form, Button } from 'semantic-ui-react';
 
 const Signup = (props) => {
     return (
-        <Form >
+        <Form onSubmit={props.submit}>
             <Form.Group widths='equal'>
-                <Form.Input fluid label='First Name' placeholder='First Name' 
+                <Form.Input fluid 
+                    // label='First Name' 
+                    placeholder='First Name' 
                     name='fname' type='text' size='large'
-                    // value={fname} onChange={props.handleChanged}
+                    onChange={props.handleChanged}
+                    icon='user'
+                    iconPosition='left'
+                    // value={fname}
                     />
-                <Form.Input fluid label='Last Name' placeholder='Last Name' 
+                <Form.Input fluid 
+                    // label='Last Name' 
+                    placeholder='Last Name' 
                     name='lname' type='text' size='large'
-                    // value={lname} onChange={props.handleChanged} 
+                    onChange={props.handleChanged} 
+                    icon='user'
+                    iconPosition='left'
+                    // value={lname} 
                     />                
             </Form.Group>
-            <Form.Input fluid label='Email' 
+            <Form.Input fluid 
+                // label='Email' 
                 type='email'
                 name='email'
                 size='large'
-                placeholder='abc@gmail.com' 
-                // onChange={props.handleChanged}
+                placeholder='Email' 
+                onChange={props.handleChanged}
+                icon='mail'
+                iconPosition='left'
                 // value={email}
                 />
-            <Form.Input fluid label='Password' 
+            <Form.Input fluid 
+                // label='Password' 
                 type='password'
                 name='password'
                 size='large'
-                placeholder='aaaaa'
-                // onChange={props.handleChanged}
+                placeholder='Password'
+                onChange={props.handleChanged}
+                icon='lock'
+                iconPosition='left'
                 // value={password}
                 />
-            <Button primary >Signup</Button>
+            <Button color='green'>Sign up</Button>
+            <p>By signing up you accept our Terms of service.</p>
         </Form> 
     )
 }

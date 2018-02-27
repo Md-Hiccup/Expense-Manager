@@ -6,25 +6,34 @@ import Signup from '../../Auth/Signup';
 // import classes from './Toolbar.css';
 
 class Toolbar extends Component {
-    state = {   open: false, email: '', password:'', submittedPassword: '', submittedEmail: '' }
+    state = { activeIndex: 0, open: false,  email: '', password:'', submittedPassword: '', submittedEmail: '' }
 
     show = dimmer => () => this.setState({ dimmer, open: true })
-    close = () => { this.setState({ open: false })  }
- 
-    handleChange = (e, { name, value }) => this.setState({ [name]: e.target.value })
+    close = () => this.setState({ open: false })
+    
+    handleTabChange = (e, { activeIndex }) => this.setState({ activeIndex });
+    handleChange = (e, { name , value }) => {
+        console.log(name, value);
+        this.setState({ [name]: e.target.value }) 
+    }
     handleSubmit = () => {
-        const { password, email } = this.state;
-        alert(" Authenticate...")
-        this.setState({ submittedPassword: password, submittedEmail: email })
-        this.close()
+        const {  email, password } = this.state;
+        console.log(email, password);
+        this.setState({ submittedPassword: password, submittedEmail: email });
+        // console.log('change: ',email, password);        
+        console.log('submit: ',this.state.submittedEmail, this.state.submittedPassword);
+        // this.close();
     }
  
     render() {
-        const {open, dimmer} = this.state;
+        const {open, email, password, submittedEmail, submittedPassword} = this.state;
         // const {email, password } = this.state; 
         const panes = [
-            { menuItem: 'SignIn', render: () => <Tab.Pane ><Login submit={this.handleSubmit}/></Tab.Pane> },
-            { menuItem: 'SignUp', render: () => <Tab.Pane ><Signup submit={this.handleSubmit}/></Tab.Pane> },
+            {   menuItem: 'Sign In', 
+            render: () => <Tab.Pane ><Login changed={this.handleChange} submit={this.handleSubmit}/></Tab.Pane> 
+            },
+            { menuItem: 'Sign Up', 
+            render: () => <Tab.Pane ><Signup changed={this.handleChange} submit={this.handleSubmit}/></Tab.Pane> },
           ]
         return(
             <Segment inverted style={{margin: '0px', borderRadius: '0px'}}>
@@ -36,9 +45,41 @@ class Toolbar extends Component {
                             </Menu.Item>
                             <Menu.Menu position="right">
                                 <Menu.Item>
-                                    <Button onClick={this.show(true)} inverted>SignIn / SignUp</Button>
+                                    <Modal dimmer='blurring' open={open} onClose={this.close} 
+                                        style={{textAlign:'center'}} size='tiny' 
+                                        trigger={<Button inverted onClick={this.show(false)}>Login / Register</Button>}>
+                                        {/* <Modal.Header >{ panes[this.state.activeIndex].menuItem}</Modal.Header> */}
+                                        <Modal.Content>
+                                            <Header as='h1'>{ panes[this.state.activeIndex].menuItem}
+                                                <Header.Subheader>with your social network</Header.Subheader>
+                                            </Header>
+                                            <Button.Group fluid>
+                                                <Button color='facebook'><Icon name='facebook'/> Facebook</Button>
+                                                <Button.Or/>    
+                                                <Button color='google plus'><Icon name='google plus'/> Google</Button>    
+                                                <Button.Or/>    
+                                                <Button color='twitter'><Icon name='twitter' /> Twitter</Button>                        
+                                            </Button.Group>
+                                            <Divider horizontal>Or</Divider>
+                                            <Modal.Description >
+                                            <Tab 
+                                                menu={{pointing:true, color: 'teal'}}
+                                                grid={{ paneWidth:12, tabWidth: 6 }}
+                                                panes={panes}
+                                                activeIndex={this.state.activeIndex} onTabChange={this.handleTabChange} 
+                                            />
+                                            </Modal.Description>
+                                        </Modal.Content>
+                                        {/* <Modal.Actions>
+                                        <strong>onChange:</strong>
+                                        <pre>{JSON.stringify({ email , password}, null, 2)}</pre>
+                                        <strong>onSubmit:</strong>
+                                        <pre>{JSON.stringify({ submittedEmail, submittedPassword }, null, 2)}</pre>
+                                        </Modal.Actions> */}
+                                    </Modal>
+                                    {/* <Button onClick={this.show(true)} inverted>SignIn / SignUp</Button>
                                     {/* <Button inverted>SignUp</Button> */}
-                                    <Modal dimmer={dimmer} size='tiny' open={open} onClose={this.close}>
+                                    {/* <Modal dimmer={dimmer} size='tiny' open={open} onClose={this.close}>
                                         <Header textAlign='center'> ExpoMan </Header>
                                         <Modal.Content>
                                             <Tab 
@@ -52,7 +93,7 @@ class Toolbar extends Component {
                                             <Button floated='right' color='google plus'><Icon name='google plus'/>Google Plus</Button>
                                             <Divider hidden />
                                         </Modal.Actions> 
-                                    </Modal>
+                                    </Modal> */}
                                 </Menu.Item>
                             </Menu.Menu>
                         </Menu>
