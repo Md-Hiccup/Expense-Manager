@@ -3,24 +3,31 @@ import { Form, Button } from 'semantic-ui-react';
 
 const Login = (props) => {
     return (
-        <Form >
-            <Form.Input fluid label='Email' 
+        <Form onSubmit={props.submit}>
+            <Form.Input fluid 
+                // label='Email' 
                 type='email'
                 name='email'
                 size='large'
-                placeholder='abc@gmail.com' 
-                // onChange={props.handleChanged}
-                // value={email}
+                placeholder='Email' 
+                onChange={props.changed}
+                icon='mail'
+                iconPosition='left'
+                // value={props.email}
                 />
-            <Form.Input fluid label='Password' 
+            <Form.Input fluid
+                // label='Password' 
                 type='password'
                 name='password'
                 size='large'
-                placeholder='aaaaa'
-                // onChange={props.handleChanged}
-                // value={password}
+                placeholder='Password'
+                onChange={props.changed}
+                icon='lock'
+                iconPosition='left'
+                // value={props.password}
                 />
-            <Button primary >Login</Button>
+            <Button primary >Sign in</Button>
+            <p>Recover my Password</p>
         </Form> 
     )
 };
