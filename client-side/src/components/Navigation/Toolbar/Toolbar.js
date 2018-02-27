@@ -4,6 +4,9 @@ import { Segment, Grid, Menu, Header, Button, Modal, Icon, Divider,Tab } from 's
 import Login from '../../Auth/Login';
 import Signup from '../../Auth/Signup';
 // import classes from './Toolbar.css';
+import GoogleLogin from  'react-google-login';
+import FacebookLogin from 'react-facebook-login';
+import axios from '../../../axios-orders';
 
 class Toolbar extends Component {
     state = { activeIndex: 0, open: false,  email: '', password:'', submittedPassword: '', submittedEmail: '' }
@@ -24,7 +27,22 @@ class Toolbar extends Component {
         console.log('submit: ',this.state.submittedEmail, this.state.submittedPassword);
         // this.close();
     }
- 
+    responseGoogle = (response) => {
+        console.log('Google ',response);
+    }
+    responseFacebook = (response) => {
+        const fbData = {
+            name: response.name,
+            email: response.email,
+            id: response.id,
+            token: response.accessToken,
+        }
+        console.log('Facebook ',response);
+        axios.post('/auth/facebook', response)
+            .then(res => {
+                console.log('fb res:', res);
+            })
+    }
     render() {
         const {open, email, password, submittedEmail, submittedPassword} = this.state;
         // const {email, password } = this.state; 
@@ -53,12 +71,25 @@ class Toolbar extends Component {
                                             <Header as='h1'>{ panes[this.state.activeIndex].menuItem}
                                                 <Header.Subheader>with your social network</Header.Subheader>
                                             </Header>
-                                            <Button.Group fluid>
-                                                <Button color='facebook'><Icon name='facebook'/> Facebook</Button>
-                                                <Button.Or/>    
-                                                <Button color='google plus'><Icon name='google plus'/> Google</Button>    
-                                                <Button.Or/>    
-                                                <Button color='twitter'><Icon name='twitter' /> Twitter</Button>                        
+                                            <Button.Group >
+                                                {/* <Button color='facebook'><Icon name='facebook'/> Facebook</Button> */}
+                                                <FacebookLogin
+                                                    appId="271200740023977"
+                                                    autoLoad={true}
+                                                    fields="name,email,picture"
+                                                    callback={this.responseFacebook}
+                                                    title='Fb'
+                                                />
+                                                {/* <Button.Or/>     */}
+                                                <GoogleLogin
+                                                    clientId="797945392647-6cemncdvdfk05lkleu6e8gv5gr1msdjp.apps.googleusercontent.com"
+                                                    buttonText="Login"
+                                                    onSuccess= {this.responseGoogle}
+                                                    onFailure = {this.responseGoogle}
+                                                />
+                                                {/* <Button color='google plus'><Icon name='google plus'/> Google</Button>     */}
+                                                {/* <Button.Or/>    
+                                                <Button color='twitter'><Icon name='twitter' /> Twitter</Button>                         */}
                                             </Button.Group>
                                             <Divider horizontal>Or</Divider>
                                             <Modal.Description >

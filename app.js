@@ -44,17 +44,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 // allowing cross origin resource sharing permission
 app.use(cors({origin: '*'}));
 
-var auth = require('./routes/auth')(passport);
-// var routes = require('./routes/item')(passport);
+// var auth = require('./routes/authjwt')(passport);
+// var routes = require('./routes/index')(passport);
+var auth = require('./routes/auth');
 var routes = require('./routes/item');
 app.use('/auth', auth);
 app.use('/', routes);
 
 //Models
-var models = require("./models");
+// var models = require("./models");
 
 //load passport strategies
-require('./config/passport.js')(passport, models.User, models.GoogleUser, models.FacebookUser);
+// require('./config/passport.js')(passport, models.User, models.GoogleUser, models.FacebookUser);
 
 //Sync Database   [ for forcefully delete previous value in DB use .sync({force:true}.then(..) ]
 // models.sequelize.sync({force: false}).then(function(){

@@ -38,10 +38,10 @@ router.get('/totalPrice', function(req, res, next){
             "totalSum":{ "$sum": "$price"}
         }
     }]).then(resss => {
-        console.log('resss:',resss)
+        // console.log('resss:',resss)
         res.json(resss);
     })
-    console.log('Total Price')
+    // console.log('Total Price')
 })
 
   /* Update Single Item By Id */

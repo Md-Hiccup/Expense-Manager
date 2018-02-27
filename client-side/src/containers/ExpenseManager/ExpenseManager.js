@@ -76,7 +76,7 @@ class ExpenseManager extends Component {
         axios.post('/addItems', saveItem)
             .then(res => {
                 return res;
-        }).then(result => {
+            }).then(result => {
             ress.push(
                 result.data
             )
