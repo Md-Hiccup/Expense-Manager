@@ -3,7 +3,7 @@ import {Route, Switch} from 'react-router-dom';
 
 import Layout from './hoc/Layout/Layout';
 import ExpenseManager from './containers/ExpenseManager/ExpenseManager';
-import AllItems from './UnUsed/AllItems/AllItems';
+import AllItems from './containers/AllItems/AllItems';
 
 class App extends Component {
   render() {
