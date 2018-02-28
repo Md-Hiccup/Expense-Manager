@@ -9,6 +9,7 @@ import InputControllers from '../../components/InputControllers/InputControllers
 // import ListControllers from '../../components/ListControllers/ListControllers';
 import classes from './ExpenseManager.css';
 import Card from '../../components/card/card';
+import AccordionList from './../../components/Accordion/Accordion';
 
 class ExpenseManager extends Component {
     constructor() {
@@ -26,18 +27,28 @@ class ExpenseManager extends Component {
             amount: 0,
             editList: false,
             editVal : null,
-            tmpItems :[]
+            tmpItems :[], 
+            activeIndex: 0,
+            dateListItems: {}
         }
     };
 
     /*  IT calls After render() */
-    componentDidMount() {
+    componentWillMount() {
         this.itemListHandler();
+        this.dateWiseItemHandler();
     }
 
     /* To handle the side Tab click */
     handleItemClick = (e, {name}) => { this.setState({ activeItem: name})}
 
+    handleClick = (e, titleProps) => {
+        const { index } = titleProps;
+        console.log('title props,', titleProps);
+        const { activeIndex } = this.state;
+        const newIndex = activeIndex === index ? -1 : index
+        this.setState({ activeIndex : newIndex})
+    }
     // InputDate = (date) => {
     //     console.log('date', date);
     //     this.setState({ date: date })
@@ -70,13 +81,18 @@ class ExpenseManager extends Component {
             // id : count,
             name: list.items,
             price: list.price,
-            dates: moment(date).format('ll')
+            dates: moment(date).format('ll'),
+            // items: [{
+            //     name: list.items,
+            //     price: list.price
+            // }]
         }
         // console.log('saveItem', saveItem);
         axios.post('/addItems', saveItem)
             .then(res => {
                 return res;
             }).then(result => {
+                console.log('add Items: ',result);
             ress.push(
                 result.data
             )
@@ -106,7 +122,7 @@ class ExpenseManager extends Component {
     /*  It list the all Items from DB   */
     itemListHandler= () => {
         axios.get('/itemList', {
-            params: {   uid: 1  }
+            // params: {   uid: 1  }
         })
         .then(res => {
             // console.log('Total Items List: ',res)
@@ -118,10 +134,13 @@ class ExpenseManager extends Component {
                 });
             }
             this.setState({allList: fetchLists});
+            this.dateWiseItemHandler();
             this.totalPriceHandler();
+            // console.log('ItemList data,' ,this.state.allList)
             // console.log('all',fetchLists);
         })
         .catch(err => { return console.error('Error: ',err); });
+        
     };
     /*  It call the total Price of the Items    */
     totalPriceHandler = () => {
@@ -178,9 +197,26 @@ class ExpenseManager extends Component {
         this.setState({ editList: false, editVal: null})
     };
 
+    dateWiseItemHandler = () => {
+        // console.log('date ITem List: ', this.state.allList);
+        const dateList = [];
+        const list = this.state.allList.slice();
+        axios.get('/itemList/date')
+        .then(res => {
+            console.log('date res: ',res)
+            dateList.push({
+                ...res
+            })
+            this.setState({ dateListItems: dateList})
+            console.log('dateList',this.state.dateListItems)
+        })
+    }
     render() {
-        const {activeItem} = this.state;
-
+        const {activeItem, activeIndex} = this.state;
+        // const panels = [
+        //  {  title: 'Date', content: ['Hot date'].join(' ') },
+        //  {  title: 'Time', content: ['Hot Time'].join(' ')  }
+        // ]
         return (
             <Aux>
                 <div className={classes.ExpenseControl}>
@@ -196,7 +232,7 @@ class ExpenseManager extends Component {
                             active={activeItem === 'allitems'} 
                             onClick={this.handleItemClick} >
                         </Menu.Item>
-                        <Button primary onClick={this.totalPriceHandler} >Show List</Button>
+                        <Button primary onClick={this.itemListHandler} >Show List</Button>
                     </Menu>
                     </Grid.Column>
                     <Grid.Column width={10}> 
@@ -208,16 +244,50 @@ class ExpenseManager extends Component {
                             saveItem={this.saveItemsHandler}
                             totalPrice = {this.state.amount}
                             // clearItem={this.clearItemHandler}
-                        />  
+                        /> 
+                        <AccordionList 
+                            dateList = {this.state.dateListItems}
+                            deleteItem={this.deleteItemHandler}
+                            updateItem = {this.updateAllHandler}
+                            isEdit = {this.state.editList}
+                            editVal = {this.state.editVal}
+                            changedInput={this.inputItemHandler}
+                        /> 
                         <div>
-                            <Card
+                            {/* <Accordion defaultActiveIndex={[0]} panels={panels} exclusive={false}/> */}
+                            {/* <Accordion fluid styled exclusive={false}>
+                                <Accordion.Title  active = { activeIndex === 0} 
+                                index={0} onClick={this.handleClick}>
+                                    <p><Icon name='dropdown'></Icon> 
+                                    Date : </p>
+                                </Accordion.Title>
+                                <Accordion.Content active={activeIndex === 0}> */}
+                                    {/* <Card
+                                        all = {this.state.allList}
+                                        deleteItem={this.deleteItemHandler}
+                                        updateItem = {this.updateAllHandler}
+                                        isEdit = {this.state.editList}
+                                        editVal = {this.state.editVal}
+                                        changedInput={this.inputItemHandler}
+                                    />  */}
+                                {/* </Accordion.Content> */}
+                                {/* <Accordion.Title active = {activeIndex === 1} 
+                                index={1} onClick={this.handleClick}>
+                                    <Icon name='dropdown'/>
+                                    Time
+                                </Accordion.Title>
+                                <Accordion.Content active={activeIndex === 1}>
+                                <p> Hot Time </p>
+                                </Accordion.Content> */}
+                            {/* </Accordion> */}
+                            {/* <Card
                                 all = {this.state.allList}
                                 deleteItem={this.deleteItemHandler}
                                 updateItem = {this.updateAllHandler}
                                 isEdit = {this.state.editList}
                                 editVal = {this.state.editVal}
                                 changedInput={this.inputItemHandler}
-                            /> 
+                            />  */}
                         </div>
                         
                     </Grid.Column>

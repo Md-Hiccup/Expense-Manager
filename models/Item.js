@@ -4,6 +4,10 @@ const ItemSchema = new mongoose.Schema({
     name : String,
     price : Number,
     dates : String,
+    // items: [{
+    //     name: String,
+    //     price: String
+    // }]
     // updated_date: {type: Date, default: Date.now },
 });
 

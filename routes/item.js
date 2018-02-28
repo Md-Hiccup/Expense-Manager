@@ -10,7 +10,24 @@ router.get('/itemList', function (req, res, next) {
         res.json(data);
     })
 });
-
+router.get('/itemList/date', function(req, res, next){
+    console.log('item Date');
+    // res.json('itemList / date')
+    Item.aggregate([{
+        // "$project": {
+        //     "$name":1,
+        //     "$price":1
+        // },
+        "$group":{
+            _id: "$dates",
+            totalSum:{ "$sum": "$price"},
+            items: { $push: "$$ROOT" }
+        }
+    }]).then(ress => {
+        console.log('item/date: ',ress)
+         res.json(ress);
+    })
+});
 /* Save Single Item */
 router.post('/addItems', function(req, res, next){
     Item.create(req.body, function(err, post){
