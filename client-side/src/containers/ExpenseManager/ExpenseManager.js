@@ -17,8 +17,8 @@ class ExpenseManager extends Component {
         // today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
         this.state = {
             itemList: {
-                items: 'ColdCoffe',
-                price: '10',
+                items: 'Biryani',
+                price: '80',
             },
             date: moment(),
             allList: [],

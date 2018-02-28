@@ -11,7 +11,8 @@ import axios from '../../../axios-orders';
 class Toolbar extends Component {
     state = { 
             activeIndex: 0, open: false, isLogin : false, ativeLogin: 0,
-            email: '', password:'', submittedPassword: '', submittedEmail: ''
+            email: '', password:'', submittedPassword: '', submittedEmail: '',
+            gToken: '', fbToken: ''
          }
 
     show = dimmer => () => this.setState({ dimmer, open: true })
@@ -32,25 +33,33 @@ class Toolbar extends Component {
     }
     responseGoogle = (response) => {
         console.log('Google ',response);
+        console.log('Google accessToken: ',response.accessToken);
+        const gTokenTime = response.tokenObj.expires_in;
         axios.post('/auth/google', response)
             .then(res => {
                 console.log('g+ res', res);
-                this.setState({isLogin: true, activeLogin: 2})
+                this.setState({isLogin: true, activeLogin: 2, gToken: gTokenTime})
                 this.close();
-        })
+            })
     }
     responseFacebook = (response) => {
         console.log('Facebook ',response);
+        console.log('Facebook accessToken', response.accessToken)
+        const fbTokenTime = response.expiresIn;
         axios.post('/auth/facebook', response)
             .then(res => {
                 console.log('fb :', res);
-                this.setState({isLogin: true, activeLogin: 1})
+                this.setState({isLogin: true, activeLogin: 1, fbToken : fbTokenTime})
                 this.close();
             })
     }
     logout = (response) => {
-        console.log('logout ', response.target);
-        // axios.get('/auth/all').then(res => console.log(res));
+        if(this.state.activeLogin === 1) {
+            console.log('logout from FB: ', this.state.fbToken);
+            // console.log('')
+        } else {
+            console.log('logout from G+: ', this.state.gToken);
+        }// axios.get('/auth/all').then(res => console.log(res));
         this.setState({isLogin: false, activeLogin: 0})
     }
     render() {
@@ -83,7 +92,8 @@ class Toolbar extends Component {
                                                 : <Button color='google plus' onClick={this.logout}>
                                                     <Icon name='google plus' onClick={this.logout}/> Logout</Button> 
                                             // <Button inverted onClick={this.logout}>Logout</Button>
-                                        : <Button inverted onClick={this.show(false)}>Login / Register</Button>}>
+                                        : <Button inverted onClick={this.show(false)}>Login / Register</Button>
+                                        }>
                                         {/* <Modal.Header >{ panes[this.state.activeIndex].menuItem}</Modal.Header> */}
                                         <Modal.Content>
                                             <Header as='h1'>{ panes[this.state.activeIndex].menuItem}
@@ -108,6 +118,7 @@ class Toolbar extends Component {
                                                     onFailure = {this.responseGoogle}
                                                     style={googleStyle}
                                                 ><Icon name='google'/>GOOGLE</GoogleLogin>
+                                               
                                                 {/* <Button color='google plus'><Icon name='google plus'/> Google</Button>     */}
                                                 {/* <Button.Or/>    
                                                 <Button color='twitter'><Icon name='twitter' /> Twitter</Button>                         */}
