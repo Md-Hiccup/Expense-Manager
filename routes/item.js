@@ -19,7 +19,7 @@ router.get('/itemList/date', function(req, res, next){
         //     "$price":1
         // },
     {  $group:{
-            _id: { $dateToString: { format: "%d-%m-%Y", date: "$created_date" } },
+            _id: { $dateToString: { format: "%m-%d-%Y", date: "$created_date" } },
             totalSum:{ "$sum": "$price"},
             items: { $push: "$$ROOT" }
             }
@@ -80,5 +80,19 @@ router.put('/updateItems/:id', function(req, res, next){
         res.json(post)
     })
 })
+
+router.get('/monthlyExp', function(req, res, next){
+    console.log('monthly Expense');
+    Item.aggregate([
+        { $group: {
+            // _id: { $dateToString: { format: "%m-%Y", date: "$created_date" } },
+            _id : { $month : "$created_date"},
+            totalSum:{ "$sum": "$price"},
+        }}
+    ]).then( mon => {
+        console.log('mon',mon);
+        res.json(mon)
+    })
+});
 
 module.exports = router;

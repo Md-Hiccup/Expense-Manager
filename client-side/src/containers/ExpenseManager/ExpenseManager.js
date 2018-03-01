@@ -10,6 +10,7 @@ import InputControllers from '../../components/InputControllers/InputControllers
 import classes from './ExpenseManager.css';
 import Card from '../../components/card/card';
 import AccordionList from './../../components/Accordion/Accordion';
+import ShowMonthList from '../../components/ShowMonthList/ShowMonthList';
 
 class ExpenseManager extends Component {
     constructor() {
@@ -28,8 +29,9 @@ class ExpenseManager extends Component {
             editList: false,
             editVal : null,
             tmpItems :[], 
-            activeIndex: 0,
-            dateListItems: []
+            // activeIndex: 0,
+            dateListItems: [],
+            monthlyExp: []
         }
     };
 
@@ -37,6 +39,7 @@ class ExpenseManager extends Component {
     componentDidMount() {
         this.itemListHandler();
         this.dateWiseItemHandler();
+        this.showMonthPriceHandle();
     }
 
     /* To handle the side Tab click */
@@ -227,8 +230,16 @@ class ExpenseManager extends Component {
             // console.log('dateList',this.state.dateListItems)
         })
     }
+
+    showMonthPriceHandle = () => {
+        axios.get('/monthlyExp')
+        .then(res => {
+            this.setState({ monthlyExp: res.data})
+            // console.log('monthly Exp: ', this.state.monthlyExp)
+        })
+    }
     render() {
-        const {activeItem, activeIndex} = this.state;
+        const {activeItem} = this.state;
         // const panels = [
         //  {  title: 'Date', content: ['Hot date'].join(' ') },
         //  {  title: 'Time', content: ['Hot Time'].join(' ')  }
@@ -238,7 +249,7 @@ class ExpenseManager extends Component {
                 <div className={classes.ExpenseControl}>
                 <Grid container relaxed>
                 {/* <Grid.Row columns={3}> */}
-                    <Grid.Column width={3} floated="left"> 
+                    <Grid.Column width={3}> 
                     <Menu  fluid pointing secondary vertical>
                         <Menu.Item as={Link} to='/' name="dashboard" 
                             active={activeItem === 'dashboard'} 
@@ -270,44 +281,19 @@ class ExpenseManager extends Component {
                             changedInput={this.inputItemHandler}
                         /> : null }
                         <div>
-                            {/* <Accordion defaultActiveIndex={[0]} panels={panels} exclusive={false}/> */}
-                            {/* <Accordion fluid styled exclusive={false}>
-                                <Accordion.Title  active = { activeIndex === 0} 
-                                index={0} onClick={this.handleClick}>
-                                    <p><Icon name='dropdown'></Icon> 
-                                    Date : </p>
-                                </Accordion.Title>
-                                <Accordion.Content active={activeIndex === 0}> */}
-                                    <Card
-                                        all = {this.state.allList}
-                                        deleteItem={this.deleteItemHandler}
-                                        updateItem = {this.updateAllHandler}
-                                        isEdit = {this.state.editList}
-                                        editVal = {this.state.editVal}
-                                        changedInput={this.inputItemHandler}
-                                    /> 
-                                {/* </Accordion.Content> */}
-                                {/* <Accordion.Title active = {activeIndex === 1} 
-                                index={1} onClick={this.handleClick}>
-                                    <Icon name='dropdown'/>
-                                    Time
-                                </Accordion.Title>
-                                <Accordion.Content active={activeIndex === 1}>
-                                <p> Hot Time </p>
-                                </Accordion.Content> */}
-                            {/* </Accordion> */}
-                            {/* <Card
+                            <Card
                                 all = {this.state.allList}
                                 deleteItem={this.deleteItemHandler}
                                 updateItem = {this.updateAllHandler}
                                 isEdit = {this.state.editList}
                                 editVal = {this.state.editVal}
                                 changedInput={this.inputItemHandler}
-                            />  */}
+                            /> 
                         </div>
-                        
                     </Grid.Column>
-                        {/* <Input type='text' onChange={this.inputItemHandler} name='items' /> */}
+                        <ShowMonthList 
+                            list = {this.state.monthlyExp}
+                        />
                     <Grid.Column width={3}> 
                     </Grid.Column>
                 {/* </Grid.Row> */}

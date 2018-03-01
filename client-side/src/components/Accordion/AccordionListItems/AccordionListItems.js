@@ -6,7 +6,7 @@ class accordionListItems extends Component {
     constructor (props){
         super(props);
         this.state={
-            activeIndex: 0
+            activeIndex: null
         }
     }
     handleClick = (e, titleProps) => {
