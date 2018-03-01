@@ -13,7 +13,7 @@ var app = express();
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
-mongoose.connect('mongodb://localhost/expense-manager', { useMongoClient: true, promiseLibrary: require('bluebird')})
+mongoose.connect('mongodb://localhost/expense-manager', { promiseLibrary: require('bluebird')})
     .then(() => console.log('connection successful'))
     .catch((err) => console.error(err));
 

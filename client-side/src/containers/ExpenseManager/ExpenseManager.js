@@ -8,9 +8,10 @@ import Aux from '../../hoc/Aux/Aux';
 import InputControllers from '../../components/InputControllers/InputControllers';
 // import ListControllers from '../../components/ListControllers/ListControllers';
 import classes from './ExpenseManager.css';
-import Card from '../../components/card/card';
+// import Card from '../../components/card/card';
 import AccordionList from './../../components/Accordion/Accordion';
 import ShowMonthList from '../../components/ShowMonthList/ShowMonthList';
+import { Divider } from 'semantic-ui-react';
 
 class ExpenseManager extends Component {
     constructor() {
@@ -31,7 +32,8 @@ class ExpenseManager extends Component {
             tmpItems :[], 
             // activeIndex: 0,
             dateListItems: [],
-            monthlyExp: []
+            monthlyExp: [],
+            listdate : 0
         }
     };
 
@@ -39,7 +41,7 @@ class ExpenseManager extends Component {
     componentDidMount() {
         this.itemListHandler();
         this.dateWiseItemHandler();
-        this.showMonthPriceHandle();
+        this.showMonthPriceHandler();
     }
 
     /* To handle the side Tab click */
@@ -160,6 +162,7 @@ class ExpenseManager extends Component {
                     const getTotalPrice = total.data[0].totalSum
                     // console.log('Total: ', getTotalPrice);
                     this.setState({ amount : getTotalPrice})
+                    this.showMonthPriceHandler();
                 } else {
                     this.setState({amount : 0})
                 }
@@ -172,25 +175,43 @@ class ExpenseManager extends Component {
         const _id = event.target.id;
         const name = event.target.name;
         // console.log('id, name, value ',_id, name, value)
-        const listt = this.state.allList.slice();
-        // const listt = this.state.dateListItems.slice();
-        // console.log('list',listt);
+        // const list = this.state.allList.slice();
+        const listt = this.state.dateListItems.slice();
+        // const list = listt;
+        console.log('list',listt);
         // const list = this.state.date
-        let lt = null;
-        const list = listt;
-        for(let ls in list){
-            if(list[ls]._id === _id){
-                if(name === 'item'){
-                    // console.log('itmsssss', list[ls])
-                    list[ls].item = value;
-                } else if (name === 'price'){
-                    list[ls].price = value;
+        // ******* For Card List **************************
+        for(let aa in listt){
+            for(let bb in listt[aa].items ){
+                const cc = listt[aa].items[bb];
+                if(cc._id === _id){
+                    if(name === 'item'){
+                        // console.log('cc: ',bb,cc._id,cc.item,cc.price)
+                        cc.item = value;
+                    } else if (name === 'price'){
+                        // console.log('cc: ',bb,cc._id,cc.item,cc.price)
+                        cc.price = value
+                    }
+                this.setState({ tmpItems: cc, editList: true, editVal: _id})
                 }
-                lt = ls;
-                // console.log('list',list[ls]);
+                // console.log('bb _id',bb, listt[aa].items[bb]._id)
             }
         }
-        this.setState({ tmpItems: list[lt], editList: true, editVal: _id})
+        //*********** For Front All List *********************
+        // let lt = null;
+        // for(let ls in list){
+        //     if(list[ls]._id === _id){
+        //         if(name === 'item'){
+        //             // console.log('itmsssss', list[ls])
+        //             list[ls].item = value;
+        //         } else if (name === 'price'){
+        //             list[ls].price = value;
+        //         }
+        //         lt = ls;
+        //         // console.log('list',list[ls]);
+        //     }
+        // }
+        // this.setState({ tmpItems: list[lt], editList: true, editVal: _id})
         // console.log('Edit item List: ', this.state.tmpItems);
     }
     /*  It update the Item from DB  */
@@ -231,10 +252,10 @@ class ExpenseManager extends Component {
         })
     }
 
-    showMonthPriceHandle = () => {
+    showMonthPriceHandler = () => {
         axios.get('/monthlyExp')
         .then(res => {
-            this.setState({ monthlyExp: res.data})
+            this.setState({ monthlyExp: res.data, listdate : 1})
             // console.log('monthly Exp: ', this.state.monthlyExp)
         })
     }
@@ -280,7 +301,18 @@ class ExpenseManager extends Component {
                             editVal = {this.state.editVal}
                             changedInput={this.inputItemHandler}
                         /> : null }
-                        <div>
+                        <Divider hidden />
+                        <AccordionList 
+                            listdate = {this.state.listdate}                        
+                            dateList = {this.state.monthlyExp}
+                            deleteItem={this.deleteItemHandler}
+                            updateItem = {this.updateAllHandler}
+                            isEdit = {this.state.editList}
+                            editVal = {this.state.editVal}
+                            changedInput={this.inputItemHandler}
+                        />
+                        <Divider hidden />
+                        {/* <div>
                             <Card
                                 all = {this.state.allList}
                                 deleteItem={this.deleteItemHandler}
@@ -289,7 +321,7 @@ class ExpenseManager extends Component {
                                 editVal = {this.state.editVal}
                                 changedInput={this.inputItemHandler}
                             /> 
-                        </div>
+                        </div> */}
                     </Grid.Column>
                         <ShowMonthList 
                             list = {this.state.monthlyExp}

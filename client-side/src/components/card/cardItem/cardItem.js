@@ -1,15 +1,18 @@
 import React from 'react';
 import { Table, Input, Icon } from 'semantic-ui-react';
+// import moment from 'moment';
 
 // import classes from './cardItem.css';
 
 const cardItem = (props) => {
     // console.log('cardItem', props);
-    // const ct = props.items.date;
-    // const date = new Date(ct).toDateString();
     const cd = props.items;
+    const dt = props.items.date;
+    // const date = moment(dt).format('MMMM Do YYYY')
+    const date = new Date(dt).toDateString();
+    // console.log('date: ',date)
     return (
-        <Table.Row >
+        <Table.Row>
             <Table.Cell>{+cd.s+1}</Table.Cell>
             <Table.Cell>
             {   
@@ -37,7 +40,7 @@ const cardItem = (props) => {
                 : cd.itemPrice
             } 
             </Table.Cell>
-            <Table.Cell>{cd.date}</Table.Cell>
+            <Table.Cell>{date}</Table.Cell>
             <Table.Cell collapsing>
                 <Icon circular inverted color='red' id={cd.id} name='close' onClick={props.deleteItem}/>
                 {   

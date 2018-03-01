@@ -21,7 +21,7 @@ class InputControllers extends Component {
         {/*<Month today = {props.today}/>*/}
             <Segment padded textAlign='left'>
                 <Header as='h2'>
-                    This Month Total Expense: {totalPrice}
+                    Gross Total Expense: {totalPrice}
                     <Button circular color='red' floated='right' 
                             onClick={() => this.setState({showInput : !this.state.showInput})}>Add</Button>
                 </Header>

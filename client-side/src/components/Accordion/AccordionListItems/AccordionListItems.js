@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Accordion, Icon } from 'semantic-ui-react';
 import Card from '../../card/card';
+import chkMonth from '../../checkMonth/checkMonth';
 
 class accordionListItems extends Component {
     constructor (props){
@@ -24,7 +25,9 @@ class accordionListItems extends Component {
                 <Accordion.Title  active = {activeIndex === this.props.val} 
                 index={this.props.val} onClick={this.handleClick}>
                     <p><Icon name='dropdown'></Icon> 
-                    <span>Date : {this.props.date}</span>
+                    { this.props.listmon ? 
+                        <span> Month : {chkMonth(this.props.date)}</span>
+                     : <span>Date : {this.props.date}</span>}
                     <span style={{fontSize:'20px'}}> Total Price: {this.props.totalSum}</span></p>
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === this.props.val}>

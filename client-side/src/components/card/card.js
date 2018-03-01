@@ -40,8 +40,8 @@ const card = (props) => {
                 <Table.Row >
                     <Table.HeaderCell width={2}>No.</Table.HeaderCell>
                     <Table.HeaderCell width={5}>Items</Table.HeaderCell>
-                    <Table.HeaderCell width={4}>Price</Table.HeaderCell>
-                    <Table.HeaderCell width={3}>Date</Table.HeaderCell>
+                    <Table.HeaderCell width={3}>Price</Table.HeaderCell>
+                    <Table.HeaderCell width={4}>Date</Table.HeaderCell>
                     <Table.HeaderCell width={2}/>
                 </Table.Row>
             </Table.Header>
