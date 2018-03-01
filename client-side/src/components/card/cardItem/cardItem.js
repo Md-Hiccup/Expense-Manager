@@ -15,8 +15,11 @@ const cardItem = (props) => {
             {   
                 props.editVal === cd.id ?    
                     props.isEdit ? 
-                        <Input type='text' size='small' value={cd.itemName} name='items'
-                        onChange={props.changedInput} id={cd.id}/> 
+                        <Input type='text' size='small' value={cd.itemName} name='item'
+                        onChange={props.changedInput} 
+                        id={cd.id} 
+                        // id={props.date}
+                        /> 
                     : cd.itemName 
                 : cd.itemName
             } 
@@ -26,7 +29,10 @@ const cardItem = (props) => {
                   props.editVal === cd.id ?
                     props.isEdit ? 
                         <Input type='number' size='small' value={cd.itemPrice} name='price'
-                        onChange={props.changedInput} id={cd.id} /> 
+                        onChange={props.changedInput} 
+                        id={cd.id} 
+                        // id={props.date}
+                        /> 
                     : cd.itemPrice 
                 : cd.itemPrice
             } 

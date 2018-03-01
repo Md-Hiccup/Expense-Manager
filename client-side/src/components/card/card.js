@@ -12,18 +12,20 @@ const card = (props) => {
         allItem.push({
             s : index,
             id: items[index]._id,
-            itemName: items[index].name,
+            itemName: items[index].item,
             itemPrice: items[index].price,
-            date : items[index].dates
+            date : items[index].created_date
+            // date: props.date
         });
     }
     // console.log('allItem: ',allItem);
     const itemsListOutput = allItem.map(il => {
-        // console.log('il',il.id)
+        // console.log('il',il)
         return (
             <CardItem
                 key = {il.id}
-                items={il}
+                items={il} 
+                // date={il.date}
                 deleteItem={props.deleteItem}
                 changedInput={props.changedInput}
                 updateItem = {props.updateItem}

@@ -18,10 +18,10 @@ class ExpenseManager extends Component {
         // today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
         this.state = {
             itemList: {
-                items: 'Biryani',
+                item: 'Biryani',
                 price: '80',
             },
-            date: moment(),
+            // date: moment(),
             allList: [],
             activeItem: 'dashboard',
             amount: 0,
@@ -29,12 +29,12 @@ class ExpenseManager extends Component {
             editVal : null,
             tmpItems :[], 
             activeIndex: 0,
-            dateListItems: {}
+            dateListItems: []
         }
     };
 
     /*  IT calls After render() */
-    componentWillMount() {
+    componentDidMount() {
         this.itemListHandler();
         this.dateWiseItemHandler();
     }
@@ -56,7 +56,7 @@ class ExpenseManager extends Component {
 
     /*  For input change in Addition of Item */
     InputHandler = (event) => {
-        // console.log('event: ', event.target);
+        // console.log('Event AddInputHandler: ', event.target);
         const value = event.target.value;
         const name = event.target.name;
         const list = { ...this.state.itemList };
@@ -65,7 +65,7 @@ class ExpenseManager extends Component {
     };
     /*  It empty the adding input Items */
     emptyInput(list) {
-        list.items = '';
+        list.item = '';
         list.price = '';
         this.setState({ itemList: list });
     }
@@ -75,13 +75,15 @@ class ExpenseManager extends Component {
     /*  It save the Item to DB  */
     saveItemsHandler = () => {
         let list = { ...this.state.itemList };
-        const date = { ...this.state.date };
-        const ress = this.state.allList.slice();
+        // const date = { ...this.state.date };
+        // const ress = this.state.allList.slice();
+        const ress = this.state.dateListItems.slice();
         const saveItem = {
             // id : count,
-            name: list.items,
+            item: list.item,
             price: list.price,
-            dates: moment(date).format('ll'),
+            // dates: moment(date).format('ll'),
+            created_date: moment().format()
             // items: [{
             //     name: list.items,
             //     price: list.price
@@ -92,11 +94,14 @@ class ExpenseManager extends Component {
             .then(res => {
                 return res;
             }).then(result => {
-                console.log('add Items: ',result);
+                // console.log('add Items: ',result);
             ress.push(
                 result.data
             )
-            this.setState({ allList: ress, itemList:list})
+            // this.setState({ allList: ress, itemList:list})
+            this.setState({ dateListItems: ress, itemList: list})
+            this.itemListHandler();
+            this.dateWiseItemHandler();
             this.totalPriceHandler();
             this.emptyInput(list);
         })
@@ -114,6 +119,7 @@ class ExpenseManager extends Component {
             if(res.status === 200){
                 // this.totalPriceHandler();
                 this.itemListHandler();
+                this.dateWiseItemHandler();
                 // console.log('Item Deleted: ',res);
             }
         })
@@ -133,8 +139,8 @@ class ExpenseManager extends Component {
                     id: key
                 });
             }
+            // this.dateWiseItemHandler();
             this.setState({allList: fetchLists});
-            this.dateWiseItemHandler();
             this.totalPriceHandler();
             // console.log('ItemList data,' ,this.state.allList)
             // console.log('all',fetchLists);
@@ -158,17 +164,22 @@ class ExpenseManager extends Component {
     };
     /*  For updating the items  */
     inputItemHandler = (event) => {
-        // console.log('event', event.target)
+        // console.log('event inputItem: ', event.target)
         const value = event.target.value;
         const _id = event.target.id;
         const name = event.target.name;
-        const list = this.state.allList.slice();
+        // console.log('id, name, value ',_id, name, value)
+        const listt = this.state.allList.slice();
+        // const listt = this.state.dateListItems.slice();
+        // console.log('list',listt);
+        // const list = this.state.date
         let lt = null;
+        const list = listt;
         for(let ls in list){
             if(list[ls]._id === _id){
-                if(name === 'items'){
+                if(name === 'item'){
                     // console.log('itmsssss', list[ls])
-                    list[ls].name = value;
+                    list[ls].item = value;
                 } else if (name === 'price'){
                     list[ls].price = value;
                 }
@@ -177,21 +188,24 @@ class ExpenseManager extends Component {
             }
         }
         this.setState({ tmpItems: list[lt], editList: true, editVal: _id})
-        // console.log('Edit item List: ', this.state.editList);
+        // console.log('Edit item List: ', this.state.tmpItems);
     }
     /*  It update the Item from DB  */
     updateAllHandler =(event) => {
+        // console.log('event Update', event.target)
         const _id = event.target.id;
-        const tmpItems = this.state.tmpItems;
+        const tmpItems = {...this.state.tmpItems};
         // console.log('tmpItems:', tmpItems)
         axios.put('/updateItems/'+_id,{
             data: {
-                name: tmpItems.name,
-                price: tmpItems.price
+                item: tmpItems.item,
+                price: tmpItems.price,
+                updated_date: moment().format()
             }
         })
         .then( res => {
             this.totalPriceHandler();
+            this.dateWiseItemHandler();
             // console.log('Updated Item: ',res);
         })
         this.setState({ editList: false, editVal: null})
@@ -199,16 +213,18 @@ class ExpenseManager extends Component {
 
     dateWiseItemHandler = () => {
         // console.log('date ITem List: ', this.state.allList);
-        const dateList = [];
-        const list = this.state.allList.slice();
         axios.get('/itemList/date')
         .then(res => {
-            console.log('date res: ',res)
-            dateList.push({
-                ...res
-            })
+            // console.log('date res: ',res.data)
+            const dateList = [];
+            for( let i in res.data){
+                dateList.push({
+                    ...res.data[i]
+                })
+            }
             this.setState({ dateListItems: dateList})
-            console.log('dateList',this.state.dateListItems)
+            this.totalPriceHandler();
+            // console.log('dateList',this.state.dateListItems)
         })
     }
     render() {
@@ -245,14 +261,14 @@ class ExpenseManager extends Component {
                             totalPrice = {this.state.amount}
                             // clearItem={this.clearItemHandler}
                         /> 
-                        <AccordionList 
+                        { this.state.dateListItems ? <AccordionList 
                             dateList = {this.state.dateListItems}
                             deleteItem={this.deleteItemHandler}
                             updateItem = {this.updateAllHandler}
                             isEdit = {this.state.editList}
                             editVal = {this.state.editVal}
                             changedInput={this.inputItemHandler}
-                        /> 
+                        /> : null }
                         <div>
                             {/* <Accordion defaultActiveIndex={[0]} panels={panels} exclusive={false}/> */}
                             {/* <Accordion fluid styled exclusive={false}>
@@ -262,14 +278,14 @@ class ExpenseManager extends Component {
                                     Date : </p>
                                 </Accordion.Title>
                                 <Accordion.Content active={activeIndex === 0}> */}
-                                    {/* <Card
+                                    <Card
                                         all = {this.state.allList}
                                         deleteItem={this.deleteItemHandler}
                                         updateItem = {this.updateAllHandler}
                                         isEdit = {this.state.editList}
                                         editVal = {this.state.editVal}
                                         changedInput={this.inputItemHandler}
-                                    />  */}
+                                    /> 
                                 {/* </Accordion.Content> */}
                                 {/* <Accordion.Title active = {activeIndex === 1} 
                                 index={1} onClick={this.handleClick}>

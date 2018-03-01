@@ -18,18 +18,19 @@ class accordionListItems extends Component {
     }
     render(){
         const { activeIndex } = this.state;
-        console.log('AccordionListItems props',this.props)
+        // console.log('AccordionListItems props',this.props)
         return (
             <div>
                 <Accordion.Title  active = {activeIndex === this.props.val} 
                 index={this.props.val} onClick={this.handleClick}>
                     <p><Icon name='dropdown'></Icon> 
-                    <span>Date : {this.props.items[0].dates}</span>
+                    <span>Date : {this.props.date}</span>
                     <span style={{fontSize:'20px'}}> Total Price: {this.props.totalSum}</span></p>
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === this.props.val}>
                     <Card
-                        all = {this.props.items}
+                        all = {this.props.items} 
+                        // date={this.props.date}
                         changedInput={this.props.changedInput}
                         deleteItem={this.props.deleteItem}
                         editVal = {this.props.editVal}

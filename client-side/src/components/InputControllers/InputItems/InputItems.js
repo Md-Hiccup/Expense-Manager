@@ -39,9 +39,9 @@ const InputItems = (props) => {
             {/*<Month today={props.today}/>*/}
             <Form className={classes.form}>
                 <Form.Group>
-                    <Form.Input size="large" type="text" name="items"
+                    <Form.Input size="large" type="text" name="item"
                         placeholder="Add Items" width={8}
-                        value={props.itemList.items} onChange={props.inputChanged}
+                        value={props.itemList.item} onChange={props.inputChanged}
                     />
                     <Form.Input size="large" type="number" name="price"
                         placeholder="$ Price" width={3}

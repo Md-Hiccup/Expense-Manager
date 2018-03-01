@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const ItemSchema = new mongoose.Schema({
     // id: Number,
-    name : String,
+    item: String,
     price : Number,
-    dates : String,
+    created_date : Date,
+    updated_date: {type: Date, default: Date.now },
     // items: [{
     //     name: String,
     //     price: String
     // }]
-    // updated_date: {type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model('Item', ItemSchema);
