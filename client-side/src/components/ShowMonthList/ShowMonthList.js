@@ -10,6 +10,7 @@ const showMonthList = (props) => {
         // console.log('dt', dt)
         return (
             <Segment vertical key={mm._id}>
+                {/* <h2><h2/> */}
                 <h2>{dt} : {mm.totalSum}</h2>
             </Segment>
         )

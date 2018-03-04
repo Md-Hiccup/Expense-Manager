@@ -26,7 +26,7 @@ class accordionListItems extends Component {
                 index={this.props.val} onClick={this.handleClick}>
                     <p><Icon name='dropdown'></Icon> 
                     { this.props.listmon ? 
-                        <span> Month : {chkMonth(this.props.date)}</span>
+                        <span>{chkMonth(this.props.date)}</span>
                      : <span>Date : {this.props.date}</span>}
                     <span style={{fontSize:'20px'}}> Total Price: {this.props.totalSum}</span></p>
                 </Accordion.Title>
@@ -34,6 +34,7 @@ class accordionListItems extends Component {
                     <Card
                         all = {this.props.items} 
                         // date={this.props.date}
+                        totalSum = {this.props.totalSum}
                         changedInput={this.props.changedInput}
                         deleteItem={this.props.deleteItem}
                         editVal = {this.props.editVal}

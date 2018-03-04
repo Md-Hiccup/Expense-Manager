@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Segment, Grid, Menu, Header, Button, Modal, Icon, Divider,Tab } from 'semantic-ui-react';
 import Login from '../../Auth/Login';
 import Signup from '../../Auth/Signup';
@@ -9,11 +9,17 @@ import FacebookLogin from 'react-facebook-login';
 import axios from '../../../axios-orders';
 
 class Toolbar extends Component {
-    state = { 
+    constructor(props){
+        super(props);
+        this.state = { 
             activeIndex: 0, open: false, isLogin : false, ativeLogin: 0,
             email: '', password:'', submittedPassword: '', submittedEmail: '',
-            gToken: '', fbToken: ''
+            gToken: '', fbToken: '', redirect: false , user : '' ,id : 0
          }
+    }
+    componentDidMount(){
+        console.log('toolbar', this.props)
+    }
 
     show = dimmer => () => this.setState({ dimmer, open: true })
     close = () => this.setState({ open: false })
@@ -38,7 +44,7 @@ class Toolbar extends Component {
         axios.post('/auth/google', response)
             .then(res => {
                 console.log('g+ res', res);
-                this.setState({isLogin: true, activeLogin: 2, gToken: gTokenTime})
+                this.setState({isLogin: true, activeLogin: 2, gToken: gTokenTime, redirect:true, user: res.data.google.name ,id: res.data.google.gid})
                 this.close();
             })
     }
@@ -49,21 +55,23 @@ class Toolbar extends Component {
         axios.post('/auth/facebook', response)
             .then(res => {
                 console.log('fb :', res);
-                this.setState({isLogin: true, activeLogin: 1, fbToken : fbTokenTime})
+                this.setState({isLogin: true, activeLogin: 1, fbToken : fbTokenTime, redirect: true, user: res.data.facebook.name, id: res.data.facebook.fbid})
                 this.close();
             })
     }
     logout = (response) => {
         if(this.state.activeLogin === 1) {
             console.log('logout from FB: ', this.state.fbToken);
+            this.setState({ redirect: false })
             // console.log('')
         } else {
             console.log('logout from G+: ', this.state.gToken);
+            this.setState({ redirect: false})
         }// axios.get('/auth/all').then(res => console.log(res));
         this.setState({isLogin: false, activeLogin: 0})
     }
     render() {
-        const {open} = this.state;
+        const {open, redirect, user, id} = this.state;
         // const {email, password } = this.state; 
         const panes = [
             {   menuItem: 'Sign In', 
@@ -87,10 +95,10 @@ class Toolbar extends Component {
                                         trigger={ this.state.isLogin ? 
                                             this.state.activeLogin === 1 ? 
                                                 <Button color='facebook' onClick={this.logout}>
-                                                    <Icon name='facebook' onClick={this.logout}/>Logout</Button>
+                                                    {id}{user}<Icon name='facebook' onClick={this.logout}/> Logout</Button>
                                                 // : <GoogleLogout buttonText="Logout" onLogoutSuccess={this.logout} />
                                                 : <Button color='google plus' onClick={this.logout}>
-                                                    <Icon name='google plus' onClick={this.logout}/> Logout</Button> 
+                                                    {id}{user}<Icon name='google plus' onClick={this.logout}/> Logout</Button> 
                                             // <Button inverted onClick={this.logout}>Logout</Button>
                                         : <Button inverted onClick={this.show(false)}>Login / Register</Button>
                                         }>
@@ -133,30 +141,7 @@ class Toolbar extends Component {
                                             />
                                             </Modal.Description>
                                         </Modal.Content>
-                                        {/* <Modal.Actions>
-                                        <strong>onChange:</strong>
-                                        <pre>{JSON.stringify({ email , password}, null, 2)}</pre>
-                                        <strong>onSubmit:</strong>
-                                        <pre>{JSON.stringify({ submittedEmail, submittedPassword }, null, 2)}</pre>
-                                        </Modal.Actions> */}
                                     </Modal>
-                                    {/* <Button onClick={this.show(true)} inverted>SignIn / SignUp</Button>
-                                    {/* <Button inverted>SignUp</Button> */}
-                                    {/* <Modal dimmer={dimmer} size='tiny' open={open} onClose={this.close}>
-                                        <Header textAlign='center'> ExpoMan </Header>
-                                        <Modal.Content>
-                                            <Tab 
-                                                menu={{color: 'teal', attached:false, tabular:false}}
-                                                grid={{ paneWidth:2, tabWidth: 6 }}
-                                                panes={panes} 
-                                            />
-                                        </Modal.Content>
-                                        <Modal.Actions>
-                                            <Button floated='left' color='facebook'><Icon name='facebook' /> Facebook</Button>
-                                            <Button floated='right' color='google plus'><Icon name='google plus'/>Google Plus</Button>
-                                            <Divider hidden />
-                                        </Modal.Actions> 
-                                    </Modal> */}
                                 </Menu.Item>
                             </Menu.Menu>
                         </Menu>

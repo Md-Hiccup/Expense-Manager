@@ -7,13 +7,13 @@ var userSchema = mongoose.Schema({
         password : String
     },
     google:{
-        gid      : String,
+        gid     : String,
         token   : String,
         email   : String,
         name    : String,
     },
     facebook:{
-        fbid      : String,
+        fbid    : String,
         token   : String,
         email   : String,
         name    : String

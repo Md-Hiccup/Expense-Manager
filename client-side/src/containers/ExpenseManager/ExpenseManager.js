@@ -8,14 +8,14 @@ import Aux from '../../hoc/Aux/Aux';
 import InputControllers from '../../components/InputControllers/InputControllers';
 // import ListControllers from '../../components/ListControllers/ListControllers';
 import classes from './ExpenseManager.css';
-// import Card from '../../components/card/card';
+import Card from '../../components/card/card';
 import AccordionList from './../../components/Accordion/Accordion';
 import ShowMonthList from '../../components/ShowMonthList/ShowMonthList';
 import { Divider } from 'semantic-ui-react';
 
 class ExpenseManager extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         // const date = new Date(),
         // today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
         this.state = {
@@ -27,13 +27,12 @@ class ExpenseManager extends Component {
             allList: [],
             activeItem: 'dashboard',
             amount: 0,
-            editList: false,
-            editVal : null,
+            editList: false,    editVal : null,
             tmpItems :[], 
             // activeIndex: 0,
             dateListItems: [],
-            monthlyExp: [],
-            listdate : 0
+            monthlyExp: [],     yearlyExp : 0,
+            listdate : 0, user : 1395056030579077 // 112239157622742530000
         }
     };
 
@@ -42,6 +41,10 @@ class ExpenseManager extends Component {
         this.itemListHandler();
         this.dateWiseItemHandler();
         this.showMonthPriceHandler();
+        this.showYearPriceHandler();
+        // console.log(this.props)
+        // console.log(moment().format('YYYY-MM-DD'))
+        // console.log(moment().toISOString());
     }
 
     /* To handle the side Tab click */
@@ -80,15 +83,18 @@ class ExpenseManager extends Component {
     /*  It save the Item to DB  */
     saveItemsHandler = () => {
         let list = { ...this.state.itemList };
+        const userId = this.state.user
         // const date = { ...this.state.date };
         // const ress = this.state.allList.slice();
         const ress = this.state.dateListItems.slice();
         const saveItem = {
-            // id : count,
+            uid : userId,
             item: list.item,
             price: list.price,
-            // dates: moment(date).format('ll'),
-            created_date: moment().format()
+            date : moment().format('YYYY-MM-DD')
+            // date: moment().toISOString(),
+            // created_date: moment().format()
+            
             // items: [{
             //     name: list.items,
             //     price: list.price
@@ -99,7 +105,7 @@ class ExpenseManager extends Component {
             .then(res => {
                 return res;
             }).then(result => {
-                // console.log('add Items: ',result);
+                console.log('add Items: ',result);
             ress.push(
                 result.data
             )
@@ -132,8 +138,9 @@ class ExpenseManager extends Component {
     };
     /*  It list the all Items from DB   */
     itemListHandler= () => {
+        const userId = this.state.user
         axios.get('/itemList', {
-            // params: {   uid: 1  }
+            params: {   uid: userId  }
         })
         .then(res => {
             // console.log('Total Items List: ',res)
@@ -156,7 +163,10 @@ class ExpenseManager extends Component {
     /*  It call the total Price of the Items    */
     totalPriceHandler = () => {
         // console.log('total Price handler: ')
-        axios('/totalPrice')
+        const userId = this.state.user;
+        axios('/totalPrice', {
+            params : { uid : userId}
+        })
             .then(total => {
                 if(total.data[0] !== undefined){
                     const getTotalPrice = total.data[0].totalSum
@@ -224,7 +234,7 @@ class ExpenseManager extends Component {
             data: {
                 item: tmpItems.item,
                 price: tmpItems.price,
-                updated_date: moment().format()
+                // updated_date: moment().format()
             }
         })
         .then( res => {
@@ -237,7 +247,11 @@ class ExpenseManager extends Component {
 
     dateWiseItemHandler = () => {
         // console.log('date ITem List: ', this.state.allList);
-        axios.get('/itemList/date')
+        const userId = this.state.user;
+        console.log('id', userId)
+        axios.get('/itemList/date', {
+            params : {  uid : userId}
+        })
         .then(res => {
             // console.log('date res: ',res.data)
             const dateList = [];
@@ -253,10 +267,22 @@ class ExpenseManager extends Component {
     }
 
     showMonthPriceHandler = () => {
-        axios.get('/monthlyExp')
+        const userId = this.state.user;
+        axios.get('/monthlyExp', {
+            params: { uid : userId }
+        })
         .then(res => {
             this.setState({ monthlyExp: res.data, listdate : 1})
             // console.log('monthly Exp: ', this.state.monthlyExp)
+        })
+    }
+    showYearPriceHandler = () => {
+        const userId = this.state.user;
+        axios.get('/yearlyExp', {
+            params: {   uid : userId}
+        }).then( res => {
+            this.setState({ yearlyExp : res.data, listdate: 1})
+            console.log('yearly exp: ', this.state.yearlyExp);            
         })
     }
     render() {

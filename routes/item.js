@@ -11,28 +11,20 @@ router.get('/itemList', function (req, res, next) {
     })
 });
 router.get('/itemList/date', function(req, res, next){
-    // console.log('item Date');
-    // res.json('itemList / date')
-    Item.aggregate([
-        // "$project": {
-        //     "$name":1,
-        //     "$price":1
-        // },
-    {  $group:{
-            _id: { $dateToString: { format: "%m-%d-%Y", date: "$created_date" } },
-            totalSum:{ "$sum": "$price"},
-            items: { $push: "$$ROOT" }
-            }
-    },
-    {   $sort : { _id: -1 } }
+    console.log('item Date', req.query);
+    it = req.query;
+    Item.aggregate([ 
+        { $match :{ uid : +it.uid} } ,
+        { $group : { _id : { $dayOfMonth : "$date"}, items : { $push : "$$ROOT" }, totalSum:{ "$sum": "$price"} } }, //]).pretty()
+        { $sort : { _id: -1 } }
     ]).then(ress => {
-        // console.log('item/date: ',ress)
+        // console.log(ress)
          res.json(ress);
     })
 });
 /* Save Single Item */
 router.post('/addItems', function(req, res, next){
-    // console.log('addItems: ', req.body)
+    console.log('addItems: ', req.body)
     Item.create(req.body, function(err, post){
         if(err) return console.log(err);
         res.json(post);
@@ -52,12 +44,14 @@ router.delete('/deleteItems', function(req, res, next){
 
 /* Get Total Price of All Items */
 router.get('/totalPrice', function(req, res, next){
-    Item.aggregate([{
-        "$group":{
-            "_id":"0",
-            "totalSum":{ "$sum": "$price"}
-        }
-    }]).then(resss => {
+    it = req.query;
+    Item.aggregate([
+        { $match : { uid : +it.uid}},
+        { $group :{
+            _id:"0",
+            totalSum:{ $sum: "$price"}
+        }}
+    ]).then(resss => {
         // console.log('resss:',resss)
         res.json(resss);
     })
@@ -71,7 +65,7 @@ router.put('/updateItems/:id', function(req, res, next){
         $set: {
             item: req.body.data.item,
             price: req.body.data.price,
-            updated_date: req.body.data.updated_date    
+            // updated_date: req.body.data.updated_date    
         }
     }
     Item.findByIdAndUpdate(req.params.id, updateBody , {new: true}, function(err, post){
@@ -82,19 +76,31 @@ router.put('/updateItems/:id', function(req, res, next){
 })
 
 router.get('/monthlyExp', function(req, res, next){
-    // console.log('monthly Expense');
-    Item.aggregate([
-        { $group: {
-            // _id: { $dateToString: { format: "%m-%Y", date: "$created_date" } },
-            _id : { $month : "$created_date"},
-            totalSum:{ "$sum": "$price"},
-            items: {"$push" : "$$ROOT"}
-        }},
-        {   $sort : { _id: 1 } }
+    console.log('monthly Expense');
+    it = req.query;
+    Item.aggregate([ 
+        { $match :{ uid : +it.uid , 
+            // date : { $lt :  ISODate("2018-02-01T00:00:00Z") , $gt :  ISODate("2017-12-31T00:00:00Z")}
+         }},
+        { $group : { _id : { $month : "$date"}, items : { $push : "$$ROOT" }, totalSum:{ "$sum": "$price"} } }, // ]).pretty()
+        { $sort : { _id: 1 } }
     ]).then( mon => {
-        console.log('mon',mon);
+        // console.log('mon',mon);
         res.json(mon)
     })
 });
-
+router.get('/yearlyExp', function(req, res, next){
+    console.log('yearly expense')
+    it = req.query;
+    Item.aggregate([ 
+        { $match :{ uid : +it.uid, 
+            // date : { $lt :  ISODate("2019-01-01T00:00:00Z") , $gt :  ISODate("2017-12-31T00:00:00Z")} 
+        }},
+        { $group : { _id : { $year : "$date"}, items : { $push : "$$ROOT" }, totalSum:{ "$sum": "$price"} } }, //]).pretty()
+        // { $sort : { _id: 1 } }
+    ]).then( year => {
+        // console.log('yearly', year);
+        res.json(year)
+    })
+});
 module.exports = router;

@@ -14,8 +14,8 @@ const card = (props) => {
             id: items[index]._id,
             itemName: items[index].item,
             itemPrice: items[index].price,
-            date : items[index].created_date
-            // date: props.date
+            date: items[index].date
+            // date : items[index].created_date
         });
     }
     // console.log('allItem: ',allItem);
@@ -48,6 +48,15 @@ const card = (props) => {
             <Table.Body>
                 {itemsListOutput}
             </Table.Body>
+            <Table.Footer>
+                <Table.Row>
+                    <Table.HeaderCell/>
+                    <Table.HeaderCell textAlign='right'>Total Price:  </Table.HeaderCell>
+                    <Table.HeaderCell>{props.totalSum}</Table.HeaderCell>
+                    <Table.HeaderCell/>
+                    <Table.HeaderCell/>
+                </Table.Row>
+            </Table.Footer>
         </Table>
         
     )
