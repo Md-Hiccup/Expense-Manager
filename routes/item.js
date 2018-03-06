@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Item = require('../models/Item');
+const User = require('../models/User')
+const moment = require('moment');
 
 /* Get All Items List  */
 router.get('/itemList', function (req, res, next) {
@@ -10,15 +12,21 @@ router.get('/itemList', function (req, res, next) {
         res.json(data);
     })
 });
+
 router.get('/itemList/date', function(req, res, next){
-    console.log('item Date', req.query);
+    // console.log('item Date', req.query);
+    d = new Date().getDate();
+    dt = moment(new Date()).subtract(d,'days').format("YYYY-MM-DD") + "T00:00:00Z";;
+    // console.log(dt)
     it = req.query;
     Item.aggregate([ 
-        { $match :{ uid : +it.uid} } ,
+        { $match :{ uid : +it.uid ,
+             date : { $gt : new Date(dt) } //new Date("2018-02-28T00:00:00Z")}
+        }} ,
         { $group : { _id : { $dayOfMonth : "$date"}, items : { $push : "$$ROOT" }, totalSum:{ "$sum": "$price"} } }, //]).pretty()
         { $sort : { _id: -1 } }
     ]).then(ress => {
-        // console.log(ress)
+        // console.log('rss',ress)
          res.json(ress);
     })
 });
@@ -76,11 +84,11 @@ router.put('/updateItems/:id', function(req, res, next){
 })
 
 router.get('/monthlyExp', function(req, res, next){
-    console.log('monthly Expense');
+    // console.log('monthly Expense');
     it = req.query;
     Item.aggregate([ 
         { $match :{ uid : +it.uid , 
-            // date : { $lt :  ISODate("2018-02-01T00:00:00Z") , $gt :  ISODate("2017-12-31T00:00:00Z")}
+            // date : { $lt :  new Date("2018-02-01T00:00:00Z") , $gt :  new Date("2018-12-31T00:00:00Z")}
          }},
         { $group : { _id : { $month : "$date"}, items : { $push : "$$ROOT" }, totalSum:{ "$sum": "$price"} } }, // ]).pretty()
         { $sort : { _id: 1 } }
@@ -90,11 +98,11 @@ router.get('/monthlyExp', function(req, res, next){
     })
 });
 router.get('/yearlyExp', function(req, res, next){
-    console.log('yearly expense')
+    // console.log('yearly expense')
     it = req.query;
     Item.aggregate([ 
         { $match :{ uid : +it.uid, 
-            // date : { $lt :  ISODate("2019-01-01T00:00:00Z") , $gt :  ISODate("2017-12-31T00:00:00Z")} 
+            // date : { $lt : new Date("2019-01-01T00:00:00Z") , $gt : new Date("2017-12-31T00:00:00Z")} 
         }},
         { $group : { _id : { $year : "$date"}, items : { $push : "$$ROOT" }, totalSum:{ "$sum": "$price"} } }, //]).pretty()
         // { $sort : { _id: 1 } }

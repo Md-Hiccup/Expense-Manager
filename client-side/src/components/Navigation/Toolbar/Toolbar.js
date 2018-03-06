@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Segment, Grid, Menu, Header, Button, Modal, Icon, Divider,Tab } from 'semantic-ui-react';
-import Login from '../../Auth/Login';
-import Signup from '../../Auth/Signup';
+// import Login from '../../Auth/Login';
+// import Signup from '../../Auth/Signup';
 // import classes from './Toolbar.css';
 import {GoogleLogin, GoogleLogout} from  'react-google-login';
 import FacebookLogin from 'react-facebook-login';
@@ -12,7 +12,7 @@ class Toolbar extends Component {
     constructor(props){
         super(props);
         this.state = { 
-            activeIndex: 0, open: false, isLogin : false, ativeLogin: 0,
+            activeIndex: 0, open: false, isLogin : false, activeLogin: 0,
             email: '', password:'', submittedPassword: '', submittedEmail: '',
             gToken: '', fbToken: '', redirect: false , user : '' ,id : 0
          }
@@ -37,28 +37,28 @@ class Toolbar extends Component {
         console.log('submit: ',this.state.submittedEmail, this.state.submittedPassword);
         // this.close();
     }
-    responseGoogle = (response) => {
-        console.log('Google ',response);
-        console.log('Google accessToken: ',response.accessToken);
-        const gTokenTime = response.tokenObj.expires_in;
-        axios.post('/auth/google', response)
-            .then(res => {
-                console.log('g+ res', res);
-                this.setState({isLogin: true, activeLogin: 2, gToken: gTokenTime, redirect:true, user: res.data.google.name ,id: res.data.google.gid})
-                this.close();
-            })
-    }
-    responseFacebook = (response) => {
-        console.log('Facebook ',response);
-        console.log('Facebook accessToken', response.accessToken)
-        const fbTokenTime = response.expiresIn;
-        axios.post('/auth/facebook', response)
-            .then(res => {
-                console.log('fb :', res);
-                this.setState({isLogin: true, activeLogin: 1, fbToken : fbTokenTime, redirect: true, user: res.data.facebook.name, id: res.data.facebook.fbid})
-                this.close();
-            })
-    }
+    // responseGoogle = (response) => {
+    //     console.log('Google ',response);
+    //     console.log('Google accessToken: ',response.accessToken);
+    //     const gTokenTime = response.tokenObj.expires_in;
+    //     axios.post('/auth/google', response)
+    //         .then(res => {
+    //             console.log('g+ res', res);
+    //             this.setState({isLogin: true, activeLogin: 2, gToken: gTokenTime, redirect:true, user: res.data.google.name ,id: res.data.google.gid})
+    //             this.close();
+    //         })
+    // }
+    // responseFacebook = (response) => {
+    //     console.log('Facebook ',response);
+    //     console.log('Facebook accessToken', response.accessToken)
+    //     const fbTokenTime = response.expiresIn;
+    //     axios.post('/auth/facebook', response)
+    //         .then(res => {
+    //             console.log('fb :', res);
+    //             this.setState({isLogin: true, activeLogin: 1, fbToken : fbTokenTime, redirect: true, user: res.data.facebook.name, id: res.data.facebook.fbid})
+    //             this.close();
+    //         })
+    // }
     logout = (response) => {
         if(this.state.activeLogin === 1) {
             console.log('logout from FB: ', this.state.fbToken);
@@ -73,13 +73,14 @@ class Toolbar extends Component {
     render() {
         const {open, redirect, user, id} = this.state;
         // const {email, password } = this.state; 
-        const panes = [
-            {   menuItem: 'Sign In', 
-            render: () => <Tab.Pane ><Login changed={this.handleChange} submit={this.handleSubmit}/></Tab.Pane> 
-            },
-            { menuItem: 'Sign Up', 
-            render: () => <Tab.Pane ><Signup changed={this.handleChange} submit={this.handleSubmit}/></Tab.Pane> },
-          ]
+        // const panes = [
+        //     {   menuItem: 'Sign In', 
+        //     render: () => <Tab.Pane ><Login changed={this.handleChange} submit={this.handleSubmit}/></Tab.Pane> 
+        //     },
+        //     { menuItem: 'Sign Up', 
+        //     render: () => <Tab.Pane ><Signup changed={this.handleChange} submit={this.handleSubmit}/></Tab.Pane> 
+        //     }
+        //   ]
         return(
             <Segment inverted style={{margin: '0px', borderRadius: '0px'}}>
                 <Grid container >
@@ -90,7 +91,17 @@ class Toolbar extends Component {
                             </Menu.Item>
                             <Menu.Menu position="right">
                                 <Menu.Item>
-                                    <Modal dimmer='blurring' open={open} onClose={this.close} 
+                                    {/* <Link to='/'><Button inverted onClick={this.logout}>Logout</Button> </Link> */}
+                                {/* { this.state.isLogin ? 
+                                            this.state.activeLogin === 1 ? 
+                                                <Button color='facebook' onClick={this.logout}>
+                                                    {id}{user}<Icon name='facebook' onClick={this.logout}/> Logout</Button>
+                                                // : <GoogleLogout buttonText="Logout" onLogoutSuccess={this.logout} />
+                                                : <Button color='google plus' onClick={this.logout}>
+                                                    {id}{user}<Icon name='google plus' onClick={this.logout}/> Logout</Button> 
+                                            // <Button inverted onClick={this.logout}>Logout</Button>
+                                : <Button inverted onClick={this.show(false)}>Login / Register</Button>  }           */}
+                                    {/* <Modal dimmer='blurring' open={open} onClose={this.close} 
                                         style={{textAlign:'center'}} size='tiny' 
                                         trigger={ this.state.isLogin ? 
                                             this.state.activeLogin === 1 ? 
@@ -101,15 +112,15 @@ class Toolbar extends Component {
                                                     {id}{user}<Icon name='google plus' onClick={this.logout}/> Logout</Button> 
                                             // <Button inverted onClick={this.logout}>Logout</Button>
                                         : <Button inverted onClick={this.show(false)}>Login / Register</Button>
-                                        }>
+                                        }>  */}
                                         {/* <Modal.Header >{ panes[this.state.activeIndex].menuItem}</Modal.Header> */}
-                                        <Modal.Content>
+                                        {/* <Modal.Content>
                                             <Header as='h1'>{ panes[this.state.activeIndex].menuItem}
                                                 <Header.Subheader>with your social network</Header.Subheader>
                                             </Header>
-                                            <Button.Group size='mini' >
+                                            <Button.Group size='mini' > */}
                                                 {/* <Button color='facebook'><Icon name='facebook'/> Facebook</Button> */}
-                                                <FacebookLogin
+                                                {/* <FacebookLogin
                                                     appId="271200740023977"
                                                     autoLoad={false} size='medium'
                                                     fields="name,email,picture"
@@ -119,18 +130,18 @@ class Toolbar extends Component {
                                                     icon= 'fa-facebook'
                                                 />
                                                 {/* <Button.Or/>     */}
-                                                <GoogleLogin
+                                                {/* <GoogleLogin
                                                     clientId="797945392647-6cemncdvdfk05lkleu6e8gv5gr1msdjp.apps.googleusercontent.com"
                                                     buttonText="Login"
                                                     onSuccess= {this.responseGoogle}
                                                     onFailure = {this.responseGoogle}
                                                     style={googleStyle}
-                                                ><Icon name='google'/>GOOGLE</GoogleLogin>
+                                                ><Icon name='google'/>GOOGLE</GoogleLogin> */} 
                                                
                                                 {/* <Button color='google plus'><Icon name='google plus'/> Google</Button>     */}
                                                 {/* <Button.Or/>    
                                                 <Button color='twitter'><Icon name='twitter' /> Twitter</Button>                         */}
-                                            </Button.Group>
+                                            {/* </Button.Group>
                                             <Divider horizontal>Or</Divider>
                                             <Modal.Description >
                                             <Tab 
@@ -141,8 +152,8 @@ class Toolbar extends Component {
                                             />
                                             </Modal.Description>
                                         </Modal.Content>
-                                    </Modal>
-                                </Menu.Item>
+                                        </Modal>*/}
+                                </Menu.Item> 
                             </Menu.Menu>
                         </Menu>
                     </Grid.Column>

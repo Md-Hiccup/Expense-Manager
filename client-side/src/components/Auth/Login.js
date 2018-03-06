@@ -26,7 +26,7 @@ const Login = (props) => {
                 iconPosition='left'
                 // value={props.password}
                 />
-            <Button primary >Sign in</Button>
+            <Button primary >Login</Button>
             <p>Recover my Password</p>
         </Form> 
     )

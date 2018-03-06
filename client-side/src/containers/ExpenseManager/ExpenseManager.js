@@ -32,7 +32,7 @@ class ExpenseManager extends Component {
             // activeIndex: 0,
             dateListItems: [],
             monthlyExp: [],     yearlyExp : 0,
-            listdate : 0, user : 1395056030579077 // 112239157622742530000
+            listdate : 0, user : this.props.match.params.id // 112239157622742530000
         }
     };
 
@@ -42,11 +42,8 @@ class ExpenseManager extends Component {
         this.dateWiseItemHandler();
         this.showMonthPriceHandler();
         this.showYearPriceHandler();
-        // console.log(this.props)
-        // console.log(moment().format('YYYY-MM-DD'))
-        // console.log(moment().toISOString());
     }
-
+    
     /* To handle the side Tab click */
     handleItemClick = (e, {name}) => { this.setState({ activeItem: name})}
 
@@ -282,7 +279,7 @@ class ExpenseManager extends Component {
             params: {   uid : userId}
         }).then( res => {
             this.setState({ yearlyExp : res.data, listdate: 1})
-            console.log('yearly exp: ', this.state.yearlyExp);            
+            // console.log('yearly exp: ', this.state.yearlyExp);            
         })
     }
     render() {

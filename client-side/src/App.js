@@ -12,9 +12,11 @@ class App extends Component {
     return (
       // <div>
         <Layout >
+            <Toolbar />
             <Switch>
-                <Route path="/dashboard" component={ExpenseManager}/>
                 <Route path="/" exact component={Home} />
+                <Route path="/dashboard/:id" component={ExpenseManager}/>
+                {/* <Route path="/:id" component={ExpenseManager} */}
                 {/* <Route path="/" component={AllItems}/> */}
             </Switch>
         </Layout>
