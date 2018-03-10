@@ -53,14 +53,14 @@ class ExpenseManager extends Component {
             .then(res => {
                 console.log('auth user', res)
                 if(Object.keys(res.data)[0] === 'google')
-                {   
+                {   console.log('google ',res.data)
                     this.setState({user : res.data.google.gid})
                     this.itemListHandler();
                     this.showMonthPriceHandler();
                     this.showYearPriceHandler();
                     this.dateWiseItemHandler();
                 }else if(Object.keys(res.data)[0] === 'facebook')
-                {
+                {   console.log('facebook', res.data)
                     this.setState({user : res.data.facebook.fbid})
                     this.itemListHandler();
                     this.showMonthPriceHandler();

@@ -47,8 +47,9 @@ class HomePage extends Component {
                     gToken: gTokenTime,  
                     redirect:true, user: res.data.google.name ,id: res.data._id})
                 localStorage.setItem('session', gTokenTime)
-                
                 // this.props.history.push('/dashboard/'+ this.state.id);
+            }).catch(err => {
+                console.error(err);
             })
     }
     responseSignupFacebook = (response) => {
