@@ -59,18 +59,19 @@ class Toolbar extends Component {
     //             this.close();
     //         })
     // }
-    logout = (response) => {
-        if(this.state.activeLogin === 1) {
-            console.log('logout from FB: ', this.state.fbToken);
-            this.setState({ redirect: false })
-            // console.log('')
-        } else {
-            console.log('logout from G+: ', this.state.gToken);
-            this.setState({ redirect: false})
-        }// axios.get('/auth/all').then(res => console.log(res));
-        this.setState({isLogin: false, activeLogin: 0})
-    }
+    // logout = (response) => {
+    //     if(this.state.activeLogin === 1) {
+    //         console.log('logout from FB: ', this.state.fbToken);
+    //         this.setState({ redirect: false })
+    //         // console.log('')
+    //     } else {
+    //         console.log('logout from G+: ', this.state.gToken);
+    //         this.setState({ redirect: false})
+    //     }// axios.get('/auth/all').then(res => console.log(res));
+    //     this.setState({isLogin: false, activeLogin: 0})
+    // }
     render() {
+        console.log('session data', localStorage.getItem('session'))
         const {open, redirect, user, id} = this.state;
         // const {email, password } = this.state; 
         // const panes = [

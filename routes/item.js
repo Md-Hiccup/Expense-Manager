@@ -4,17 +4,32 @@ const mongoose = require('mongoose');
 const Item = require('../models/Item');
 const User = require('../models/User')
 const moment = require('moment');
+const auth = require('./auth');
 
+const loginRequired = function(req, res, next){
+    console.log(req.user)
+    if(req.user){
+        next();
+    } else {
+        return res.status(401).json({message: 'Unauthorised user!!!'})
+    }
+}
 /* Get All Items List  */
-router.get('/itemList', function (req, res, next) {
-    Item.find(function(err, data){
-        if(err) return next(err);
-        res.json(data);
-    })
+router.get('/itemList', loginRequired ,function (req, res, next) {
+    console.log('rea, ', req.user)
+    if(req.user){
+        Item.find(req.user,function(err, data){
+            if(err) return next(err);
+            res.json(data);
+        })
+        next();
+    } else {
+        return res.status(404).json({ message : 'Unauthorised User'})
+    }
 });
 
 router.get('/itemList/date', function(req, res, next){
-    // console.log('item Date', req.query);
+    console.log('item Date', req.query);
     d = new Date().getDate();
     dt = moment(new Date()).subtract(d,'days').format("YYYY-MM-DD") + "T00:00:00Z";;
     // console.log(dt)

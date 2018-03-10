@@ -12,6 +12,7 @@ var cors = require('cors');
 var app = express();
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
+var jwt = require('jsonwebtoken')
 
 mongoose.connect('mongodb://localhost/expense-manager', { promiseLibrary: require('bluebird')})
     .then(() => console.log('connection successful'))
@@ -42,7 +43,27 @@ app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // allowing cross origin resource sharing permission
-app.use(cors({origin: '*'}));
+const corsOption = {
+    origin: true,
+    method: 'GET,HEAD,PUT,POST,PATCH,DELETE',
+    credentials: true,
+    exposedHeaders: ['x-auth-token']
+}
+app.use(cors(corsOption));
+
+app.use(function(req, res, next) {
+    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
+      jsonwebtoken.verify(req.headers.authorization.split(' ')[1], 'expenseManager', function(err, decode) {
+        if (err) req.user = undefined;
+        req.user = decode;
+        console.log('[app.js] user: ',req.user)
+        next();
+      });
+    } else {
+      req.user = undefined;
+      next();
+    }
+});
 
 // var auth = require('./routes/authjwt')(passport);
 // var routes = require('./routes/index')(passport);

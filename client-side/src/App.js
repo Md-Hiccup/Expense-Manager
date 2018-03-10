@@ -16,6 +16,7 @@ class App extends Component {
             <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/dashboard/:id" component={ExpenseManager}/>
+                <Route path="*" render={() => <h2>404 Error Page</h2>} />_
                 {/* <Route path="/:id" component={ExpenseManager} */}
                 {/* <Route path="/" component={AllItems}/> */}
             </Switch>

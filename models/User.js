@@ -3,18 +3,20 @@ var mongoose =require('mongoose');
 var bcrypt = require('bcrypt');
 var userSchema = mongoose.Schema({
     local:{
-        username : String,
-        password : String
+        name : { type: String,  trim: true},
+        email : { type: String,  trim: true, lowercase: true},
+        password: { type: String},
+        // passwordConf: { type: String, required: true}
     },
     google:{
         gid     : String,
-        token   : String,
+        // token   : String,
         email   : String,
         name    : String,
     },
     facebook:{
         fbid    : String,
-        token   : String,
+        // token   : String,
         email   : String,
         name    : String
     }

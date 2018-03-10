@@ -40,6 +40,7 @@ class accordionListItems extends Component {
                         editVal = {this.props.editVal}
                         isEdit = {this.props.isEdit}
                         updateItem = {this.props.updateItem}
+                        showEdit = {this.props.showEdit}
                     /> 
                 </Accordion.Content>
             </div>

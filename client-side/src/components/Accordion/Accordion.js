@@ -17,6 +17,7 @@ const accordion = (props) => {
                 editVal = {props.editVal}
                 isEdit = {props.isEdit}
                 updateItem = {props.updateItem}
+                showEdit = { props.showEdit}
             />
         )
     })

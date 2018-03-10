@@ -31,6 +31,7 @@ const card = (props) => {
                 updateItem = {props.updateItem}
                 isEdit = {props.isEdit} 
                 editVal = {props.editVal}
+                showEdit = {props.showEdit}
             />
         )
     });

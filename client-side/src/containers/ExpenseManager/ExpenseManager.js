@@ -32,18 +32,44 @@ class ExpenseManager extends Component {
             // activeIndex: 0,
             dateListItems: [],
             monthlyExp: [],     yearlyExp : 0,
-            listdate : 0, user : this.props.match.params.id // 112239157622742530000
+            listdate : 0, user : '' , id: this.props.match.params.id, // 112239157622742530000
+            showEdit: false
         }
     };
 
     /*  IT calls After render() */
     componentDidMount() {
-        this.itemListHandler();
-        this.dateWiseItemHandler();
-        this.showMonthPriceHandler();
-        this.showYearPriceHandler();
+        this.getUserData();
+        // this.itemListHandler();
+        // this.showMonthPriceHandler();
+        // this.showYearPriceHandler();
+        // this.dateWiseItemHandler();
     }
     
+    getUserData= () => {
+        axios.get('/auth/user', {
+            params : {  id: this.state.id    }
+            })
+            .then(res => {
+                console.log('auth user', res)
+                if(Object.keys(res.data)[0] === 'google')
+                {   
+                    this.setState({user : res.data.google.gid})
+                    this.itemListHandler();
+                    this.showMonthPriceHandler();
+                    this.showYearPriceHandler();
+                    this.dateWiseItemHandler();
+                }else if(Object.keys(res.data)[0] === 'facebook')
+                {
+                    this.setState({user : res.data.facebook.fbid})
+                    this.itemListHandler();
+                    this.showMonthPriceHandler();
+                    this.showYearPriceHandler();
+                    this.dateWiseItemHandler();
+                }
+            })
+    }
+
     /* To handle the side Tab click */
     handleItemClick = (e, {name}) => { this.setState({ activeItem: name})}
 
@@ -102,7 +128,7 @@ class ExpenseManager extends Component {
             .then(res => {
                 return res;
             }).then(result => {
-                console.log('add Items: ',result);
+                // console.log('add Items: ',result);
             ress.push(
                 result.data
             )
@@ -243,9 +269,9 @@ class ExpenseManager extends Component {
     };
 
     dateWiseItemHandler = () => {
-        // console.log('date ITem List: ', this.state.allList);
+        // console.log('date ITem List: ');
         const userId = this.state.user;
-        console.log('id', userId)
+        // console.log('id', userId)
         axios.get('/itemList/date', {
             params : {  uid : userId}
         })
@@ -282,7 +308,25 @@ class ExpenseManager extends Component {
             // console.log('yearly exp: ', this.state.yearlyExp);            
         })
     }
+    logoutHandler = (response) => {
+        localStorage.setItem('session', null)
+        console.log('session data', localStorage.getItem('session'));
+        this.props.history.replace('/');
+        // if(this.state.activeLogin === 1) {
+            // console.log('logout from FB: ', this.state.fbToken);
+            // this.setState({ redirect: false })
+        // } else {
+            // console.log('logout from G+: ', this.state.gToken);
+            // this.setState({ redirect: false})
+        // }// axios.get('/auth/all').then(res => console.log(res));
+        // this.setState({isLogin: false, activeLogin: 0})
+    }
     render() {
+        const isSessionActive = localStorage.getItem('session')
+        console.log('expense session', isSessionActive);
+        // if(isSessionActive === null){
+        //     this.props.history.push('/');
+        // }
         const {activeItem} = this.state;
         // const panels = [
         //  {  title: 'Date', content: ['Hot date'].join(' ') },
@@ -295,15 +339,15 @@ class ExpenseManager extends Component {
                 {/* <Grid.Row columns={3}> */}
                     <Grid.Column width={3}> 
                     <Menu  fluid pointing secondary vertical>
-                        <Menu.Item as={Link} to='/' name="dashboard" 
+                        <Menu.Item as={Link} to="#" name="dashboard" 
                             active={activeItem === 'dashboard'} 
                             onClick={this.handleItemClick}>
                         </Menu.Item>
-                        <Menu.Item as={Link} to='/allitems' name='allitems' 
+                        {/* <Menu.Item as={Link} to='/allitems' name='allitems' 
                             active={activeItem === 'allitems'} 
                             onClick={this.handleItemClick} >
-                        </Menu.Item>
-                        <Button primary onClick={this.itemListHandler} >Show List</Button>
+                        </Menu.Item> */}
+                        <Button primary onClick={this.logoutHandler} >Logout</Button>
                     </Menu>
                     </Grid.Column>
                     <Grid.Column width={10}> 
@@ -323,6 +367,7 @@ class ExpenseManager extends Component {
                             isEdit = {this.state.editList}
                             editVal = {this.state.editVal}
                             changedInput={this.inputItemHandler}
+                            showEdit = {true}                            
                         /> : null }
                         <Divider hidden />
                         <AccordionList 
@@ -333,6 +378,7 @@ class ExpenseManager extends Component {
                             isEdit = {this.state.editList}
                             editVal = {this.state.editVal}
                             changedInput={this.inputItemHandler}
+                            showEdit = {this.state.showEdit}
                         />
                         <Divider hidden />
                         {/* <div>
