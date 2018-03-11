@@ -42,28 +42,30 @@ class HomePage extends Component {
     responseSignupGoogle = (response) => {
         console.log('Google signup',response);
         // console.log('Google accessToken: ',response.accessToken);
-        const gTokenTime = response.tokenObj.expires_in;
+        // const gTokenTime = response.tokenObj.expires_in;
         axios.post('/auth/g/register', response)
             .then(res => {
-                console.log('g+ res', res);
+                console.log('g+ res', res.data);
                 this.setState({
-                    gToken: gTokenTime,  showSignup: false,
+                    showSignup: false,
                     redirect:true, user: res.data.google.name ,id: res.data._id})
             }).catch(err => {
+                alert('USer Is Already present')
                 console.error(err);
             })
     }
     responseSignupFacebook = (response) => {
         console.log('Facebook signup',response);
         // console.log('Facebook accessToken', response.accessToken)
-        const fbTokenTime = response.expiresIn;
+        // const fbTokenTime = response.expiresIn;
         axios.post('/auth/fb/register', response)
             .then(res => {
                 console.log('fb :', res);
                 this.setState({
-                    fbToken : fbTokenTime, showSignup: false,
+                    showSignup: false,
                     redirect: true, user: res.data.facebook.name, id: res.data._id})
             }).catch(err => {
+                alert('USer Is Already present')
                 console.error(err);
             })
     }
@@ -108,9 +110,9 @@ class HomePage extends Component {
         // if(!this.state.redirectToRefer){
         //     // return <Redirect to='/allItems'/>
         // }
-        if(isSessionActive === undefined || isSessionActive === null){
-            this.props.history.push('/dashboard/'+ this.state.id);
-        }
+        // if(isSessionActive === undefined || isSessionActive === null){
+        //     this.props.history.push('/dashboard/'+ this.state.id);
+        // }
         return(
             <Aux>
                 <div className={classes.Container}>

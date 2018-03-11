@@ -317,9 +317,9 @@ class ExpenseManager extends Component {
     }
     logoutHandler = (response) => {
         console.log(localStorage.getItem('token'))
-        localStorage.setItem('token', null)
+        localStorage.removeItem('token')
         console.log('local token data', localStorage.getItem('token'));
-        this.props.history.replace('/');
+        this.props.history.push('/');
         // if(this.state.activeLogin === 1) {
             // console.log('logout from FB: ', this.state.fbToken);
             // this.setState({ redirect: false })

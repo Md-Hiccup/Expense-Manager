@@ -14,34 +14,59 @@ router.get('/user', function (req, res) {
 });
 router.post('/g/register', function(req, res) {
     profile = req.body.profileObj;
-    // console.log('G',profile)
-    var newUser = new User();
-    newUser.google.gid = profile.googleId;
-    // newUser.facebook.token = profile.accessToken;
-    newUser.google.name = profile.name;
-    newUser.google.email = profile.email 
-    newUser.save(function (err) {
-        if (err)
-            return console.error(err);
-        // console.log('g user',newUser)
-        return res.json(newUser);
-    });
+    console.log('G',profile)
+    User.findOne(
+        { 'google.email': profile.email 
+        }, function(err, post){
+            if(err) console.error(err);
+            // console.log('post',post)
+            if(post){
+                console.log('poset err', post)
+                return res.status(401).json({message: 'already present'});
+                // return post;
+            }else {
+                console.log('new user google')
+                var newUser = new User();
+                newUser.google.gid = profile.googleId;
+                // newUser.facebook.token = profile.accessToken;
+                newUser.google.name = profile.name;
+                newUser.google.email = profile.email 
+                newUser.save(function (err) {
+                    if (err)
+                        return console.error(err);
+                    // console.log('g user',newUser)
+                    return res.status(200).json(newUser);
+                });
+            }
+        });
+        return;
 });
+
 router.post('/fb/register', function(req, res) {
     profile = req.body;
     console.log(profile)
-    var newUser = new User(req.body);
-    newUser.facebook.fbid = profile.id;
-    // newUser.facebook.token = profile.accessToken;
-    newUser.facebook.name = profile.name;
-    newUser.facebook.email = profile.email 
-    newUser.save(function (err) {
-        if (err)
-            return console.error(err);
-        // console.log(newUser)
-        // return res.json({ token: jwt.sign({ email: newUser.email, fullName: newUser.name, _id: newUser._id }, 'RESTFULAPIs') });
-        return res.json(newUser);
-    });
+    User.findOne(
+        { 'facebook.email': profile.email 
+        }, function(err, post){
+            if(post){
+                console.log('post err ',post)
+                return res.status(401).json({message: 'already present'});
+            } else {
+                console.log('new user facebook');
+                var newUser = new User(req.body);
+                newUser.facebook.fbid = profile.id;
+                // newUser.facebook.token = profile.accessToken;
+                newUser.facebook.name = profile.name;
+                newUser.facebook.email = profile.email 
+                newUser.save(function (err) {
+                    if (err)
+                        return console.error(err);
+                    // console.log(newUser)
+                    // return res.json({ token: jwt.sign({ email: newUser.email, fullName: newUser.name, _id: newUser._id }, 'RESTFULAPIs') });
+                    return res.json(newUser);
+                });
+            }
+        })
 });
   
 router.post('/g/signin', function(req, res) {
