@@ -46,14 +46,13 @@ router.post('/fb/register', function(req, res) {
   
 router.post('/g/signin', function(req, res) {
     profile = req.body.profileObj;
-    // console.log('ggg ', profile)
+    console.log('ggg ', profile)
     User.findOne({
       'google.email': profile.email
     }, function(err, user) {
       if (err) throw err;
-    //   if (!user || !user.comparePassword(req.body.password)) {
-    //     return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
-    //   }
+      if (!user )//|| !user.comparePassword(req.body.password)) {
+        return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
     //   console.log('g', user)
       g = user.google;
       return res.json({ id: user._id, token: jwt.sign({ email: g.email, fullName: g.name, _id: user._id }, 'expenseManager') });
@@ -66,8 +65,8 @@ router.post('/fb/signin', function(req, res) {
       'facebook.email': req.body.email
     }, function(err, user) {
       if (err) throw err;
-    //   if (!user || !user.comparePassword(req.body.password)) {
-    //     return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
+      if (!user) //|| !user.comparePassword(req.body.password)) {
+        return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
     //   }
     //   console.log('fb', user)
       fb = user.facebook;

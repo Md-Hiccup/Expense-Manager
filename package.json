@@ -32,6 +32,8 @@
     "passport-local": "^1.0.0",
     "react-facebook-login": "^4.0.1",
     "react-google-login": "^3.0.4",
+    "react-redux": "^5.0.7",
+    "redux": "^3.7.2",
     "sequelize": "^3.30.4",
     "sequelize-cli": "^2.7.0",
     "serve-favicon": "~2.3.2"

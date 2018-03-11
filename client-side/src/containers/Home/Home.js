@@ -9,12 +9,15 @@ import {GoogleLogin, GoogleLogout} from  'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 import axios from '../../axios-orders';
 
+import { connect } from 'react-redux';
+import * as actionTypes from '../../store/action';
+
 import src from './../../assets/images/Turquoise\ flow.png';
 
 class HomePage extends Component {
     constructor(){
         super();
-        this.state = { showSignup: false , active: 0, signup: {name : '',email: '', password:''},
+        this.state = { showSignup: false , signup: {name : '',email: '', password:''},
             submittedPassword: '', submittedEmail: '',
             gToken: '', fbToken: '', user: '', id: null, redirectToRefer : false
         }
@@ -37,34 +40,29 @@ class HomePage extends Component {
         // this.close();
     }
     responseSignupGoogle = (response) => {
-        console.log('Google login',response);
+        console.log('Google signup',response);
         // console.log('Google accessToken: ',response.accessToken);
         const gTokenTime = response.tokenObj.expires_in;
         axios.post('/auth/g/register', response)
             .then(res => {
                 console.log('g+ res', res);
                 this.setState({
-                    gToken: gTokenTime,  
+                    gToken: gTokenTime,  showSignup: false,
                     redirect:true, user: res.data.google.name ,id: res.data._id})
-                localStorage.setItem('session', gTokenTime)
-                // this.props.history.push('/dashboard/'+ this.state.id);
             }).catch(err => {
                 console.error(err);
             })
     }
     responseSignupFacebook = (response) => {
-        console.log('Facebook login',response);
+        console.log('Facebook signup',response);
         // console.log('Facebook accessToken', response.accessToken)
         const fbTokenTime = response.expiresIn;
         axios.post('/auth/fb/register', response)
             .then(res => {
                 console.log('fb :', res);
                 this.setState({
-                    fbToken : fbTokenTime,
+                    fbToken : fbTokenTime, showSignup: false,
                     redirect: true, user: res.data.facebook.name, id: res.data._id})
-                localStorage.setItem('session', fbTokenTime )
-                // console.log(res.data.facebook.email)
-                // this.responseLoginFacebook(res.data.facebook.email);
             }).catch(err => {
                 console.error(err);
             })
@@ -73,7 +71,8 @@ class HomePage extends Component {
         console.log(response)
         axios.post('/auth/g/signin', response)
             .then(res => {
-                console.log('login res', res)
+                console.log('login google res', res)
+                localStorage.setItem('token', res.data.token)
                 this.props.history.push('/dashboard/'+ res.data.id);                    
             })
             .catch(err => {
@@ -84,7 +83,8 @@ class HomePage extends Component {
         console.log(response)
         axios.post('/auth/fb/signin', response)
             .then(res => {
-                console.log('login res', res)
+                console.log('login fb res', res)
+                localStorage.setItem('token', res.data.token)
                 this.props.history.push('/dashboard/'+ res.data.id);                    
             })
             .catch(err => {
@@ -103,12 +103,12 @@ class HomePage extends Component {
     //     this.setState({isLogin: false, activeLogin: 0})
     // }
     render(){
-        const isSessionActive = localStorage.getItem('session')
+        const isSessionActive = localStorage.getItem('token')
         // console.log('home session',isSessionActive);
         // if(!this.state.redirectToRefer){
         //     // return <Redirect to='/allItems'/>
         // }
-        if(isSessionActive === null){
+        if(isSessionActive === undefined || isSessionActive === null){
             this.props.history.push('/dashboard/'+ this.state.id);
         }
         return(
@@ -131,8 +131,9 @@ class HomePage extends Component {
                             <Grid.Column width={2} />
                             <Grid.Column width={5}>
                                 <div>
-                                    { this.state.active === 0 ?<Header inverted as='h1'> Login</Header>
-                                        :   <Header inverted as='h1'> Signup </Header>
+                                    { this.state.showSignup ?
+                                        <Header inverted as='h1'> Signup </Header>
+                                        :<Header inverted as='h1'> Login</Header>
                                     }
                                     
                                     { this.state.showSignup ? 

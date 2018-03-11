@@ -16,16 +16,15 @@ const loginRequired = function(req, res, next){
 }
 /* Get All Items List  */
 router.get('/itemList',function (req, res, next) {
-    // console.log('rea, ', req.user)
-    if(req.user){
+    // if(req.user){
         Item.find(req.user,function(err, data){
             if(err) return next(err);
             res.json(data);
         })
-        next();
-    } else {
-        return res.status(404).json({ message : 'Unauthorised User'})
-    }
+        // next();
+    // } else {
+        // return res.status(404).json({ message : 'Unauthorised User'})
+    // }
 });
 
 router.get('/itemList/date', function(req, res, next){

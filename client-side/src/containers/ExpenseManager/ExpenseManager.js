@@ -51,6 +51,7 @@ class ExpenseManager extends Component {
             params : {  id: this.state.id    }
             })
             .then(res => {
+                console.log('this', this.state)
                 console.log('auth user', res)
                 if(Object.keys(res.data)[0] === 'google')
                 {   console.log('google ',res.data)
@@ -126,7 +127,7 @@ class ExpenseManager extends Component {
         // console.log('saveItem', saveItem);
         axios.post('/addItems',{
                 headers: { 
-                    'Authorization' :  '' ,
+                    'Authorization' :  localStorage.getItem('token') ,
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 data : { saveItem: saveItem}
@@ -169,7 +170,7 @@ class ExpenseManager extends Component {
     itemListHandler= () => {
         const userId = this.state.user
         axios.get('/itemList', {
-            params: {   uid: userId  }
+            // params: {   uid: userId  }
         })
         .then(res => {
             // console.log('Total Items List: ',res)
@@ -315,8 +316,9 @@ class ExpenseManager extends Component {
         })
     }
     logoutHandler = (response) => {
-        localStorage.setItem('session', null)
-        console.log('session data', localStorage.getItem('session'));
+        console.log(localStorage.getItem('token'))
+        localStorage.setItem('token', null)
+        console.log('local token data', localStorage.getItem('token'));
         this.props.history.replace('/');
         // if(this.state.activeLogin === 1) {
             // console.log('logout from FB: ', this.state.fbToken);
@@ -328,11 +330,12 @@ class ExpenseManager extends Component {
         // this.setState({isLogin: false, activeLogin: 0})
     }
     render() {
-        const isSessionActive = localStorage.getItem('session')
+        const isSessionActive = localStorage.getItem('token')
+        // console.log('localstorage',localStorage.getItem('token'));
         // console.log('expense session', isSessionActive);
-        // if(isSessionActive === null){
-        //     this.props.history.push('/');
-        // }
+        if(isSessionActive === null){
+            this.props.history.push('/');
+        }
         const {activeItem} = this.state;
         // const panels = [
         //  {  title: 'Date', content: ['Hot date'].join(' ') },
