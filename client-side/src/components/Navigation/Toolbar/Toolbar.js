@@ -71,7 +71,7 @@ class Toolbar extends Component {
     //     this.setState({isLogin: false, activeLogin: 0})
     // }
     render() {
-        console.log('session data', localStorage.getItem('session'))
+        // console.log('session data', localStorage.getItem('session'))
         const {open, redirect, user, id} = this.state;
         // const {email, password } = this.state; 
         // const panes = [

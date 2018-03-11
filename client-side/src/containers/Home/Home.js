@@ -104,7 +104,7 @@ class HomePage extends Component {
     // }
     render(){
         const isSessionActive = localStorage.getItem('session')
-        console.log('home session',isSessionActive);
+        // console.log('home session',isSessionActive);
         // if(!this.state.redirectToRefer){
         //     // return <Redirect to='/allItems'/>
         // }

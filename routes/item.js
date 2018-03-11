@@ -7,7 +7,7 @@ const moment = require('moment');
 const auth = require('./auth');
 
 const loginRequired = function(req, res, next){
-    console.log(req.user)
+    console.log('login', req.data)
     if(req.user){
         next();
     } else {
@@ -15,8 +15,8 @@ const loginRequired = function(req, res, next){
     }
 }
 /* Get All Items List  */
-router.get('/itemList', loginRequired ,function (req, res, next) {
-    console.log('rea, ', req.user)
+router.get('/itemList',function (req, res, next) {
+    // console.log('rea, ', req.user)
     if(req.user){
         Item.find(req.user,function(err, data){
             if(err) return next(err);
@@ -40,13 +40,13 @@ router.get('/itemList/date', function(req, res, next){
         }} ,
         { $group : { _id : { $dayOfMonth : "$date"}, items : { $push : "$$ROOT" }, totalSum:{ "$sum": "$price"} } }, //]).pretty()
         { $sort : { _id: -1 } }
-    ]).then(ress => {
+    ]).then(ress => {       
         // console.log('rss',ress)
          res.json(ress);
     })
 });
 /* Save Single Item */
-router.post('/addItems', function(req, res, next){
+router.post('/addItems', loginRequired,  function(req, res, next){
     console.log('addItems: ', req.body)
     Item.create(req.body, function(err, post){
         if(err) return console.log(err);

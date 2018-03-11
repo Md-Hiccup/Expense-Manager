@@ -14,7 +14,7 @@ router.get('/user', function (req, res) {
 });
 router.post('/g/register', function(req, res) {
     profile = req.body.profileObj;
-    console.log('G',profile)
+    // console.log('G',profile)
     var newUser = new User();
     newUser.google.gid = profile.googleId;
     // newUser.facebook.token = profile.accessToken;
@@ -23,7 +23,7 @@ router.post('/g/register', function(req, res) {
     newUser.save(function (err) {
         if (err)
             return console.error(err);
-        console.log('g user',newUser)
+        // console.log('g user',newUser)
         return res.json(newUser);
     });
 });
@@ -38,7 +38,7 @@ router.post('/fb/register', function(req, res) {
     newUser.save(function (err) {
         if (err)
             return console.error(err);
-        console.log(newUser)
+        // console.log(newUser)
         // return res.json({ token: jwt.sign({ email: newUser.email, fullName: newUser.name, _id: newUser._id }, 'RESTFULAPIs') });
         return res.json(newUser);
     });
@@ -46,7 +46,7 @@ router.post('/fb/register', function(req, res) {
   
 router.post('/g/signin', function(req, res) {
     profile = req.body.profileObj;
-    console.log('ggg ', profile)
+    // console.log('ggg ', profile)
     User.findOne({
       'google.email': profile.email
     }, function(err, user) {
@@ -54,7 +54,7 @@ router.post('/g/signin', function(req, res) {
     //   if (!user || !user.comparePassword(req.body.password)) {
     //     return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
     //   }
-      console.log('g', user)
+    //   console.log('g', user)
       g = user.google;
       return res.json({ id: user._id, token: jwt.sign({ email: g.email, fullName: g.name, _id: user._id }, 'expenseManager') });
     });
@@ -69,7 +69,7 @@ router.post('/fb/signin', function(req, res) {
     //   if (!user || !user.comparePassword(req.body.password)) {
     //     return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
     //   }
-      console.log('fb', user)
+    //   console.log('fb', user)
       fb = user.facebook;
       return res.json({ id: user._id, token: jwt.sign({ email: fb.email, fullName: fb.name, _id: user._id }, 'expenseManager') });
     });

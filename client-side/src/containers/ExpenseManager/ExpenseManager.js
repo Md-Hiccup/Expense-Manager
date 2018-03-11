@@ -124,7 +124,13 @@ class ExpenseManager extends Component {
             // }]
         }
         // console.log('saveItem', saveItem);
-        axios.post('/addItems', saveItem)
+        axios.post('/addItems',{
+                headers: { 
+                    'Authorization' :  '' ,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                data : { saveItem: saveItem}
+            })
             .then(res => {
                 return res;
             }).then(result => {
@@ -323,7 +329,7 @@ class ExpenseManager extends Component {
     }
     render() {
         const isSessionActive = localStorage.getItem('session')
-        console.log('expense session', isSessionActive);
+        // console.log('expense session', isSessionActive);
         // if(isSessionActive === null){
         //     this.props.history.push('/');
         // }
