@@ -7,8 +7,8 @@ const moment = require('moment');
 const auth = require('./auth');
 
 const loginRequired = function(req, res, next){
-    console.log('login', req.data)
-    if(req.user){
+    console.log('login', req.bod)
+    if(req.body.headers.Authorization){
         next();
     } else {
         return res.status(401).json({message: 'Unauthorised user!!!'})
@@ -47,8 +47,9 @@ router.get('/itemList/date', function(req, res, next){
 /* Save Single Item */
 router.post('/addItems', loginRequired,  function(req, res, next){
     console.log('addItems: ', req.body)
-    Item.create(req.body, function(err, post){
+    Item.create(req.body.data.saveItem, function(err, post){
         if(err) return console.log(err);
+        console.log('add',post)
         res.json(post);
     })
 });
