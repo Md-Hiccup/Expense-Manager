@@ -5,6 +5,17 @@ Creating totalExpense by adding Items and Price to get the total estimate cost o
 <!-- **SET Mysql sql_mode _ONLY_FULL_GROUP_BY = "";_**
 
 **SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));** -->
+## To Run The Application
+
+1. **Start mongoDB server**
+
+- sudo service mongod start
+
+2. **Start node and react server**
+
+- npm start
+
+
 
 ## MongoDB
 

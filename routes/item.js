@@ -7,8 +7,8 @@ const moment = require('moment');
 const auth = require('./auth');
 
 const loginRequired = function(req, res, next){
-    console.log('login', req.bod)
-    if(req.body.headers.Authorization){
+    // console.log('login', req.headers)
+    if(req.headers.authorization){
         next();
     } else {
         return res.status(401).json({message: 'Unauthorised user!!!'})
@@ -28,7 +28,7 @@ router.get('/itemList',function (req, res, next) {
 });
 
 router.get('/itemList/date', function(req, res, next){
-    console.log('item Date', req.query);
+    // console.log('item Date', req.query);
     d = new Date().getDate();
     dt = moment(new Date()).subtract(d,'days').format("YYYY-MM-DD") + "T00:00:00Z";;
     // console.log(dt)
@@ -46,10 +46,10 @@ router.get('/itemList/date', function(req, res, next){
 });
 /* Save Single Item */
 router.post('/addItems', loginRequired,  function(req, res, next){
-    console.log('addItems: ', req.body)
-    Item.create(req.body.data.saveItem, function(err, post){
+    console.log('addItems: ', req.session)
+    Item.create(req.body, function(err, post){
         if(err) return console.log(err);
-        console.log('add',post)
+        // console.log('add',post)
         res.json(post);
     })
 });

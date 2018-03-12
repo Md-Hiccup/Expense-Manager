@@ -1,4 +1,5 @@
 var express = require('express');
+var app = express();
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -9,7 +10,6 @@ var session = require('express-session');
 var env = require('dotenv').load();
 var flash = require('connect-flash');
 var cors = require('cors');
-var app = express();
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 var jwt = require('jsonwebtoken')
@@ -30,10 +30,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
     cookieName: 'session',
-    resave : true ,
-    saveUninitialized: true,
-    secret: 'express-session'
-    // duration: 30 * 60 * 1000,
+    resave : false ,
+    saveUninitialized: false,
+    secret: 'express-session',
+    cookie: {   
+        expires: new Date(Date.now() + (.5 * 60 * 1000)),
+        // maxAge: 30 * 1000,   
+    }
+    // duration: 5 * 60 * 1000,
     // activeDuration: 5 * 60 * 1000
 }));
 app.use(passport.initialize());
@@ -52,14 +56,21 @@ const corsOption = {
 app.use(cors(corsOption));
 
 app.use(function(req, res, next) {
-    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
-      jsonwebtoken.verify(req.headers.authorization.split(' ')[1], 'expenseManager', function(err, decode) {
+    sess = req.session.cookie;
+    console.log('session email  exist', req.session.cookie.originalMaxAge)
+    if(req.session.email){
+    }
+    // console.log('author',req.headers)
+    if (req.session.cookie.originalMaxAge>0 && req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
+      jwt.verify(req.headers.authorization.split(' ')[1], 'expenseManager', function(err, decode) {
         if (err) req.user = undefined;
         req.user = decode;
-        console.log('[app.js] user: ',req.user)
+        req.session.touch();
+        console.log('[app.js] session: ',req.session)
         next();
       });
     } else {
+    //   console.log('req.session', sess)
       req.user = undefined;
       next();
     }

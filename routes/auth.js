@@ -11,6 +11,13 @@ router.get('/user', function (req, res) {
         res.json(data)
     });
 });
+router.get('/logout',function(req, res){
+    console.log('logoout',req.body);
+    console.log('logout',req.session);
+    req.session.destroy();
+    console.log('logout',req.session);
+    res.status(200).json({message: 'logout and session destroyed'});
+})
 router.post('/register', function(req, res){
     var profile = req.body;
     console.log('local register: ', profile);
@@ -38,7 +45,7 @@ router.post('/register', function(req, res){
 })
 router.post('/signin', function(req, res){
     var profile = req.body;
-    console.log('lcoalt', profile);
+    // console.log('lcoalt', profile);
     User.findOne({
         'local.email': profile.email
       }, function(err, user) {
@@ -46,7 +53,8 @@ router.post('/signin', function(req, res){
         if (!user || !user.validPassword(profile.password)){
           return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
         }
-        //   console.log('l', user)
+        req.session.email = user.email
+        console.log('session email', req.session.email)
         l = user.local;
         return res.json({ id: user._id, token: jwt.sign({ email: l.email, fullName: l.name, _id: user._id }, 'expenseManager') });
       });

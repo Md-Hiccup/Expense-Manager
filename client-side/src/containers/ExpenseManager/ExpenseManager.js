@@ -53,7 +53,7 @@ class ExpenseManager extends Component {
             })
             .then(res => {
                 // console.log('this', this.state)
-                console.log('auth user', res)
+                // console.log('auth user', res)
                 if(Object.keys(res.data)[0] === 'google')
                 {   console.log('google ',res.data)
                     this.setState({user : res.data.google.gid, userName: res.data.google.name})
@@ -121,12 +121,12 @@ class ExpenseManager extends Component {
             // }]
         }
         // console.log('saveItem', saveItem);
-        axios.post('/addItems',{
-                headers: { 
-                    'Authorization' :  localStorage.getItem('token') ,
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                data : { saveItem: saveItem}
+        const headers = { 
+            'Authorization' :  'JWT '+localStorage.getItem('token') ,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+        axios.post('/addItems',saveItem,{
+                headers: headers
             })
             .then(res => {
                 return res;
@@ -300,15 +300,11 @@ class ExpenseManager extends Component {
         localStorage.removeItem('token');
         localStorage.removeItem('id');
         console.log('local token data', localStorage.getItem('token'));
-        this.props.history.push('/');
-        // if(this.state.activeLogin === 1) {
-            // console.log('logout from FB: ', this.state.fbToken);
-            // this.setState({ redirect: false })
-        // } else {
-            // console.log('logout from G+: ', this.state.gToken);
-            // this.setState({ redirect: false})
-        // }// axios.get('/auth/all').then(res => console.log(res));
-        // this.setState({isLogin: false, activeLogin: 0})
+        axios.get('/auth/logout')
+            .then(res => {
+                console.log('logout ho gye bhaiya',res)
+                this.props.history.push('/');
+            })
     }
     render() {
         const isSessionActive = localStorage.getItem('token')
