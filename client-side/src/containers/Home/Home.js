@@ -59,6 +59,7 @@ class HomePage extends Component {
             .then(res => {
                 console.log('login local res', res)
                 localStorage.setItem('token', res.data.token)
+                localStorage.setItem('id', res.data.id);
                 this.props.history.push('/dashboard/'+ res.data.id);                    
             })
             .catch(err => {
@@ -97,6 +98,7 @@ class HomePage extends Component {
             .then(res => {
                 console.log('login google res', res)
                 localStorage.setItem('token', res.data.token)
+                localStorage.setItem('id', res.data.id);
                 this.props.history.push('/dashboard/'+ res.data.id);                    
             })
             .catch(err => {
@@ -108,7 +110,8 @@ class HomePage extends Component {
         axios.post('/auth/fb/signin', response)
             .then(res => {
                 console.log('login fb res', res)
-                localStorage.setItem('token', res.data.token)
+                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('id', res.data.id);
                 this.props.history.push('/dashboard/'+ res.data.id);                    
             })
             .catch(err => {
@@ -118,13 +121,16 @@ class HomePage extends Component {
     
     render(){
         const isSessionActive = localStorage.getItem('token')
+        const isId = localStorage.getItem('id');
+        // console.log('Home',isSessionActive, isId )
         // console.log('home session',isSessionActive);
         // if(!this.state.redirectToRefer){
         //     // return <Redirect to='/allItems'/>
         // }
-        // if(isSessionActive === undefined || isSessionActive === null){
-        //     this.props.history.push('/dashboard/'+ this.state.id);
-        // }
+        if(isSessionActive){
+            console.log(isSessionActive, isId)
+            this.props.history.push('/dashboard/'+isId);
+        }
         return(
             <Aux>
                 <div className={classes.Container}>
