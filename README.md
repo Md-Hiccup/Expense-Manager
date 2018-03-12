@@ -26,7 +26,9 @@ Creating totalExpense by adding Items and Price to get the total estimate cost o
 
 - sudo service mongod restart
 
-## API Post request
+
+
+## API Post request using mysql db
 *check in postman*
 ###### user request
 
