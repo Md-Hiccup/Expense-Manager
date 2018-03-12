@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { Link, BrowserRouter as Router, Redirect } from 'react-router-dom';
+// import { Link, BrowserRouter as Router, Redirect } from 'react-router-dom';
 import classes from './Home.css';
 import Aux from '../../hoc/Aux/Aux';
-import { Button, Grid, Divider, Header, Icon } from 'semantic-ui-react';
+import { Button, Grid, Divider, Header} from 'semantic-ui-react';
 import Login from '../../components/Auth/Login'
 import Signup from '../../components/Auth/Signup';
-import {GoogleLogin, GoogleLogout} from  'react-google-login';
-import FacebookLogin from 'react-facebook-login';
+// import {GoogleLogin, GoogleLogout} from  'react-google-login';
+// import FacebookLogin from 'react-facebook-login';
 import axios from '../../axios-orders';
-
-import { connect } from 'react-redux';
-import * as actionTypes from '../../store/action';
 
 import src from './../../assets/images/Turquoise\ flow.png';
 
@@ -18,31 +15,58 @@ class HomePage extends Component {
     constructor(){
         super();
         this.state = { showSignup: false , signup: {name : '',email: '', password:''},
-            submittedPassword: '', submittedEmail: '',
-            gToken: '', fbToken: '', user: '', id: null, redirectToRefer : false
+            submittedPassword: '', submittedEmail: '', login: { email: '', password: ''},
+            user: '',  id: null, redirectToRefer : false
         }
     };
 
     showSignupHandler = () => { this.setState({ showSignup : true, active : 1 })}
     showLoginHandler = () => { this.setState({ showSignup : false, active : 0 })}
-    handleChange = (e) => {
+    handleSignupChange = (e) => {
         const name = e.target.name;
         const value = e.target.value;
         const userSignup = {...this.state.signup};
         userSignup[name] = value;
-        console.log(userSignup)
         this.setState({ signup : userSignup }) 
+        // console.log('state signup ',userSignup)
     }
-    handleSubmit = (e) => {
+    handleSignup = (e) => {
         e.preventDefault();
-        const { userSignup } = this.state;
-        console.log('change: ',userSignup);        
-        // this.close();
+        const { signup } = this.state;
+        // console.log('change Signup: ',signup);
+        axios.post('/auth/register', signup)
+            .then(res => {
+                console.log('after register ',res)
+                this.setState({ showSignup: false, id: res.data._id, user: res.data.name})
+            }).catch(err => {
+                alert('USer Is Already present')
+                console.error(err);
+            })        
+    }
+    handleLoginChange = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        const userLogin = {...this.state.login};
+        userLogin[name] = value
+        this.setState({ login : userLogin})
+        // console.log('state login ', userLogin);
+    }
+    handleLogin = (e) => {
+        e.preventDefault();
+        const { login } = this.state;
+        // console.log('change Login: ', login); 
+        axios.post('/auth/signin', login )
+            .then(res => {
+                console.log('login local res', res)
+                localStorage.setItem('token', res.data.token)
+                this.props.history.push('/dashboard/'+ res.data.id);                    
+            })
+            .catch(err => {
+                console.error(err)
+            })       
     }
     responseSignupGoogle = (response) => {
         console.log('Google signup',response);
-        // console.log('Google accessToken: ',response.accessToken);
-        // const gTokenTime = response.tokenObj.expires_in;
         axios.post('/auth/g/register', response)
             .then(res => {
                 console.log('g+ res', res.data);
@@ -56,8 +80,6 @@ class HomePage extends Component {
     }
     responseSignupFacebook = (response) => {
         console.log('Facebook signup',response);
-        // console.log('Facebook accessToken', response.accessToken)
-        // const fbTokenTime = response.expiresIn;
         axios.post('/auth/fb/register', response)
             .then(res => {
                 console.log('fb :', res);
@@ -93,17 +115,7 @@ class HomePage extends Component {
                 console.error(err)
             })
     }
-    // logout = (response) => {
-    //     if(this.state.activeLogin === 1) {
-    //         console.log('logout from FB: ', this.state.fbToken);
-    //         this.setState({ redirect: false })
-    //         // console.log('')
-    //     } else {
-    //         console.log('logout from G+: ', this.state.gToken);
-    //         this.setState({ redirect: false})
-    //     }// axios.get('/auth/all').then(res => console.log(res));
-    //     this.setState({isLogin: false, activeLogin: 0})
-    // }
+    
     render(){
         const isSessionActive = localStorage.getItem('token')
         // console.log('home session',isSessionActive);
@@ -139,8 +151,8 @@ class HomePage extends Component {
                                     }
                                     
                                     { this.state.showSignup ? 
-                                        <Signup changed={this.handleChange} 
-                                            submit = {this.handleSubmit}
+                                        <Signup changed={this.handleSignupChange} 
+                                            submit = {this.handleSignup}
                                             signupFb  = {this.responseSignupFacebook}
                                             signupG = {this.responseSignupGoogle}
                                             />
@@ -150,32 +162,6 @@ class HomePage extends Component {
                                             loginG = {this.responseLoginGoogle}
                                             /> }
                                     <Divider hidden />
-                                    {/* <p>Social Authenticate with</p>
-                                    <Button.Group size='mini' > */}
-                                                {/* <Button color='facebook'><Icon name='facebook'/> Facebook</Button> */}
-                                                {/* <FacebookLogin
-                                                    appId="271200740023977"
-                                                    autoLoad={false} size='medium'
-                                                    fields="name,email,picture"
-                                                    callback={this.responseFacebook}
-                                                    textButton="Facebook"
-                                                    cssClass='kep-login-facebook'
-                                                    icon= 'fa-facebook'
-                                                /> */}
-                                                {/* <Button.Or/>     */}
-                                                {/* <GoogleLogin
-                                                    clientId="797945392647-6cemncdvdfk05lkleu6e8gv5gr1msdjp.apps.googleusercontent.com"
-                                                    buttonText="Login"
-                                                    onSuccess= {this.responseGoogle}
-                                                    onFailure = {this.responseGoogle}
-                                                    style={googleStyle}
-                                                    autoLoad={false} 
-                                                ><Icon name='google'/>GOOGLE</GoogleLogin> */}
-                                                {/* <Button color='google plus'><Icon name='google plus'/> Google</Button>     */}
-                                                {/* <Button.Or/>    
-                                                <Button color='twitter'><Icon name='twitter' /> Twitter</Button>                         */}
-                                            {/* </Button.Group>
-                                            <Divider hidden /> */}
                                 </div>
                             </Grid.Column>
                             <Grid.Column width={2} />
@@ -187,17 +173,4 @@ class HomePage extends Component {
     }
 }
 
-// const googleStyle = {
-//     display: 'inline-block',
-//     background: 'rgb(209, 72, 54)',
-//     color: 'rgb(255, 255, 255)',
-//     // width: '190px',
-//     padding: '10px 23px',
-//     borderRadius: '2px',
-//     border: '1px solid transparent',
-//     fontSize: '18px',
-//     fontWeight: 'bold',
-//     // fontFamily: 'Roboto',
-//     cursor: 'pointer'
-// }
 export default HomePage;

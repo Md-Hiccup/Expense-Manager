@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Button } from 'semantic-ui-react';
-import {  Grid, Divider, Header, Icon } from 'semantic-ui-react';
-import {GoogleLogin, GoogleLogout} from  'react-google-login';
+import { Divider, Icon } from 'semantic-ui-react';
+import {GoogleLogin} from  'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 
 const Signup = (props) => {
@@ -13,7 +13,7 @@ const Signup = (props) => {
                     // label='First Name' 
                     placeholder='User Name' 
                     name='name' type='text' size='large'
-                    onChange={props.handleChanged}
+                    onChange={props.changed}
                     icon='user'
                     iconPosition='left'
                     // value={fname}
@@ -34,7 +34,7 @@ const Signup = (props) => {
                 name='email'
                 size='large'
                 placeholder='Email' 
-                onChange={props.handleChanged}
+                onChange={props.changed}
                 icon='mail'
                 iconPosition='left'
                 // value={email}
@@ -45,7 +45,7 @@ const Signup = (props) => {
                 name='password'
                 size='large'
                 placeholder='Password'
-                onChange={props.handleChanged}
+                onChange={props.changed}
                 icon='lock'
                 iconPosition='left'
                 // value={password}

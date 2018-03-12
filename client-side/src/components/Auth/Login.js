@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Button } from 'semantic-ui-react';
-import {  Grid, Divider, Header, Icon } from 'semantic-ui-react';
-import {GoogleLogin, GoogleLogout} from  'react-google-login';
+import { Divider, Icon } from 'semantic-ui-react';
+import {GoogleLogin} from  'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 
 const Login = (props) => {

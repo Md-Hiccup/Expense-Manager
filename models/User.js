@@ -3,8 +3,9 @@ var mongoose =require('mongoose');
 var bcrypt = require('bcrypt');
 var userSchema = mongoose.Schema({
     local:{
-        name : { type: String,  trim: true},
-        email : { type: String,  trim: true, lowercase: true},
+        lid     : String,
+        name    : { type: String,  trim: true},
+        email   : { type: String,  trim: true, lowercase: true},
         password: { type: String},
         // passwordConf: { type: String, required: true}
     },

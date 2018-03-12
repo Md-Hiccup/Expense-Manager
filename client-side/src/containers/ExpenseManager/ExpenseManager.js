@@ -8,7 +8,7 @@ import Aux from '../../hoc/Aux/Aux';
 import InputControllers from '../../components/InputControllers/InputControllers';
 // import ListControllers from '../../components/ListControllers/ListControllers';
 import classes from './ExpenseManager.css';
-import Card from '../../components/card/card';
+// import Card from '../../components/card/card';
 import AccordionList from './../../components/Accordion/Accordion';
 import ShowMonthList from '../../components/ShowMonthList/ShowMonthList';
 import { Divider } from 'semantic-ui-react';
@@ -40,33 +40,32 @@ class ExpenseManager extends Component {
     /*  IT calls After render() */
     componentDidMount() {
         this.getUserData();
-        // this.itemListHandler();
-        // this.showMonthPriceHandler();
-        // this.showYearPriceHandler();
-        // this.dateWiseItemHandler();
     }
-    
+    callOtherMethodHandler = () => {
+        this.itemListHandler();
+        this.showMonthPriceHandler();
+        this.showYearPriceHandler();
+        this.dateWiseItemHandler();
+    }
     getUserData= () => {
         axios.get('/auth/user', {
             params : {  id: this.state.id    }
             })
             .then(res => {
-                console.log('this', this.state)
+                // console.log('this', this.state)
                 console.log('auth user', res)
                 if(Object.keys(res.data)[0] === 'google')
                 {   console.log('google ',res.data)
                     this.setState({user : res.data.google.gid})
-                    this.itemListHandler();
-                    this.showMonthPriceHandler();
-                    this.showYearPriceHandler();
-                    this.dateWiseItemHandler();
+                    this.callOtherMethodHandler();
                 }else if(Object.keys(res.data)[0] === 'facebook')
-                {   console.log('facebook', res.data)
+                {   console.log('facebook ', res.data)
                     this.setState({user : res.data.facebook.fbid})
-                    this.itemListHandler();
-                    this.showMonthPriceHandler();
-                    this.showYearPriceHandler();
-                    this.dateWiseItemHandler();
+                    this.callOtherMethodHandler();
+                }else if(Object.keys(res.data)[0] === 'local'){
+                    console.log('local ', res.data)
+                    this.setState({user : res.data.local.lid})
+                    this.callOtherMethodHandler();
                 }
             })
     }
@@ -81,10 +80,6 @@ class ExpenseManager extends Component {
         const newIndex = activeIndex === index ? -1 : index
         this.setState({ activeIndex : newIndex})
     }
-    // InputDate = (date) => {
-    //     console.log('date', date);
-    //     this.setState({ date: date })
-    // };
 
     /*  For input change in Addition of Item */
     InputHandler = (event) => {
@@ -108,6 +103,7 @@ class ExpenseManager extends Component {
     saveItemsHandler = () => {
         let list = { ...this.state.itemList };
         const userId = this.state.user
+        // console.log('id',userId)
         // const date = { ...this.state.date };
         // const ress = this.state.allList.slice();
         const ress = this.state.dateListItems.slice();
@@ -135,7 +131,7 @@ class ExpenseManager extends Component {
             .then(res => {
                 return res;
             }).then(result => {
-                // console.log('add Items: ',result);
+                console.log('add Items: ',result);
             ress.push(
                 result.data
             )
@@ -237,22 +233,6 @@ class ExpenseManager extends Component {
                 // console.log('bb _id',bb, listt[aa].items[bb]._id)
             }
         }
-        //*********** For Front All List *********************
-        // let lt = null;
-        // for(let ls in list){
-        //     if(list[ls]._id === _id){
-        //         if(name === 'item'){
-        //             // console.log('itmsssss', list[ls])
-        //             list[ls].item = value;
-        //         } else if (name === 'price'){
-        //             list[ls].price = value;
-        //         }
-        //         lt = ls;
-        //         // console.log('list',list[ls]);
-        //     }
-        // }
-        // this.setState({ tmpItems: list[lt], editList: true, editVal: _id})
-        // console.log('Edit item List: ', this.state.tmpItems);
     }
     /*  It update the Item from DB  */
     updateAllHandler =(event) => {
