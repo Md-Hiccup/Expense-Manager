@@ -296,7 +296,7 @@ class ExpenseManager extends Component {
         })
     }
     logoutHandler = (response) => {
-        console.log(localStorage.getItem('token'))
+        // console.log(localStorage.getItem('token'))
         localStorage.removeItem('token')
         console.log('local token data', localStorage.getItem('token'));
         this.props.history.push('/');

@@ -11,6 +11,9 @@ import axios from '../../axios-orders';
 
 import src from './../../assets/images/Turquoise\ flow.png';
 
+import { connect } from 'react-redux';
+import * as actionTypes from '../../store/action';
+
 class HomePage extends Component {
     constructor(){
         super();
@@ -109,6 +112,7 @@ class HomePage extends Component {
             .then(res => {
                 console.log('login fb res', res)
                 localStorage.setItem('token', res.data.token)
+                this.props.onAddedPerson(response.name)
                 this.props.history.push('/dashboard/'+ res.data.id);                    
             })
             .catch(err => {
@@ -172,5 +176,17 @@ class HomePage extends Component {
         )
     }
 }
+const mapStateToProps = state => {
+    console.log('state', state)
+    return {
+        prs: state.person
+    };
+};
 
-export default HomePage;
+const mapDispatchToProps = dispatch => {
+    return {
+        onAddedPerson: (name) => dispatch({type: actionTypes.ADD_USER, personName: name}),
+        onRemovedPerson: (name) => dispatch({type: actionTypes.REMOVE_USER, personName: name})
+    }
+};
+export default connect(mapStateToProps,mapDispatchToProps)(HomePage);

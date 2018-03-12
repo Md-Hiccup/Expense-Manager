@@ -5,14 +5,14 @@ import Layout from './hoc/Layout/Layout';
 import ExpenseManager from './containers/ExpenseManager/ExpenseManager';
 // import AllItems from './UnUsed/AllItems/AllItems';
 import Home from './containers/Home/Home';
-import Toolbar from './components/Navigation/Toolbar/Toolbar';
+// import Toolbar from './components/Navigation/Toolbar/Toolbar';
 
 class App extends Component {
   render() {
     return (
       // <div>
         <Layout >
-            <Toolbar />
+            {/* <Toolbar /> */}
             <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/dashboard/:id" component={ExpenseManager}/>
