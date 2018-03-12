@@ -28,7 +28,7 @@ Creating totalExpense by adding Items and Price to get the total estimate cost o
 
 
 
-## API Post request using mysql db
+## API Post request using MySQL DB
 *check in postman*
 ###### user request
 
