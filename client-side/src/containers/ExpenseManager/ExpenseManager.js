@@ -33,7 +33,7 @@ class ExpenseManager extends Component {
             dateListItems: [],
             monthlyExp: [],     yearlyExp : 0,
             listdate : 0, user : '' , id: this.props.match.params.id, // 112239157622742530000
-            showEdit: false
+            showEdit: false, userName: ''
         }
     };
 
@@ -56,15 +56,15 @@ class ExpenseManager extends Component {
                 console.log('auth user', res)
                 if(Object.keys(res.data)[0] === 'google')
                 {   console.log('google ',res.data)
-                    this.setState({user : res.data.google.gid})
+                    this.setState({user : res.data.google.gid, userName: res.data.google.name})
                     this.callOtherMethodHandler();
                 }else if(Object.keys(res.data)[0] === 'facebook')
                 {   console.log('facebook ', res.data)
-                    this.setState({user : res.data.facebook.fbid})
+                    this.setState({user : res.data.facebook.fbid, userName: res.data.facebook.name})
                     this.callOtherMethodHandler();
                 }else if(Object.keys(res.data)[0] === 'local'){
                     console.log('local ', res.data)
-                    this.setState({user : res.data.local.lid})
+                    this.setState({user : res.data.local.lid, userName: res.data.local.name})
                     this.callOtherMethodHandler();
                 }
             })
@@ -327,6 +327,7 @@ class ExpenseManager extends Component {
                 <Grid container relaxed>
                 {/* <Grid.Row columns={3}> */}
                     <Grid.Column width={3}> 
+                    <h2 style={style}>{this.state.userName}</h2>
                     <Menu  fluid pointing secondary vertical>
                         <Menu.Item as={Link} to="#" name="dashboard" 
                             active={activeItem === 'dashboard'} 
@@ -393,5 +394,10 @@ class ExpenseManager extends Component {
         );
     }
 }
-
+const style = {
+    textAlign: 'center',
+    fontStyle: 'italic',
+    fontFamily: 'serif',
+    color: 'chocolate'
+}
 export default ExpenseManager;

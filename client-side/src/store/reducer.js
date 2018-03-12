@@ -10,13 +10,13 @@ const reducer = (state = initialState, action) => {
         console.log('actioontype adduser')
             return {
                 ...state,
-                user: state.user.concat(action.userAdd )
+                user: state.user.concat(action.personName )
             }
         case actionTypes.REMOVE_USER:
         console.log('actioontype removeuser')        
             return {
                 ...state,
-                user: state.user.filter(tkn => tkn.user !== action.userRmv)
+                user: state.user.filter(tkn => tkn.user !== action.personName)
             }
     }
     return state;

@@ -5,6 +5,9 @@ import { Segment, Grid, Menu, Header } from 'semantic-ui-react';
 // import Signup from '../../Auth/Signup';
 // import classes from './Toolbar.css';
 
+// import { connect } from 'react-redux';
+// import * as actionTypes from '../../../store/action';
+
 class Toolbar extends Component {
     constructor(props){
         super(props);
@@ -80,3 +83,16 @@ class Toolbar extends Component {
 }
 
 export default Toolbar;
+// const mapStateToProps = state => {
+//     console.log('state', state)
+//     return {
+//         prs: state.person
+//     };
+// };
+
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         onRemovedPerson: (name) => dispatch({type: actionTypes.REMOVE_USER, personName: name})
+//     }
+// };
+// export default connect(mapStateToProps,mapDispatchToProps)(Toolbar);
