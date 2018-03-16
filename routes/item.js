@@ -7,11 +7,13 @@ const moment = require('moment');
 const auth = require('./auth');
 
 const loginRequired = function(req, res, next){
-    // console.log('login', req.headers)
-    if(req.headers.authorization){
+    // console.log('login', req.decoded)
+    if(req.decoded){
+        console.log('headers authorization')
         next();
     } else {
-        return res.status(401).json({message: 'Unauthorised user!!!'})
+        // console.log('req ',req.decoded)
+        return res.status(403).json({message: 'Unauthorised user!!!'})
     }
 }
 /* Get All Items List  */
@@ -46,9 +48,9 @@ router.get('/itemList/date', function(req, res, next){
 });
 /* Save Single Item */
 router.post('/addItems', loginRequired,  function(req, res, next){
-    console.log('addItems: ', req.session)
+    // console.log('addItems: ',req.body)
     Item.create(req.body, function(err, post){
-        if(err) return console.log(err);
+        if(err) return next(err);
         // console.log('add',post)
         res.json(post);
     })

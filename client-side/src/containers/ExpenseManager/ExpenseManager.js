@@ -48,8 +48,10 @@ class ExpenseManager extends Component {
         this.dateWiseItemHandler();
     }
     getUserData= () => {
+        const token = 'JWT '+localStorage.getItem('token');
         axios.get('/auth/user', {
-            params : {  id: this.state.id    }
+            params : {  id: this.state.id },
+            headers : { token : token }
             })
             .then(res => {
                 // console.log('this', this.state)
@@ -67,6 +69,10 @@ class ExpenseManager extends Component {
                     this.setState({user : res.data.local.lid, userName: res.data.local.name})
                     this.callOtherMethodHandler();
                 }
+            }).catch(err => {
+                console.log(err)
+                alert(err.message)
+                this.props.history.push('/');
             })
     }
 
@@ -123,7 +129,7 @@ class ExpenseManager extends Component {
         // console.log('saveItem', saveItem);
         const headers = { 
             'Authorization' :  'JWT '+localStorage.getItem('token') ,
-            'X-Requested-With': 'XMLHttpRequest'
+            // 'X-Requested-With': 'XMLHttpRequest'
         }
         axios.post('/addItems',saveItem,{
                 headers: headers
@@ -132,9 +138,9 @@ class ExpenseManager extends Component {
                 return res;
             }).then(result => {
                 console.log('add Items: ',result);
-            ress.push(
-                result.data
-            )
+                ress.push(
+                    result.data
+                )
             // this.setState({ allList: ress, itemList:list})
             this.setState({ dateListItems: ress, itemList: list})
             this.itemListHandler();
@@ -142,7 +148,11 @@ class ExpenseManager extends Component {
             this.totalPriceHandler();
             this.emptyInput(list);
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+            console.log('errr',err)
+            alert(err.message)
+            this.props.history.push('/');
+        });
         
     };
     /*  It delete the item from DB  */
@@ -166,7 +176,7 @@ class ExpenseManager extends Component {
     itemListHandler= () => {
         const userId = this.state.user
         axios.get('/itemList', {
-            // params: {   uid: userId  }
+            params: {   uid: userId  }
         })
         .then(res => {
             // console.log('Total Items List: ',res)
@@ -214,7 +224,7 @@ class ExpenseManager extends Component {
         // const list = this.state.allList.slice();
         const listt = this.state.dateListItems.slice();
         // const list = listt;
-        console.log('list',listt);
+        // console.log('list',listt);
         // const list = this.state.date
         // ******* For Card List **************************
         for(let aa in listt){
