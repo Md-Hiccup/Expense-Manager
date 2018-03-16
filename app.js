@@ -7,12 +7,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var env = require('dotenv').load();
 var flash = require('connect-flash');
 var cors = require('cors');
 var mongoose = require('mongoose');
-mongoose.Promise = require('bluebird');
-var jwt = require('jsonwebtoken')
+// mongoose.Promise = require('bluebird');
+var jwt = require('jsonwebtoken');
 
 mongoose.connect('mongodb://localhost/expense-manager', { promiseLibrary: require('bluebird')})
     .then(() => console.log('connection successful'))
@@ -21,7 +22,14 @@ mongoose.connect('mongodb://localhost/expense-manager', { promiseLibrary: requir
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+process.on("unhandledRejection", function(reason, promise) {
+    // See Promise.onPossiblyUnhandledRejection for parameter documentation
+    console.log('promise unhandled rejection ', reason, promise)
+});
+process.on("rejectionHandled", function(promise) {
+    // See Promise.onUnhandledRejectionHandled for parameter documentation
+    console.log('promise rejection handled ',reason, promise)
+});
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -29,19 +37,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-    cookieName: 'session',
-    resave : false ,
-    saveUninitialized: false,
+    resave : true ,
+    saveUninitialized: true,
     secret: 'express-session',
-    cookie: {   
-        expires: new Date(Date.now() + (.5 * 60 * 1000)),
+    // store: new MongoStore({
+        // url:  
+        // mongooseConnection: mongoose.connection ,
+        // ttl: 10
+    // }),
+    // cookie: {  
+        // path: '/', 
+        // expires: new Date(Date.now() + (.5 * 60 * 1000)),
         // maxAge: 30 * 1000,   
-    }
+        // httpOnly: true
+    // }
     // duration: 5 * 60 * 1000,
     // activeDuration: 5 * 60 * 1000
 }));
-app.use(passport.initialize());
-app.use(passport.session());   // persistent login sessions
+// app.use(passport.initialize());
+// app.use(passport.session());   // persistent login sessions
 app.use(flash());
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -56,23 +70,23 @@ const corsOption = {
 app.use(cors(corsOption));
 
 app.use(function(req, res, next) {
-    sess = req.session.cookie;
-    console.log('session email  exist', req.session.cookie.originalMaxAge)
-    if(req.session.email){
-    }
-    // console.log('author',req.headers)
-    if (req.session.cookie.originalMaxAge>0 && req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
-      jwt.verify(req.headers.authorization.split(' ')[1], 'expenseManager', function(err, decode) {
-        if (err) req.user = undefined;
-        req.user = decode;
-        req.session.touch();
-        console.log('[app.js] session: ',req.session)
+    const token = req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT';
+    if (token) {    
+    jwt.verify(req.headers.authorization.split(' ')[1], 'expenseManager', function(err, decode) {
+        if (err) {
+            res.status(403).json({
+            success: false,
+            message: err.message
+            })
+        }
+        req.decoded = decode;
+        console.log('token remain', req.decoded)
         next();
       });
     } else {
-    //   console.log('req.session', sess)
-      req.user = undefined;
-      next();
+        // req.decoded = undefined;
+        console.log('do something')
+        next();
     }
 });
 

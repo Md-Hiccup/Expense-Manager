@@ -3,19 +3,46 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken')
 
-// localhost:3000/auth/
-router.get('/user', function (req, res) {
+const verifiedToken = function(req, res, next){
+//    console.log('sploit',req.headers.token.split(' '));
+   const token = req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT';
+   if (req.headers.token.split(' ')[0] === 'JWT') {    
+//    jwt.verify(req.headers.authorization.split(' ')[1], 'expenseManager', function(err, decode) {
+    jwt.verify(req.headers.token.split(' ')[1], 'expenseManager', function(err, decode) {
+       if (err) {
+           res.status(403).json({
+           success: false,
+           message: err.message
+           })
+       }
+        req.decoded = decode;
+        console.log('token remainnnss', req.decoded)
+        next();
+     });
+   } else {
+       // req.decoded = undefined;
+       console.log('do something')
+       next();
+   }
+}
+router.get('/user', verifiedToken, function (req, res, next) {
     var id = req.query.id
-    User.findById(id, function(err, data){
-        if(err) return next(err);
-        res.json(data)
-    });
+    token = req.headers.token;
+    // console.log('token', token, req.decoded)
+    if(token){
+        User.findById(id, function(err, data){
+            if(err) return next(err);
+            res.json(data)
+        });
+    }else {
+        console.log('token expired')
+    }
 });
 router.get('/logout',function(req, res){
-    console.log('logoout',req.body);
-    console.log('logout',req.session);
+    // console.log('logoout');
+    // console.log('logout',req.session);
     req.session.destroy();
-    console.log('logout',req.session);
+    // console.log('logout',req.session);
     res.status(200).json({message: 'logout and session destroyed'});
 })
 router.post('/register', function(req, res){
@@ -52,11 +79,17 @@ router.post('/signin', function(req, res){
         if (err) throw err;
         if (!user || !user.validPassword(profile.password)){
           return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
-        }
-        req.session.email = user.email
-        console.log('session email', req.session.email)
+        }else {
+        // console.log('user', user)
+        // req.session = user.local.lid
+        // console.log('session email', req.session)
         l = user.local;
-        return res.json({ id: user._id, token: jwt.sign({ email: l.email, fullName: l.name, _id: user._id }, 'expenseManager') });
+        const token = jwt.sign(
+            { email: l.email, fullName: l.name, _id: user._id },
+            'expenseManager', 
+            {expiresIn: '20s', issuer: 'veloperst.com', subject: 'userInfo'});
+        return res.json({ id: user._id, token: token});
+        }
       });
 })
 router.post('/g/register', function(req, res) {
@@ -121,12 +154,16 @@ router.post('/g/signin', function(req, res) {
     User.findOne({
       'google.email': profile.email
     }, function(err, user) {
-      if (err) throw err;
-      if (!user )//|| !user.comparePassword(req.body.password)) {
+    if (err) throw err;
+    if (!user )//|| !user.comparePassword(req.body.password)) {
         return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
     //   console.log('g', user)
-      g = user.google;
-      return res.json({ id: user._id, token: jwt.sign({ email: g.email, fullName: g.name, _id: user._id }, 'expenseManager') });
+        g = user.google;
+        const token = jwt.sign(
+            { email: g.email, fullName: g.name, _id: user._id }, 
+            'expenseManager', 
+            {expiresIn: '20s', issuer: 'veloperst.com', subject: 'userInfo'}) ;
+      return res.json({ id: user._id, token: token });
     });
 });
 router.post('/fb/signin', function(req, res) {
@@ -141,7 +178,11 @@ router.post('/fb/signin', function(req, res) {
     //   }
     //   console.log('fb', user)
       fb = user.facebook;
-      return res.json({ id: user._id, token: jwt.sign({ email: fb.email, fullName: fb.name, _id: user._id }, 'expenseManager') });
+      const token = jwt.sign(
+          { email: fb.email, fullName: fb.name, _id: user._id }, 
+            'expenseManager',
+            {expiresIn: '20s', issuer: 'veloperst.com', subject: 'userInfo'}) ;
+      return res.json({ id: user._id, token: token });
     });
 });
 

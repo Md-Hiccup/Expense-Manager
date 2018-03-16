@@ -54,7 +54,7 @@ class HomePage extends Component {
     handleLogin = (e) => {
         e.preventDefault();
         const { login } = this.state;
-        // console.log('change Login: ', login); 
+        console.log('change Login: ', login); 
         axios.post('/auth/signin', login )
             .then(res => {
                 console.log('login local res', res)
@@ -127,10 +127,10 @@ class HomePage extends Component {
         // if(!this.state.redirectToRefer){
         //     // return <Redirect to='/allItems'/>
         // }
-        if(isSessionActive){
-            console.log(isSessionActive, isId)
-            this.props.history.push('/dashboard/'+isId);
-        }
+        // if(isSessionActive){
+        //     console.log(isSessionActive, isId)
+        //     this.props.history.push('/dashboard/'+isId);
+        // }
         return(
             <Aux>
                 <div className={classes.Container}>
